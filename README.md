@@ -2,7 +2,7 @@
 
 Watch a lot of TV shows and want to keep track of them?  Me too.
 
-There are some great services out there for tracking your TV shows.  I wanted something to do that and **only** that withouAt using a service that tracks my viewing habits.
+There are some great services out there for tracking your TV shows.  I wanted something to do that and **only** that without using a service that tracks my viewing habits.
 
 Ads?  Episode comments?  Sharing?  Badges?  No thanks.  Just track my TV shows.
 
@@ -17,7 +17,7 @@ This project is in it's early stages and there isn't currently a Docker image (y
 
 ## Technology
 
-- *Frontend* - React, TailwindCSS *(mostly likely to be rewritten with lit web components)*
+- *Frontend* - React, TailwindCSS *(most likely to be rewritten with [Lit](https://www.lit.dev) web components)*
 - *Backend* - NestJS
 	- The default setup uses a SQLite database but can be used with MySQL or PostgreSQL
 ## Shows
