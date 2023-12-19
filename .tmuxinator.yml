@@ -1,0 +1,16 @@
+name: mishos
+root: ~/projects/mishos
+
+windows:
+  - frontend:
+      root: ~/projects/mishos/web
+      layout: main-vertical
+      panes:
+        - nvim .
+        - yarn dev
+  - backend:
+      root: ~/projects/mishos/api
+      layout: main-vertical
+      panes:
+        - nvim .
+        - yarn start:dev

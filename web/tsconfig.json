@@ -1,0 +1,35 @@
+{
+  "extends": "./tsconfig.paths.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": false,
+    "jsx": "preserve",
+    "incremental": false
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "next.config.js",
+    "postcss.config.cjs",
+    "tailwind.config.cjs",
+    ".eslintrc.cjs"
+  ],
+  //"references": [{ "path": "./tsconfig.node.json" }]
+}
