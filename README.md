@@ -17,7 +17,7 @@ This project is in it's early stages and there isn't currently a Docker image (y
 
 ## Technology
 
-- *Frontend* - React, TailwindCSS *(most likely to be rewritten with [Lit](https://www.lit.dev) web components)*
+- *Frontend* - [Lit](https://lit.dev) web components
 - *Backend* - NestJS
 	- The default setup uses a SQLite database but can be used with MySQL or PostgreSQL
 ## Shows
