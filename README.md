@@ -34,7 +34,7 @@ This project is in it's early stages and there isn't currently a Docker image (y
 
 ## Gotify Notification
 
-The current backend code is designed to use an [Apprise](https://github.com/caronc/apprise) endpoint for notifications.  I currently use [Gotify](https://github.com/gotify/server) for notifications.  Since it uses Apprise you have a **lot** of notification options.
+The current backend code is designed to use an [Apprise](https://github.com/caronc/apprise) endpoint for notifications.  I currently use [Gotify](https://github.com/gotify/server) for notifications.  Since the backend server uses Apprise you have a **lot** of notification options.
 
 ![Screenshot of the watch list screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/gotify.png "Watch list screenshot")
 
