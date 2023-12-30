@@ -50,7 +50,10 @@ export class ShowDetails extends LitElement {
               `}
         </div>
         <div class="detail-content">
-          <img src=${this.show.imageMedium} alt=${this.show.name} class="show-image" />
+          <div>
+            <img src=${this.show.imageMedium} alt=${this.show.name} class="show-image" />
+            <a href=${this.show.providerUrl} class="provider-link" target="_blank">view at tvmaze.com</a>
+          </div>
           <div class="right-content">
             <p class="summary">${this.show.summary}</p>
             <ul class="show-info">
@@ -177,6 +180,15 @@ export class ShowDetails extends LitElement {
 
     .show-image {
       border-radius: var(--sl-border-radius-large);
+    }
+
+    .provider-link {
+      display: block;
+      text-align: center;
+      font-size: var(--sl-font-size-small);
+      text-decoration: none;
+      color: var(--sl-color-neutral-500);
+      margin-top: var(--sl-spacing-x-small);
     }
 
     form {
