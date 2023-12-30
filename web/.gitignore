@@ -1,3 +1,7 @@
+.env
+.env.prod
+build.sh
+
 # Logs
 logs
 *.log

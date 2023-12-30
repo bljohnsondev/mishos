@@ -7,9 +7,11 @@ export interface LoginResponse {
   token?: string;
 }
 
+const LOGIN_API = import.meta.env.VITE_API_URL;
+
 export const login = async (username: string, password: string): Promise<LoginResponse> => {
   return await ky
-    .post('http://localhost:3000/api/auth/login', {
+    .post(`${LOGIN_API}/auth/login`, {
       json: { username, password },
     })
     .json();

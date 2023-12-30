@@ -2,7 +2,7 @@ import ky from 'ky';
 
 import { createEvent, storage } from '@/utils';
 
-const urlPrefix = 'http://localhost:3000/api';
+const urlPrefix = import.meta.env.VITE_API_URL;
 
 export const kyWrapper = ky.extend({
   prefixUrl: urlPrefix,
