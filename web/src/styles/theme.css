@@ -53,7 +53,7 @@
   --sm-button-selected-bg: #253241;
 
   /* content header */
-  --content-header-divider-color: #1F2634;
+  --content-header-divider-color: var(--sl-color-neutral-100);
   --content-header-menu-bg: #2A3646;
   --content-header-menu-border: #354458;
   --content-header-menu-item-hover: #334256;
