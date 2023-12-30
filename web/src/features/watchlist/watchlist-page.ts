@@ -67,7 +67,7 @@ export class WatchListPage extends LitElement {
 
   private handleClickShow(event: Event, episode: EpisodeDto) {
     event.preventDefault();
-    Router.go(`/show/view/${episode.id}`);
+    Router.go(`/show/view/${episode.show?.id}`);
   }
 
   async handleWatch(episode: EpisodeDto) {
