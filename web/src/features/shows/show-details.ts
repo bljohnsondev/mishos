@@ -181,19 +181,29 @@ export class ShowDetails extends LitElement {
 
     form {
       display: flex;
-      align-items: center;
-      .previous {
-        margin-left: auto;
-      }
+      align-items: flex-start;
+      flex-direction: column;
+      gap: var(--sl-spacing-medium);
       .previous::part(label) {
         font-size: var(--sl-font-size-small);
+      }
+      @media screen and (min-width: 768px) {
+        align-items: center;
+        flex-direction: row;
+        .previous {
+          margin-left: auto;
+        }
       }
     }
 
     .detail-content {
       display: flex;
       align-items: flex-start;
+      flex-direction: column;
       gap: var(--sl-spacing-medium);
+      @media screen and (min-width: 1024px) {
+        flex-direction: row;
+      }
     }
 
     .seasons-select {
