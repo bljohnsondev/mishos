@@ -119,8 +119,12 @@ export class AppRoot extends LitElement {
 
     #loading-spinner {
       position: absolute;
-      top: 20px;
-      right: 4rem;
+      top: 10px;
+      right: 1rem;
+      @media screen and (min-width: 768px) {
+        top: 20px;
+        right: 4rem;
+      }
     }
 
     .loading-hide {
