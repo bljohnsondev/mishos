@@ -18,7 +18,7 @@ import './shows-header';
 export class ShowViewPage extends LitElement {
   @property({ type: Object }) location?: RouterLocation;
 
-  @state() show?: ShowDto;
+  @state() show?: ShowDto | null;
   @state() togglePrevious: boolean = false;
 
   render() {
@@ -33,7 +33,9 @@ export class ShowViewPage extends LitElement {
                 @toggle-previous=${this.handleTogglePrevious}
                 @remove-show=${this.handleRemoveShow}
               ></show-details>`
-            : null}
+            : this.show === null
+              ? html`<div>Show could not be found</div>`
+              : null}
         </section>
       </app-layout>
     `;
@@ -70,7 +72,8 @@ export class ShowViewPage extends LitElement {
   }
 
   private async loadShow(showId: string) {
-    this.show = await getShowDetails(showId);
+    const show = await getShowDetails(showId);
+    this.show = show ? show : null;
   }
 
   async connectedCallback() {

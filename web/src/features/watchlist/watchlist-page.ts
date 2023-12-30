@@ -1,3 +1,4 @@
+import { Router } from '@vaadin/router';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
@@ -45,9 +46,9 @@ export class WatchListPage extends LitElement {
     return episode.show
       ? html`
           <div class="episode">
-            <div class="show-image-container">
+            <a href="#" class="show-image-container" @click=${(event: Event) => this.handleClickShow(event, episode)}>
               <img class="show-image" src=${episode.show.imageMedium} alt=${episode.show.name} />
-            </div>
+            </a>
             <div>
               <h1>${episode.show.name}</h1>
               <div class="episode-details">
@@ -62,6 +63,11 @@ export class WatchListPage extends LitElement {
           </div>
         `
       : null;
+  }
+
+  private handleClickShow(event: Event, episode: EpisodeDto) {
+    event.preventDefault();
+    Router.go(`/show/view/${episode.id}`);
   }
 
   async handleWatch(episode: EpisodeDto) {
