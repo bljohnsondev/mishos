@@ -34,10 +34,14 @@ export class ShowService {
   async search(authUser: UserDto, query: string): Promise<ShowDto[]> {
     const shows: ShowDto[] = await this.tvProviderService.search(query);
     return await Promise.all(
-      shows.map(async (show: Show) => ({
-        ...show,
-        added: await this.isFollowedByProviderId(authUser, show.providerId),
-      }))
+      shows.map(async (show: Show) => {
+        const followedShow: ShowDto = await this.findShowByProviderId(authUser, show.providerId);
+        return {
+          ...show,
+          added: followedShow ? true : false,
+          id: followedShow?.id,
+        };
+      })
     );
   }
 
@@ -124,6 +128,23 @@ export class ShowService {
     });
 
     return followedShows.map(followed => followed.show);
+  }
+
+  async findShowByProviderId(user: UserDto, providerId: string): Promise<Show | undefined> {
+    const followed = await this.followedShowRepository.findOne({
+      where: {
+        user: {
+          id: user.id,
+        },
+        show: {
+          providerId,
+        },
+      },
+      relations: {
+        show: true,
+      },
+    });
+    return followed ? followed.show : undefined;
   }
 
   async isFollowedByProviderId(user: UserDto, providerId: string): Promise<boolean> {

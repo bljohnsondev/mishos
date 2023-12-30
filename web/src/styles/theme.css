@@ -1,0 +1,64 @@
+:root,
+:host,
+.sl-theme-light {
+  /* layout colors */
+  --header-title-color: var(--sl-color-neutral-900);
+
+  /* some main color palettes */
+  --content-bg-color: var(--sl-color-neutral-50);
+
+  /* side menu */
+  --sm-bg-color: var(--sl-color-neutral-50);
+  --sm-border-color: var(--sl-color-neutral-200);
+  --sm-divider-color: var(--sl-color-neutral-300);
+  --sm-button-text: var(--sl-color-neutral-700);
+  --sm-button-selected-bg: var(--sl-color-blue-100);
+  --sm-button-selected-text: var(--sl-color-blue-700);
+  --sm-tooltip-bg: var(--sl-color-neutral-800);
+  --sm-tooltip-text: var(--sl-color-neutral-100);
+
+  /* content header */
+  --content-header-bg-color: var(--content-bg-color);
+  --content-header-divider-color: var(--sl-color-neutral-300);
+  --content-header-tab-border: var(--sl-color-blue-100);
+  --content-header-tab-text: var(--sl-color-blue-800);
+  --content-header-tab-selected-bg: var(--sl-color-blue-200);
+  --content-header-tab-selected-border: var(--sl-color-blue-400);
+  --content-header-tab-selected-text: var(--sl-color-blue-900);
+  --content-header-drawer-toggle-color: var(--sl-color-blue-800);
+  --content-header-menu-bg: var(--sl-color-neutral-100);
+  --content-header-menu-border: var(--sl-color-neutral-300);
+  --content-header-menu-item-hover: var(--sl-color-neutral-200);
+
+  /* show cards */
+  --show-card-width: 200px;
+
+  /* feed list */
+  --fl-article-title-color: var(--sl-color-neutral-900);
+  --fl-article-summary-color: var(--sl-color-neutral-600);
+  --fl-article-footer-color: var(--sl-color-neutral-400);
+  --fl-article-hover-bg: var(--sl-color-neutral-200);
+  --fl-article-hover-border: var(--sl-color-blue-400);
+}
+
+:host,
+.sl-theme-dark {
+  /* some main color palettes */
+  --content-bg-color: #1D222A;
+
+  /* side menu */
+  --sm-bg-color: #161B22;
+  --sm-border-color: #28313C;
+  --sm-divider-color: var(--sl-color-neutral-300);
+  --sm-button-selected-bg: #253241;
+
+  /* content header */
+  --content-header-divider-color: #1F2634;
+  --content-header-menu-bg: #2A3646;
+  --content-header-menu-border: #354458;
+  --content-header-menu-item-hover: #334256;
+
+  /* feed list */
+  --fl-article-hover-bg: #1C242F;
+}
+

@@ -1,8 +1,3 @@
-/build.sh
-/.env
-/.env.prod
-/db
-
 # Logs
 logs
 *.log
@@ -12,7 +7,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-.yarn
 node_modules
 dist
 dist-ssr

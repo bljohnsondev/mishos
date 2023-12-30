@@ -37,6 +37,7 @@ export class TvMazeService implements TvProviderService {
             name: data.show.name,
             imageMedium: data.show.image?.medium,
             summary: stripHtml(data.show.summary),
+            network: data.show.network?.name ? data.show.network?.name : data.show.webChannel?.name,
             premiered: data.show.premiered,
           };
 
