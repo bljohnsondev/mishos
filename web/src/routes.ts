@@ -1,3 +1,4 @@
+import './components/not-found-page';
 import './features/auth/login-page';
 import './features/search/search-results-page';
 import './features/shows/shows-page';
@@ -15,4 +16,5 @@ export const routes = [
   { path: '/show/view/:id', component: 'show-view-page', action: authGuard },
   { path: '/show/preview/:id', component: 'show-preview-page', action: authGuard },
   { path: '/watchlist', component: 'watchlist-page', action: authGuard },
+  { path: '(.*)', component: 'not-found-page' },
 ];
