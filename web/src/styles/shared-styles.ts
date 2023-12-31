@@ -19,4 +19,9 @@ export const sharedStyles = css`
       filter: brightness(110%);
     }
   }
+
+  .reset-button {
+    all: unset;
+    line-height: 0;
+  }
 `;

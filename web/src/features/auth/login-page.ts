@@ -6,7 +6,7 @@ import { object, string, ObjectSchema } from 'yup';
 
 import { sharedStyles } from '@/styles/shared-styles';
 import { ToastMessage } from '@/types';
-import { initializeFormEvents, storage, FormValidator, createEvent } from '@/utils';
+import { initializeFormEvents, setToken, FormValidator, createEvent } from '@/utils';
 
 import { login } from './auth-api';
 
@@ -65,7 +65,7 @@ export class LoginPage extends LitElement {
       login(data.username, data.password)
         .then(response => {
           if (response.user && response.token) {
-            storage.setToken(response.token);
+            setToken(response.token);
             Router.go('/');
           }
         })

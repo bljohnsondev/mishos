@@ -1,6 +1,8 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
+import { getTheme, setTheme } from '@/utils';
+
 import { SideMenuItem } from './side-menu-item';
 
 import './side-menu';
@@ -20,6 +22,15 @@ export class AppLayout extends LitElement {
       </main>
       <slot name="footer"></slot>
     `;
+  }
+
+  private initializeTheme() {
+    const theme = getTheme();
+    setTheme(theme);
+  }
+
+  firstUpdated() {
+    this.initializeTheme();
   }
 
   static styles = css`

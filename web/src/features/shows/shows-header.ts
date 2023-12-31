@@ -1,9 +1,11 @@
 import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 import { Router } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, property, state, query } from 'lit/decorators.js';
 
 import { logout } from '@/lib/auth';
+import { sharedStyles } from '@/styles/shared-styles';
+import { getTheme, setTheme } from '@/utils';
 
 import '@/layout/app-header';
 
@@ -24,6 +26,7 @@ export class ShowsHeader extends LitElement {
 
   @property({ type: String }) headerTitle?: string;
   @property({ type: String }) query?: string;
+  @state() theme?: string = getTheme();
 
   render() {
     return html`
@@ -33,14 +36,24 @@ export class ShowsHeader extends LitElement {
             <sl-icon slot="suffix" library="hi-outline" name="magnifying-glass"></sl-icon>
           </sl-input>
         </form>
-        <sl-dropdown distance="8" @sl-select=${this.handleAccountSelect}>
-          <sl-avatar slot="trigger" label="User"></sl-avatar>
-          <sl-menu>
-            <sl-menu-item value="logout">Logout</sl-menu-item>
-          </sl-menu>
-        </sl-dropdown>
+        <div class="right-menu">
+          <button title="Toggle Theme" class="reset-button" @click=${this.handleToggleTheme}>
+            <sl-icon library="hi-solid" name=${this.theme === 'light' ? 'moon' : 'sun'}></sl-icon>
+          </button>
+          <sl-dropdown distance="8" @sl-select=${this.handleAccountSelect}>
+            <sl-avatar slot="trigger" label="User"></sl-avatar>
+            <sl-menu>
+              <sl-menu-item value="logout">Logout</sl-menu-item>
+            </sl-menu>
+          </sl-dropdown>
+        </div>
       </app-header>
     `;
+  }
+
+  private handleToggleTheme() {
+    this.theme = this.theme === 'light' ? 'dark' : 'light';
+    setTheme(this.theme);
   }
 
   private handleAccountSelect(event: Event) {
@@ -62,28 +75,42 @@ export class ShowsHeader extends LitElement {
     }
   }
 
-  static styles = css`
-    form {
-      :is(sl-input)::part(base) {
-        background-color: transparent;
+  static styles = [
+    sharedStyles,
+    css`
+      form {
+        :is(sl-input)::part(base) {
+          background-color: transparent;
+        }
       }
-    }
 
-    @media screen and (min-width: 1024px) {
-      sl-input::part(base) {
-        max-width: 320px;
-      }
-    }
-
-    sl-dropdown {
-      cursor: pointer;
       @media screen and (min-width: 1024px) {
-        margin-left: auto;
+        sl-input::part(base) {
+          max-width: 320px;
+        }
       }
-    }
 
-    sl-avatar {
-      --size: 2rem;
-    }
-  `;
+      .right-menu {
+        display: flex;
+        align-items: center;
+        gap: var(--sl-spacing-medium);
+        @media screen and (min-width: 1024px) {
+          margin-left: auto;
+        }
+        :is(button) {
+          cursor: pointer;
+          font-size: var(--sl-font-size-large);
+          color: var(--sl-color-neutral-700);
+        }
+      }
+
+      sl-dropdown {
+        cursor: pointer;
+      }
+
+      sl-avatar {
+        --size: 2rem;
+      }
+    `,
+  ];
 }

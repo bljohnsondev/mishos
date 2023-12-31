@@ -69,12 +69,9 @@ export class SideMenu extends LitElement {
       .logo {
         height: 35px;
         width: 35px;
-        font-size: var(--sl-font-size-large);
+        font-size: 1.8rem;
         margin: 0 var(--sl-spacing-medium);
-        background-color: var(--sl-color-sky-300);
-        color: var(--sl-color-neutral-800);
-        border: 1px solid var(--sl-color-sky-400);
-        border-radius: var(--sl-border-radius-medium);
+        color: var(--sl-color-green-500);
         display: flex;
         align-items: center;
         justify-content: center;

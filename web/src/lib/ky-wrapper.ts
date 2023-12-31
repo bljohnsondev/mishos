@@ -1,6 +1,6 @@
 import ky from 'ky';
 
-import { createEvent, storage } from '@/utils';
+import { createEvent, getToken } from '@/utils';
 
 const urlPrefix = import.meta.env.VITE_API_URL;
 
@@ -21,7 +21,7 @@ export const kyWrapper = ky.extend({
     ],
     beforeRequest: [
       request => {
-        const token = storage.getToken();
+        const token = getToken();
         request.headers.set('Authorization', `Bearer ${token}`);
         dispatchEvent(createEvent('api-loading', true));
       },
