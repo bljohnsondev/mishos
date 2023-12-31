@@ -1,6 +1,7 @@
-import { Controller, Get, Request } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 
 import { UserDto } from '@/auth/dto';
+import { CurrentUser } from '@/common/decorators';
 
 import { WatchListService } from './watchlist.service';
 
@@ -9,8 +10,7 @@ export class WatchListController {
   constructor(private watchListService: WatchListService) {}
 
   @Get()
-  async currentWatchList(@Request() req): Promise<any> {
-    const authUser: UserDto = req.user;
-    return this.watchListService.findWatchList(authUser);
+  async currentWatchList(@CurrentUser() user: UserDto): Promise<any> {
+    return this.watchListService.findWatchList(user);
   }
 }

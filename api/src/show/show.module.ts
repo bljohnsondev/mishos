@@ -36,6 +36,6 @@ import { TvMazeService } from './tvproviders/tvmaze.service';
     UserMapper,
   ],
   controllers: [ShowController],
-  exports: [EpisodeMapper, ShowMapper, UserMapper],
+  exports: [EpisodeMapper, ShowMapper, ShowService, UserMapper],
 })
 export class ShowModule {}
