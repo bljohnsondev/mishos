@@ -1,0 +1,131 @@
+import { Router } from '@vaadin/router';
+import dayjs from 'dayjs';
+import { css, html, LitElement, TemplateResult } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
+
+import { sideMenuItems } from '@/layout/side-menu-items';
+import { sharedStyles } from '@/styles/shared-styles';
+import { UpNextEpisodeDto } from '@/types';
+
+import { getUpNextList } from './upnext-api';
+
+import '@/features/shows/shows-header';
+import '@/layout/app-layout';
+
+@customElement('upnext-page')
+export class UpNextPage extends LitElement {
+  @state() episodes?: UpNextEpisodeDto[];
+
+  render() {
+    console.log('EPISODES = ' + JSON.stringify(this.episodes, null, 2));
+    return html`
+      <app-layout .sideitems=${sideMenuItems} selected="upnext">
+        <shows-header headerTitle="Up Next"></shows-header>
+        <section class="content">
+          ${this.episodes
+            ? this.episodes.length > 0
+              ? html`
+                  <ul class="episode-list">
+                    ${this.episodes.map(episode => {
+                      return html`<li>${this.renderEpisode(episode)}</li>`;
+                    })}
+                  </ul>
+                `
+              : html`<div class="nonext">No upcoming episodes</div>`
+            : null}
+        </section>
+      </app-layout>
+    `;
+  }
+
+  private renderEpisode(episode: UpNextEpisodeDto): TemplateResult | null {
+    return episode && episode.show
+      ? html`
+          <div class="episode">
+            <a href="#" class="show-image-container" @click=${(event: Event) => this.handleClickShow(event, episode)}>
+              <img class="show-image" src=${episode.show.imageMedium} alt=${episode.show.name} />
+            </a>
+            <div>
+              <h1>${episode.show.name}</h1>
+              <div class="episode-details">
+                S${episode.seasonNumber} E${episode.number} &middot; ${this.formatDate(episode.aired)} &middot;
+                ${this.formatWeekday(episode.aired)}
+              </div>
+              <div class="episode-title">${episode.name}</div>
+            </div>
+          </div>
+        `
+      : null;
+  }
+
+  private formatDate(date?: Date): TemplateResult | null {
+    return date ? html`${dayjs(date).format('MM-DD-YYYY')}` : null;
+  }
+
+  private formatWeekday(date?: Date): TemplateResult | null {
+    return date ? html`${dayjs(date).format('dddd')}` : null;
+  }
+
+  private handleClickShow(event: Event, episode: UpNextEpisodeDto) {
+    event.preventDefault();
+    Router.go(`/show/view/${episode.show?.id}`);
+  }
+
+  async firstUpdated() {
+    this.episodes = await getUpNextList();
+  }
+
+  static styles = [
+    sharedStyles,
+    css`
+      .content {
+        margin: var(--sl-spacing-large);
+      }
+
+      .episode-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--sl-spacing-medium);
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .episode {
+        display: flex;
+        align-items: start;
+        gap: var(--sl-spacing-small);
+        border-bottom: 1px solid var(--sl-color-neutral-100);
+        padding-bottom: var(--sl-spacing-medium);
+        :is(h1) {
+          margin: 0;
+          padding: 0;
+          font-weight: var(--sl-font-weight-semibold);
+          font-size: var(--sl-font-size-small);
+        }
+      }
+
+      .show-image-container {
+        width: 80px;
+      }
+
+      .show-image {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: var(--sl-border-radius-medium);
+      }
+
+      .episode-details {
+        font-size: var(--sl-font-size-small);
+        color: var(--sl-color-neutral-500);
+        margin: var(--sl-spacing-x-small) 0;
+      }
+
+      .episode-title {
+        font-size: var(--sl-font-size-small);
+        color: var(--sl-color-neutral-700);
+      }
+    `,
+  ];
+}

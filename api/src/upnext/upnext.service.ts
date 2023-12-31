@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, MoreThan, Repository } from 'typeorm';
 
 import { UserDto } from '@/auth/dto';
+import { UpNextEpisodeDto } from '@/common/dto';
 import { Episode } from '@/common/entity';
 import { ShowService } from '@/show/show.service';
 
@@ -13,7 +14,7 @@ export class UpNextService {
     private showService: ShowService
   ) {}
 
-  async findUpNextEpisodes(user: UserDto): Promise<any> {
+  async findUpNextEpisodes(user: UserDto): Promise<UpNextEpisodeDto[]> {
     const followedShows = await this.showService.findFollowed(user.id);
     const followedIds = followedShows.map(show => show.id);
 
@@ -51,6 +52,21 @@ export class UpNextService {
         aired: 'ASC',
       },
     });
-    return episodes;
+
+    const upnextEpisodes: UpNextEpisodeDto[] = episodes.map(episode => ({
+      id: episode.id,
+      name: episode.name,
+      number: episode.number,
+      seasonNumber: episode.season?.number,
+      aired: episode.aired,
+      show: {
+        id: episode.season?.show?.id,
+        name: episode.season.show?.name,
+        network: episode.season?.show?.network,
+        imageMedium: episode.season?.show?.imageMedium,
+      },
+    }));
+
+    return upnextEpisodes;
   }
 }
