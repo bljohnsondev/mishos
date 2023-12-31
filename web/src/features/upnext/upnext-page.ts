@@ -17,7 +17,6 @@ export class UpNextPage extends LitElement {
   @state() episodes?: UpNextEpisodeDto[];
 
   render() {
-    console.log('EPISODES = ' + JSON.stringify(this.episodes, null, 2));
     return html`
       <app-layout .sideitems=${sideMenuItems} selected="upnext">
         <shows-header headerTitle="Up Next"></shows-header>
