@@ -16,6 +16,7 @@ export const kyWrapper = ky.extend({
         if (json) {
           dispatchEvent(createEvent('error-message', json));
         }
+        dispatchEvent(createEvent('api-loading', false));
         return error;
       },
     ],

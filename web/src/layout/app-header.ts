@@ -1,8 +1,11 @@
+import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { logout } from '@/lib/auth';
+import { appContext } from '@/store/app-context';
 import { sharedStyles } from '@/styles/shared-styles';
+import { AppStore } from '@/types';
 import { createEvent } from '@/utils';
 
 import '@shoelace-style/shoelace/dist/components/avatar/avatar.js';
@@ -12,8 +15,14 @@ import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@shoelace-style/shoelace/dist/components/menu-item/menu-item.js';
 
+import '@/components/loading-spinner';
+
 @customElement('app-header')
 export class AppHeader extends LitElement {
+  @consume({ context: appContext, subscribe: true })
+  @property({ attribute: false })
+  public appStore?: AppStore;
+
   @property() icon?: string;
   @property() title!: string;
   @property() theme?: string;
@@ -27,7 +36,7 @@ export class AppHeader extends LitElement {
         </div>
         <slot></slot>
         <div class="right-menu">
-          <loading-spinner></loading-spinner>
+          <loading-spinner ?loading=${this.appStore?.loading}></loading-spinner>
           <button title="Toggle Theme" class="reset-button" @click=${this.handleToggleTheme}>
             <sl-icon library="hi-solid" name=${this.theme === 'light' ? 'moon' : 'sun'}></sl-icon>
           </button>

@@ -1,14 +1,21 @@
-import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert.js';
+import { provide } from '@lit/context';
 import { Router } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
 import { customElement, query } from 'lit/decorators.js';
 
-import { ToastMessage } from '@/types';
+import { appContext } from '@/store/app-context';
+import { ToastMessage, AppStore } from '@/types';
 
-import '@shoelace-style/shoelace/dist/components/spinner/spinner';
+import '@shoelace-style/shoelace/dist/components/alert/alert.js';
+import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {
+  @provide({ context: appContext })
+  appStore: AppStore = {
+    loading: false,
+  };
+
   @query('#loading-overlay') loadingOverlay?: HTMLElement;
 
   constructor() {
@@ -21,9 +28,6 @@ export class AppRoot extends LitElement {
     return html`
       <div id="toast-container"></div>
       <div class="app-root">
-        <div id="loading-overlay" class="loading-hide">
-          <div id="loading-spinner"><sl-spinner style="font-size: 1.3rem;"></sl-spinner></div>
-        </div>
         <slot></slot>
       </div>
     `;
@@ -53,7 +57,7 @@ export class AppRoot extends LitElement {
           ${toast.title ? `<strong>${toast.title}</strong>` : ''}
           ${this.escapeHtml(toast.message)}
         `,
-      }) as SlAlert;
+      });
 
       const container = this.renderRoot.querySelector('#toast-container');
 
@@ -85,22 +89,17 @@ export class AppRoot extends LitElement {
   private handleApiLoading(event: Event) {
     if (event && event instanceof CustomEvent) {
       const loading = event.detail;
-      if (this.loadingOverlay) {
-        if (loading === true) {
-          this.loadingOverlay.classList.remove('loading-hide');
-          this.loadingOverlay.classList.add('loading-show');
-        } else {
-          this.loadingOverlay.classList.remove('loading-show');
-          this.loadingOverlay.classList.add('loading-hide');
-        }
-      }
+      this.appStore = {
+        ...this.appStore,
+        loading,
+      };
     }
   }
 
   connectedCallback() {
     super.connectedCallback();
 
-    // add a window event listener to catch any "error-message" events
+    // add a window event listener to catch any top-level events
     // https://lit.dev/docs/components/events/#adding-event-listeners-to-other-elements
     window.addEventListener('error-message', event => this.handleErrorMessage(event));
     window.addEventListener('api-loading', event => this.handleApiLoading(event));
