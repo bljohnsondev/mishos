@@ -1,6 +1,8 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
+import { sharedStyles } from '@/styles/shared-styles';
+
 import '@shoelace-style/shoelace/dist/components/badge/badge';
 import '@shoelace-style/shoelace/dist/components/card/card';
 
@@ -23,7 +25,7 @@ export class ShowCard extends LitElement {
       <sl-card class="show-card">
         ${this.image
           ? html`<img slot="image" src=${this.image} alt=${this.name} />`
-          : html`<div slot="image" class="no-image"></div>`}
+          : html`<div slot="image" class="no-image-placeholder"></div>`}
         <div>
           <strong>${this.name}</strong>
           <small>${this.network}</small>
@@ -35,32 +37,29 @@ export class ShowCard extends LitElement {
     `;
   }
 
-  static styles = css`
-    sl-card::part(body) {
-      padding: var(--sl-spacing-small);
-    }
+  static styles = [
+    sharedStyles,
+    css`
+      sl-card::part(body) {
+        padding: var(--sl-spacing-small);
+      }
 
-    .show-card {
-      position: relative;
-      max-width: 200px;
-      :is(div) {
-        display: flex;
-        flex-direction: column;
-        gap: var(--sl-spacing-small);
-        :is(strong) {
-          font-size: var(--sl-font-size-medium);
-          font-weight: var(--sl-font-weight-semibold);
-        }
-        :is(small) {
-          color: var(--sl-color-neutral-600);
+      .show-card {
+        position: relative;
+        max-width: 200px;
+        :is(div) {
+          display: flex;
+          flex-direction: column;
+          gap: var(--sl-spacing-small);
+          :is(strong) {
+            font-size: var(--sl-font-size-medium);
+            font-weight: var(--sl-font-weight-semibold);
+          }
+          :is(small) {
+            color: var(--sl-color-neutral-600);
+          }
         }
       }
-    }
-
-    .no-image {
-      width: 200px;
-      height: 280px;
-      background-color: var(--sl-color-neutral-300);
-    }
-  `;
+    `,
+  ];
 }

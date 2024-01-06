@@ -24,4 +24,11 @@ export const sharedStyles = css`
     all: unset;
     line-height: 0;
   }
+
+  .no-image-placeholder {
+    width: 200px;
+    height: 280px;
+    background-color: var(--sl-color-neutral-300);
+    border-radius: var(--sl-border-radius-medium);
+  }
 `;

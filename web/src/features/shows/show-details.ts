@@ -2,6 +2,7 @@ import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 import { css, html, LitElement } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 
+import { sharedStyles } from '@/styles/shared-styles';
 import { ShowDto } from '@/types';
 import { createEvent, formatDate } from '@/utils';
 
@@ -51,7 +52,9 @@ export class ShowDetails extends LitElement {
         </div>
         <div class="detail-content">
           <div>
-            <img src=${this.show.imageMedium} alt=${this.show.name} class="show-image" />
+            ${this.show.imageMedium
+              ? html` <img src=${this.show.imageMedium} alt=${this.show.name} class="show-image" /> `
+              : html` <div class="no-image-placeholder"></div> `}
             <a href=${this.show.providerUrl} class="provider-link" target="_blank">view at tvmaze.com</a>
           </div>
           <div class="right-content">
@@ -125,112 +128,115 @@ export class ShowDetails extends LitElement {
     this.dispatchEvent(createEvent('toggle-previous', data.previous === '1'));
   }
 
-  static styles = css`
-    .show-header {
-      display: flex;
-      align-items: center;
-      gap: var(--sl-spacing-x-large);
-      margin-bottom: var(--sl-spacing-medium);
-      :is(h1) {
-        display: block;
-        font-size: var(--sl-font-size-large);
-        margin: 0;
-      }
-      .add-remove > a {
+  static styles = [
+    sharedStyles,
+    css`
+      .show-header {
         display: flex;
         align-items: center;
-        gap: var(--sl-spacing-x-small);
-        text-decoration: none;
-        font-size: var(--sl-font-size-small);
-        font-weight: var(--sl-font-weight-semibold);
-        color: var(--sl-color-neutral-800);
-        :is(sl-icon) {
-          color: var(--sl-color-yellow-500);
+        gap: var(--sl-spacing-x-large);
+        margin-bottom: var(--sl-spacing-medium);
+        :is(h1) {
+          display: block;
+          font-size: var(--sl-font-size-large);
+          margin: 0;
+        }
+        .add-remove > a {
+          display: flex;
+          align-items: center;
+          gap: var(--sl-spacing-x-small);
+          text-decoration: none;
+          font-size: var(--sl-font-size-small);
+          font-weight: var(--sl-font-weight-semibold);
+          color: var(--sl-color-neutral-800);
+          :is(sl-icon) {
+            color: var(--sl-color-yellow-500);
+          }
         }
       }
-    }
 
-    .bookmark-icon {
-    }
-
-    .right-content {
-      display: flex;
-      flex-direction: column;
-      gap: var(--sl-spacing-large);
-    }
-
-    .summary {
-      margin: 0;
-    }
-
-    .show-info {
-      display: flex;
-      align-items: center;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      font-size: var(--sl-font-size-small);
-      color: var(--sl-color-neutral-600);
-    }
-
-    .show-info li:not(:first-child):before {
-      content: '·';
-      padding: 0 var(--sl-spacing-small);
-    }
-
-    .show-image {
-      border-radius: var(--sl-border-radius-large);
-    }
-
-    .provider-link {
-      display: block;
-      text-align: center;
-      font-size: var(--sl-font-size-small);
-      text-decoration: none;
-      color: var(--sl-color-neutral-500);
-      margin-top: var(--sl-spacing-x-small);
-    }
-
-    form {
-      display: flex;
-      align-items: flex-start;
-      flex-direction: column;
-      gap: var(--sl-spacing-medium);
-      .previous::part(label) {
-        font-size: var(--sl-font-size-small);
+      .bookmark-icon {
       }
-      @media screen and (min-width: 768px) {
+
+      .right-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--sl-spacing-large);
+      }
+
+      .summary {
+        margin: 0;
+      }
+
+      .show-info {
+        display: flex;
         align-items: center;
-        flex-direction: row;
-        .previous {
-          margin-left: auto;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        font-size: var(--sl-font-size-small);
+        color: var(--sl-color-neutral-600);
+      }
+
+      .show-info li:not(:first-child):before {
+        content: '·';
+        padding: 0 var(--sl-spacing-small);
+      }
+
+      .show-image {
+        border-radius: var(--sl-border-radius-medium);
+      }
+
+      .provider-link {
+        display: block;
+        text-align: center;
+        font-size: var(--sl-font-size-small);
+        text-decoration: none;
+        color: var(--sl-color-neutral-500);
+        margin-top: var(--sl-spacing-x-small);
+      }
+
+      form {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: var(--sl-spacing-medium);
+        .previous::part(label) {
+          font-size: var(--sl-font-size-small);
+        }
+        @media screen and (min-width: 768px) {
+          align-items: center;
+          flex-direction: row;
+          .previous {
+            margin-left: auto;
+          }
         }
       }
-    }
 
-    .detail-content {
-      display: flex;
-      align-items: flex-start;
-      flex-direction: column;
-      gap: var(--sl-spacing-medium);
-      @media screen and (min-width: 1024px) {
-        flex-direction: row;
+      .detail-content {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: var(--sl-spacing-medium);
+        @media screen and (min-width: 1024px) {
+          flex-direction: row;
+        }
       }
-    }
 
-    .seasons-select {
-      width: 200px;
-    }
+      .seasons-select {
+        width: 200px;
+      }
 
-    .episode-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--sl-spacing-medium);
-    }
+      .episode-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--sl-spacing-medium);
+      }
 
-    .no-episodes {
-      font-size: var(--sl-font-size-small);
-      color: var(--sl-color-neutral-700);
-    }
-  `;
+      .no-episodes {
+        font-size: var(--sl-font-size-small);
+        color: var(--sl-color-neutral-700);
+      }
+    `,
+  ];
 }
