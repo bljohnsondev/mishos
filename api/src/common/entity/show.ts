@@ -46,6 +46,9 @@ export class Show {
   @Column({ nullable: true })
   imageOriginal?: string;
 
+  @Column({ nullable: true })
+  imdbId?: string;
+
   @OneToMany(() => Season, season => season.show, {
     cascade: true,
   })

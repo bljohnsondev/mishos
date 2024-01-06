@@ -26,6 +26,7 @@ export class ShowMapper implements Mapper<Show, ShowDto> {
       network: show.network,
       imageMedium: show.imageMedium,
       imageOriginal: show.imageOriginal,
+      imdbId: show.imdbId,
       createdAt: show.createdAt,
     };
   }

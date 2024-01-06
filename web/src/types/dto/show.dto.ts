@@ -15,6 +15,7 @@ export interface ShowDto {
   network?: string;
   imageMedium?: string;
   imageOriginal?: string;
+  imdbId?: string;
   createdAt?: Date;
   added?: boolean;
   seasons?: SeasonDto[];

@@ -29,10 +29,14 @@ export class ShowsPage extends LitElement {
                   </a>
                 `
               )
-            : null}
+            : this.renderEmptyShows()}
         </section>
       </app-layout>
     `;
+  }
+
+  private renderEmptyShows() {
+    return html`<div>You are not following any shows. Use the search to find your favorite shows!</div>`;
   }
 
   private handleSelectShow(event: Event, show: ShowDto) {

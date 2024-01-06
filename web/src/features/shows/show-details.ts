@@ -63,6 +63,10 @@ export class ShowDetails extends LitElement {
               ${this.show.network ? html`<li>${this.show.network}</li>` : null}
               ${this.show.premiered ? html`<li>${formatDate(this.show.premiered)}</li>` : null}
               ${this.show.status ? html`<li>${this.show.status}</li>` : null}
+              ${this.show.externals?.imdb ? html`<li>IMDB HERE</li>` : null}
+              ${this.show.imdbId
+                ? html`<li><button class="imdb-button" @click=${this.handleImdbButton}>IMDb</button></li>`
+                : null}
             </ul>
             <form>
               <sl-select
@@ -102,6 +106,10 @@ export class ShowDetails extends LitElement {
         </div>
       </section>
     `;
+  }
+
+  private handleImdbButton() {
+    window.open(`https://www.imdb.com/title/${this.show?.imdbId}`, '_blank');
   }
 
   private handleClickAdd(event: Event) {
@@ -236,6 +244,21 @@ export class ShowDetails extends LitElement {
       .no-episodes {
         font-size: var(--sl-font-size-small);
         color: var(--sl-color-neutral-700);
+      }
+
+      .imdb-button {
+        all: unset;
+        cursor: pointer;
+        font-size: var(--sl-font-size-x-small);
+        padding: var(--sl-spacing-3x-small) var(--sl-spacing-x-small);
+        background-color: var(--sl-color-yellow-600);
+        border: 1px solid var(--sl-color-yellow-700);
+        border-radius: var(--sl-border-radius-medium);
+        color: black;
+        &:hover {
+          background-color: var(--sl-color-yellow-500);
+          border: 1px solid var(--sl-color-yellow-600);
+        }
       }
     `,
   ];

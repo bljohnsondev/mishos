@@ -68,6 +68,7 @@ export class TvMazeService implements TvProviderService {
       network: response.network?.name ? response.network?.name : response.webChannel?.name,
       imageMedium: response.image?.medium,
       imageOriginal: response.image?.original,
+      imdbId: response.externals?.imdb,
     });
 
     const seasons: Season[] | undefined = await this.getSeasonsAndEpisodes(providerId);
