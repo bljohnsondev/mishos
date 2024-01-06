@@ -1,22 +1,33 @@
 import { css, html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 
+import { sideMenuItems } from '@/layout/side-menu-items';
 import { getTheme, setTheme } from '@/utils';
 
-import { SideMenuItem } from './side-menu-item';
-
+import './app-header';
 import './side-menu';
 
 @customElement('app-layout')
 export class AppLayout extends LitElement {
-  @property({ attribute: false }) sideitems?: SideMenuItem[];
+  @property() icon?: string;
+  @property() headerTitle?: string;
   @property() selected?: string;
+
+  @state() theme?: string = getTheme();
+
+  constructor() {
+    super();
+    this.addEventListener('toggle-theme', this.handleToggleTheme);
+  }
 
   render() {
     return html`
       <main class="app-container">
-        <side-menu .items=${this.sideitems} selected=${this.selected}></side-menu>
+        <side-menu .items=${sideMenuItems} selected=${this.selected}></side-menu>
         <div class="content">
+          <app-header icon="tv" title=${this.headerTitle ?? 'Shows'}>
+            <slot name="header"></slot>
+          </app-header>
           <slot></slot>
         </div>
       </main>
@@ -27,6 +38,11 @@ export class AppLayout extends LitElement {
   private initializeTheme() {
     const theme = getTheme();
     setTheme(theme);
+  }
+
+  private handleToggleTheme() {
+    this.theme = this.theme === 'light' ? 'dark' : 'light';
+    setTheme(this.theme);
   }
 
   firstUpdated() {

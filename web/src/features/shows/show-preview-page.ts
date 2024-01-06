@@ -2,17 +2,16 @@ import { Router, RouterLocation } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import { sideMenuItems } from '@/layout/side-menu-items';
 import { sharedStyles } from '@/styles/shared-styles';
 import { ShowDto } from '@/types';
 import { createToastEvent } from '@/utils';
 
 import { followShow, getProviderPreview } from './shows-api';
 
+import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
 
 import './show-details';
-import './shows-header';
 
 @customElement('show-preview-page')
 export class ShowPreviewPage extends LitElement {
@@ -23,8 +22,8 @@ export class ShowPreviewPage extends LitElement {
 
   render() {
     return html`
-      <app-layout .sideitems=${sideMenuItems} selected="shows">
-        <shows-header></shows-header>
+      <app-layout icon="tv" headerTitle="Shows" selected="shows">
+        <shows-search-form slot="header"></shows-search-form>
         <section class="content">
           ${this.show
             ? html`<show-details .show=${this.show} preview @add-show=${this.handleAddShow}></show-details>`

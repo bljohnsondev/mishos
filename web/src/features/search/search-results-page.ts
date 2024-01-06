@@ -2,14 +2,13 @@ import { Router, RouterLocation } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import { sideMenuItems } from '@/layout/side-menu-items';
 import { sharedStyles } from '@/styles/shared-styles';
 import { ShowDto } from '@/types';
 
 import { searchShowsFromProvider } from './search-api';
 
 import '@/features/shows/show-card';
-import '@/features/shows/shows-header';
+import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
 
 import '@shoelace-style/shoelace/dist/components/badge/badge';
@@ -23,8 +22,8 @@ export class SearchResultsPage extends LitElement {
 
   render() {
     return html`
-      <app-layout .sideitems=${sideMenuItems} selected="shows">
-        <shows-header headerTitle="Search Results" query=${this.query}></shows-header>
+      <app-layout icon="tv" headerTitle="Search Results" selected="shows">
+        <shows-search-form slot="header" query=${this.query}></shows-search-form>
         <section class="content" @select-show=${this.handleSelectShow}>
           <div class="results">
             ${this.results && this.results.length > 0

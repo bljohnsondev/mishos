@@ -3,13 +3,12 @@ import dayjs from 'dayjs';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
-import { sideMenuItems } from '@/layout/side-menu-items';
 import { sharedStyles } from '@/styles/shared-styles';
 import { UpNextEpisodeDto } from '@/types';
 
 import { getUpNextList } from './upnext-api';
 
-import '@/features/shows/shows-header';
+import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
 
 @customElement('upnext-page')
@@ -18,8 +17,8 @@ export class UpNextPage extends LitElement {
 
   render() {
     return html`
-      <app-layout .sideitems=${sideMenuItems} selected="upnext">
-        <shows-header headerTitle="Up Next"></shows-header>
+      <app-layout icon="tv" headerTitle="Up Next" selected="upnext">
+        <shows-search-form slot="header"></shows-search-form>
         <section class="content">
           ${this.episodes
             ? this.episodes.length > 0

@@ -3,16 +3,14 @@ import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 import { addWatch } from '@/features/shows/shows-api';
-import { sideMenuItems } from '@/layout/side-menu-items';
 import { sharedStyles } from '@/styles/shared-styles';
 import { EpisodeDto } from '@/types';
 import { createToastEvent, formatDate } from '@/utils';
 
 import { getWatchList } from './wachlist-api';
 
+import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
-
-import '@/features/shows/shows-header';
 
 import '@shoelace-style/shoelace/dist/components/button/button';
 import '@shoelace-style/shoelace/dist/components/icon/icon';
@@ -23,8 +21,8 @@ export class WatchListPage extends LitElement {
 
   render() {
     return html`
-      <app-layout .sideitems=${sideMenuItems} selected="watchlist">
-        <shows-header headerTitle="Watch List"></shows-header>
+      <app-layout icon="tv" headerTitle="Watch List" selected="watchlist">
+        <shows-search-form slot="header"></shows-search-form>
         <section class="content">
           ${this.episodes
             ? this.episodes.length > 0

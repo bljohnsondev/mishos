@@ -2,7 +2,6 @@ import { Router } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
-import { sideMenuItems } from '@/layout/side-menu-items';
 import { sharedStyles } from '@/styles/shared-styles';
 import { ShowDto } from '@/types';
 
@@ -11,7 +10,7 @@ import { getFollowedShows } from './shows-api';
 import '@/layout/app-layout';
 
 import './show-card';
-import './shows-header';
+import './shows-search-form';
 
 @customElement('shows-page')
 export class ShowsPage extends LitElement {
@@ -19,8 +18,8 @@ export class ShowsPage extends LitElement {
 
   render() {
     return html`
-      <app-layout .sideitems=${sideMenuItems} selected="shows">
-        <shows-header></shows-header>
+      <app-layout icon="tv" headerTitle="Shows" selected="shows">
+        <shows-search-form slot="header"></shows-search-form>
         <section class="content">
           ${this.shows && this.shows.length > 0
             ? this.shows.map(
