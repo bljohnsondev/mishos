@@ -37,7 +37,7 @@ export class AppHeader extends LitElement {
         <slot></slot>
         <div class="right-menu">
           <loading-spinner ?loading=${this.appStore?.loading}></loading-spinner>
-          <button title="Toggle Theme" class="reset-button" @click=${this.handleToggleTheme}>
+          <button title="Toggle Theme" class="reset-button toggle-theme" @click=${this.handleToggleTheme}>
             <sl-icon library="hi-solid" name=${this.theme === 'light' ? 'moon' : 'sun'}></sl-icon>
           </button>
           <sl-dropdown distance="8" @sl-select=${this.handleAccountSelect}>
@@ -103,9 +103,9 @@ export class AppHeader extends LitElement {
         @media screen and (min-width: 1024px) {
           margin-left: auto;
         }
-        :is(button) {
+        .toggle-theme {
           cursor: pointer;
-          font-size: var(--sl-font-size-large);
+          font-size: var(--sl-font-size-x-large);
           color: var(--sl-color-neutral-700);
         }
       }

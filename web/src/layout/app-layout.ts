@@ -25,7 +25,7 @@ export class AppLayout extends LitElement {
       <main class="app-container">
         <side-menu .items=${sideMenuItems} selected=${this.selected}></side-menu>
         <div class="content">
-          <app-header icon="tv" title=${this.headerTitle ?? 'Shows'}>
+          <app-header icon="tv" title=${this.headerTitle ?? 'Shows'} theme=${this.theme}>
             <slot name="header"></slot>
           </app-header>
           <slot></slot>
