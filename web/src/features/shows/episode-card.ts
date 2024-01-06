@@ -85,6 +85,7 @@ export class EpisodeCard extends LitElement {
     .watched {
       background-color: var(--sl-color-green-300);
       border: 1px solid var(--sl-color-green-100);
+      color: var(--sl-color-neutral-900);
     }
 
     .unwatched {
