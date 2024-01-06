@@ -9,7 +9,7 @@ export const setStorageValue = (key: string, value: string) => {
 };
 
 export const clearStorageValue = (key: string) => {
-  window.localStorage.removeItem(`${storagePrefix}${key}}`);
+  window.localStorage.removeItem(`${storagePrefix}${key}`);
 };
 
 export const getToken = () => {
