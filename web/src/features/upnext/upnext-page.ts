@@ -11,6 +11,8 @@ import { getUpNextList } from './upnext-api';
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
 
+import './calendar-card';
+
 @customElement('upnext-page')
 export class UpNextPage extends LitElement {
   @state() episodes?: UpNextEpisodeDto[];
@@ -40,14 +42,14 @@ export class UpNextPage extends LitElement {
     return episode && episode.show
       ? html`
           <div class="episode">
+            <calendar-card .date=${episode.aired}></calendar-card>
             <a href="#" class="show-image-container" @click=${(event: Event) => this.handleClickShow(event, episode)}>
               <img class="show-image" src=${episode.show.imageMedium} alt=${episode.show.name} />
             </a>
             <div>
               <h1>${episode.show.name}</h1>
               <div class="episode-details">
-                S${episode.seasonNumber} E${episode.number} &middot; ${this.formatDate(episode.aired)} &middot;
-                ${this.formatWeekday(episode.aired)}
+                S${episode.seasonNumber} E${episode.number} &middot; ${this.formatWeekday(episode.aired)}
               </div>
               <div class="episode-title">${episode.name}</div>
             </div>
@@ -104,7 +106,7 @@ export class UpNextPage extends LitElement {
       }
 
       .show-image-container {
-        width: 80px;
+        width: 50px;
       }
 
       .show-image {
