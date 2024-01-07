@@ -26,7 +26,7 @@ This project is in it's early stages and there isn't currently a Docker image (y
 
 ![Screenshot of the show list screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/shows-screenshot1.png "Shows screenshot")
 
-### Show Search
+## Show Search
 
 ![Screenshot of the show search results screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/searchresults-screenshot1.png "Show search screenshot")
 
