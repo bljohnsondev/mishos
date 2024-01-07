@@ -9,18 +9,6 @@ import { routes } from './routes';
 
 import '@/components/app-root';
 
-/*
-using it this way with node modules doesn't work consistently right.
-
-registerIconLibrary('hi-outline', {
-  resolver: name => `node_modules/heroicons/24/outline/${name}.svg`,
-});
-
-registerIconLibrary('hi-solid', {
-  resolver: name => `node_modules/heroicons/24/solid/${name}.svg`,
-});
-*/
-
 registerIconLibrary('local', {
   resolver: name => `/icons/${name}.svg`,
   mutator: svg => svg.setAttribute('fill', 'currentColor'),
