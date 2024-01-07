@@ -34,7 +34,7 @@ This project is in it's early stages and there isn't currently a Docker image (y
 
 ![Screenshot of the show details screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/show-screenshot1.png "Show details screenshot")
 
-## Watchlist
+## Watch List
 
 ![Screenshot of the watch list screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/watchlist-screenshot1.png "Watch list screenshot")
 
