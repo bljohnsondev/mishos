@@ -21,9 +21,14 @@ This project is in it's early stages and there isn't currently a Docker image (y
 - *Frontend* - [Lit](https://lit.dev) web components
 - *Backend* - NestJS
 	- The default setup uses a SQLite database but can be used with MySQL or PostgreSQL
+
 ## Shows
 
 ![Screenshot of the show list screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/shows-screenshot1.png "Shows screenshot")
+
+### Show Search
+
+![Screenshot of the show search results screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/searchresults-screenshot1.png "Show search screenshot")
 
 ## Show Info
 
@@ -35,10 +40,11 @@ This project is in it's early stages and there isn't currently a Docker image (y
 
 ## Up Next
 
-![Screenshot of the up  next screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/upnext-screenshot1.png "Up next screenshot")
+![Screenshot of the up next screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/upnext-screenshot1.png "Up next screenshot")
 
 ## Gotify Notification
 
 The current backend code is designed to use an [Apprise](https://github.com/caronc/apprise) endpoint for notifications.  I currently use [Gotify](https://github.com/gotify/server) for notifications.  Since the backend server uses Apprise you have a **lot** of notification options.
 
-![Screenshot of the watch list screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/gotify.png "Watch list screenshot")
+![Screenshot of Gotify notifications](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/gotify.png "Gotify notifications screenshot")
+
