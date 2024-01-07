@@ -58,10 +58,6 @@ export class UpNextPage extends LitElement {
       : null;
   }
 
-  private formatDate(date?: Date): TemplateResult | null {
-    return date ? html`${dayjs(date).format('MM-DD-YYYY')}` : null;
-  }
-
   private formatWeekday(date?: Date): TemplateResult | null {
     return date ? html`${dayjs(date).format('dddd')}` : null;
   }

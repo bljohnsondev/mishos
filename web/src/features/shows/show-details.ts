@@ -63,7 +63,6 @@ export class ShowDetails extends LitElement {
               ${this.show.network ? html`<li>${this.show.network}</li>` : null}
               ${this.show.premiered ? html`<li>${formatDate(this.show.premiered)}</li>` : null}
               ${this.show.status ? html`<li>${this.show.status}</li>` : null}
-              ${this.show.externals?.imdb ? html`<li>IMDB HERE</li>` : null}
               ${this.show.imdbId
                 ? html`<li><button class="imdb-button" @click=${this.handleImdbButton}>IMDb</button></li>`
                 : null}
