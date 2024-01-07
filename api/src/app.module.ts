@@ -3,8 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Episode, FollowedShow, Season, Show, User, UserConfig, WatchedEpisode } from '@/common/entity';
-
 import { AuthModule } from './auth/auth.module';
 import { databaseConfig } from './common/config/db-config';
 import { ShowModule } from './show/show.module';
@@ -16,7 +14,7 @@ import { WatchListModule } from './watchlist/watchlist.module';
   imports: [
     ConfigModule.forRoot(),
     ScheduleModule.forRoot(),
-      TypeOrmModule.forRootAsync({
+    TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: databaseConfig,
       inject: [ConfigService],

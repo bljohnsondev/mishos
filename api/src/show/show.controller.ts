@@ -28,12 +28,17 @@ export class ShowController {
 
   @Get('preview/:providerId')
   async previewShow(@Param('providerId') providerId: string): Promise<ShowDto> {
-    return this.showService.getProviderShow(providerId);
+    return await this.showService.getProviderShow(providerId);
   }
 
   @Get('detail/:id')
   async findShowDetails(@CurrentUser() user: UserDto, @Param('id') id: string): Promise<ShowDto> {
-    return this.showService.findShowWithWatched(user, id);
+    return await this.showService.findShowWithWatched(user, id);
+  }
+
+  @Get('update/:id')
+  async updateShowFromProvider(@Param('id') id: string): Promise<void> {
+    return await this.showService.updateShowFromProvider(id);
   }
 
   @Post('add')
@@ -69,7 +74,7 @@ export class ShowController {
 
   @Post('episodes')
   async findEpisodes(@CurrentUser() user: UserDto, @Body() findEpisodesDto: FindEpisodesDto): Promise<EpisodeDto[]> {
-    const episodes: Episode[] = await this.showService.findEpisodesBySeasonId(user, findEpisodesDto.seasonId);
+    const episodes: Episode[] = await this.showService.findEpisodesBySeasonId(findEpisodesDto.seasonId);
     return this.showService.filterEpisodesForWatched(user, episodes);
   }
 

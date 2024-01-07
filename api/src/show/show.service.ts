@@ -11,6 +11,7 @@ import { TvProviderService } from '@/common/interfaces';
 import { EpisodeMapper, SeasonMapper, ShowMapper } from '@/common/mapper';
 import { WatchEpisodeDto } from '@/show/dto';
 import { NotifierTaskService } from '@/tasks/notifier/notifier.task';
+import { TvProviderUpdateTaskService } from '@/tasks/tvprovider-update/tvprovider-update.task';
 
 @Injectable()
 export class ShowService {
@@ -28,7 +29,8 @@ export class ShowService {
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(WatchedEpisode) private watchedEpisodeRepository: Repository<WatchedEpisode>,
     @Inject(forwardRef(() => NotifierTaskService))
-    private notifierTaskService: NotifierTaskService
+    private notifierTaskService: NotifierTaskService,
+    private tvProviderUpdateTaskService: TvProviderUpdateTaskService
   ) {}
 
   async search(authUser: UserDto, query: string): Promise<ShowDto[]> {
@@ -59,7 +61,7 @@ export class ShowService {
     }
   }
 
-  async findShowById(user: User, showId: string, includeEpisodes = false): Promise<Show | null> {
+  async findShowById(showId: string, includeEpisodes = false): Promise<Show | null> {
     return await this.showRepository.findOne({
       where: { id: showId },
       relations: includeEpisodes
@@ -90,7 +92,7 @@ export class ShowService {
       },
     });
 
-    const show = await this.findShowById(user, showId, true);
+    const show = await this.findShowById(showId, true);
 
     if (show) {
       const showDto: ShowDto | null = this.showMapper.toDto(show);
@@ -263,7 +265,7 @@ export class ShowService {
     });
   }
 
-  async findEpisodesBySeasonId(user: UserDto, seasonId: string): Promise<Episode[]> {
+  async findEpisodesBySeasonId(seasonId: string): Promise<Episode[]> {
     const episodes: Episode[] = await this.episodeRepository.find({
       select: {
         watches: {
@@ -410,6 +412,14 @@ export class ShowService {
         user,
         episode,
       });
+    }
+  }
+
+  async updateShowFromProvider(showId: string): Promise<void> {
+    const show = await this.findShowById(showId, true);
+    if (show) {
+      const providerShow: ShowDto = await this.tvProviderService.getShow(show.providerId);
+      await this.tvProviderUpdateTaskService.updateShowData(show, providerShow);
     }
   }
 }

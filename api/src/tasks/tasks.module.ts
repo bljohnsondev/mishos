@@ -32,6 +32,6 @@ import { TvProviderUpdateTaskService } from './tvprovider-update/tvprovider-upda
     { provide: 'TvProviderService', useClass: TvMazeService },
   ],
   controllers: [TasksController],
-  exports: [NotifierTaskService],
+  exports: [NotifierTaskService, TvProviderUpdateTaskService],
 })
 export class TasksModule {}

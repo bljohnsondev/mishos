@@ -39,7 +39,7 @@ export class TvProviderUpdateTaskService {
     };
   }
 
-  private async updateShowData(show: Show, providerShow: ShowDto): Promise<void> {
+  async updateShowData(show: Show, providerShow: ShowDto): Promise<void> {
     // first update the show data
     show.name = providerShow.name;
     show.providerUrl = providerShow.providerUrl;
