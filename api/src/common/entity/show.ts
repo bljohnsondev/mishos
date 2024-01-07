@@ -16,7 +16,7 @@ export class Show {
   @Column({ nullable: true })
   providerUrl?: string;
 
-  @Column({ nullable: true, length: 1024 })
+  @Column({ nullable: true, length: 4096 })
   summary?: string;
 
   @Column({ nullable: true })
