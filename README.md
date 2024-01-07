@@ -22,7 +22,7 @@ This project is in it's early stages and there isn't currently a Docker image (y
 - *Backend* - NestJS
 	- The default setup uses a SQLite database but can be used with MySQL or PostgreSQL
 
-## Shows
+## Followed Shows
 
 ![Screenshot of the show list screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/shows-screenshot1.png "Shows screenshot")
 
