@@ -23,6 +23,7 @@ export class AppHeader extends LitElement {
   @property({ attribute: false })
   public appStore?: AppStore;
 
+  @property() iconlibrary?: string;
   @property() icon?: string;
   @property() title!: string;
   @property() theme?: string;
@@ -31,7 +32,9 @@ export class AppHeader extends LitElement {
     return html`
       <header>
         <div class="icon">
-          ${this.icon ? html`<sl-icon library="hi-outline" name="${this.icon}"></sl-icon>` : null}
+          ${this.icon
+            ? html`<sl-icon library=${this.iconlibrary ?? 'hi-outline'} name="${this.icon}"></sl-icon>`
+            : null}
           <span>${this.title}</span>
         </div>
         <slot></slot>

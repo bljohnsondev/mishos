@@ -19,7 +19,7 @@ export class UpNextPage extends LitElement {
 
   render() {
     return html`
-      <app-layout icon="tv" headerTitle="Up Next" selected="upnext">
+      <app-layout icon="calendar-days" headerTitle="Up Next" selected="upnext">
         <shows-search-form slot="header"></shows-search-form>
         <section class="content">
           ${this.episodes

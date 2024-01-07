@@ -22,7 +22,7 @@ export class SearchResultsPage extends LitElement {
 
   render() {
     return html`
-      <app-layout icon="tv" headerTitle="Search Results" selected="shows">
+      <app-layout icon="magnifying-glass" headerTitle="Search Results" selected="shows">
         <shows-search-form slot="header" query=${this.query}></shows-search-form>
         <section class="content" @select-show=${this.handleSelectShow}>
           <div class="results">
