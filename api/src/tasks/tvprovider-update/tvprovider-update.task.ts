@@ -53,6 +53,7 @@ export class TvProviderUpdateTaskService {
     show.network = providerShow.network;
     show.imageMedium = providerShow.imageMedium;
     show.imageOriginal = providerShow.imageOriginal;
+    show.imdbId = providerShow.imdbId;
 
     // update the existing seasonss
     for (const season of show.seasons) {
