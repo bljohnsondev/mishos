@@ -38,11 +38,13 @@ export class ShowDetails extends LitElement {
           <h1>${this.show.name}</h1>
           ${this.show.id
             ? html`
-                <sl-button variant="warning" size="small" @click=${this.handleClickRemove}>
-                  <sl-icon slot="prefix" library="hi-outline" name="bookmark-slash"></sl-icon>
-                  Remove
-                </sl-button>
-                <sl-button size="small" class="refresh-button" @click=${this.handleClickRefresh}>Refresh</sl-button>
+                <div class="show-header-buttons">
+                  <sl-button variant="warning" size="small" @click=${this.handleClickRemove}>
+                    <sl-icon slot="prefix" library="hi-outline" name="bookmark-slash"></sl-icon>
+                    Remove
+                  </sl-button>
+                  <sl-button size="small" class="refresh-button" @click=${this.handleClickRefresh}>Refresh</sl-button>
+                </div>
               `
             : html`
                 <sl-button variant="default" size="small" @click=${this.handleClickAdd}>
@@ -147,26 +149,26 @@ export class ShowDetails extends LitElement {
     css`
       .show-header {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: var(--sl-spacing-x-large);
+        gap: var(--sl-spacing-medium);
         margin-bottom: var(--sl-spacing-medium);
+        @media screen and (min-width: 768px) {
+          flex-direction: row;
+          gap: var(--sl-spacing-x-large);
+        }
         :is(h1) {
           display: block;
           font-size: var(--sl-font-size-large);
           margin: 0;
         }
-        .add-remove > a {
-          display: flex;
-          align-items: center;
-          gap: var(--sl-spacing-x-small);
-          text-decoration: none;
-          font-size: var(--sl-font-size-small);
-          font-weight: var(--sl-font-weight-semibold);
-          color: var(--sl-color-neutral-800);
-          :is(sl-icon) {
-            color: var(--sl-color-yellow-500);
-          }
-        }
+      }
+
+      .show-header-buttons {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        align-self: stretch;
       }
 
       .refresh-button {
