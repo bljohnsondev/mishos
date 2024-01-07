@@ -42,6 +42,7 @@ export class ShowDetails extends LitElement {
                   <sl-icon slot="prefix" library="hi-outline" name="bookmark-slash"></sl-icon>
                   Remove
                 </sl-button>
+                <sl-button size="small" class="refresh-button" @click=${this.handleClickRefresh}>Refresh</sl-button>
               `
             : html`
                 <sl-button variant="default" size="small" @click=${this.handleClickAdd}>
@@ -116,6 +117,12 @@ export class ShowDetails extends LitElement {
     this.dispatchEvent(createEvent('add-show', this.show));
   }
 
+  private handleClickRefresh() {
+    if (this.show) {
+      this.dispatchEvent(createEvent('refresh-show', this.show.id));
+    }
+  }
+
   private handleClickRemove(event: Event) {
     event.preventDefault();
     this.dispatchEvent(createEvent('remove-show', this.show));
@@ -162,7 +169,8 @@ export class ShowDetails extends LitElement {
         }
       }
 
-      .bookmark-icon {
+      .refresh-button {
+        margin-left: auto;
       }
 
       .right-content {

@@ -6,7 +6,7 @@ import { sharedStyles } from '@/styles/shared-styles';
 import { ShowDto } from '@/types';
 import { createToastEvent } from '@/utils';
 
-import { addWatch, getShowDetails, unfollowShow } from './shows-api';
+import { addWatch, getShowDetails, refreshShow, unfollowShow } from './shows-api';
 
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
@@ -31,6 +31,7 @@ export class ShowViewPage extends LitElement {
                 @toggle-watched=${this.handleToggleWatched}
                 @toggle-previous=${this.handleTogglePrevious}
                 @remove-show=${this.handleRemoveShow}
+                @refresh-show=${this.handleRefreshShow}
               ></show-details>`
             : this.show === null
               ? html`<div>Show could not be found</div>`
@@ -53,6 +54,20 @@ export class ShowViewPage extends LitElement {
   private handleTogglePrevious(event: Event) {
     if (event && event instanceof CustomEvent) {
       this.togglePrevious = event.detail;
+    }
+  }
+
+  private async handleRefreshShow(event: Event) {
+    if (event && event instanceof CustomEvent && event.detail && this.show?.id) {
+      const showId = event.detail;
+      await refreshShow(showId);
+      await this.loadShow(this.show.id);
+      this.dispatchEvent(
+        createToastEvent({
+          variant: 'success',
+          message: `${this.show.name} has been updated`,
+        })
+      );
     }
   }
 

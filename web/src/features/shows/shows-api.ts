@@ -45,3 +45,7 @@ export const unfollowShow = async (show: ShowDto): Promise<void> => {
     },
   });
 };
+
+export const refreshShow = async (showId: string): Promise<void> => {
+  await kyWrapper.get(`show/update/${showId}`);
+};
