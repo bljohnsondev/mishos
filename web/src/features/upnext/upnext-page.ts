@@ -44,7 +44,9 @@ export class UpNextPage extends LitElement {
           <div class="episode">
             <calendar-card .date=${episode.aired}></calendar-card>
             <a href="#" class="show-image-container" @click=${(event: Event) => this.handleClickShow(event, episode)}>
-              <img class="show-image" src=${episode.show.imageMedium} alt=${episode.show.name} />
+              ${episode.show.imageMedium
+                ? html` <img class="show-image" src=${episode.show.imageMedium} alt=${episode.show.name} /> `
+                : html` <div class="placeholder-image"></div> `}
             </a>
             <div>
               <h1>${episode.show.name}</h1>
@@ -109,6 +111,13 @@ export class UpNextPage extends LitElement {
         display: block;
         width: 100%;
         height: auto;
+        border-radius: var(--sl-border-radius-medium);
+      }
+
+      .placeholder-image {
+        width: 50px;
+        height: 70px;
+        background-color: var(--sl-color-neutral-300);
         border-radius: var(--sl-border-radius-medium);
       }
 
