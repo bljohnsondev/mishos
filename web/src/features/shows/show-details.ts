@@ -1,5 +1,5 @@
 import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
@@ -142,6 +142,13 @@ export class ShowDetails extends LitElement {
     event.preventDefault();
     const data = serialize(this.form);
     this.dispatchEvent(createEvent('toggle-previous', data.previous === '1'));
+  }
+
+  willUpdate(changedProperties: PropertyValues<this>) {
+    // on show change reset the toggle previous switch
+    if (this.form && changedProperties.has('show')) {
+      this.form.reset();
+    }
   }
 
   static styles = [
