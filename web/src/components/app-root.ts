@@ -1,7 +1,7 @@
 import { provide } from '@lit/context';
 import { Router } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
-import { customElement, query } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 
 import { appContext } from '@/store/app-context';
 import { ToastMessage, AppStore } from '@/types';
@@ -15,8 +15,6 @@ export class AppRoot extends LitElement {
   appStore: AppStore = {
     loading: false,
   };
-
-  @query('#loading-overlay') loadingOverlay?: HTMLElement;
 
   constructor() {
     super();
@@ -105,33 +103,5 @@ export class AppRoot extends LitElement {
     window.addEventListener('api-loading', event => this.handleApiLoading(event));
   }
 
-  static styles = css`
-    #loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100vh;
-      width: 100vw;
-      z-index: 999999;
-      background: rgba(0, 0, 0, 0.2);
-    }
-
-    #loading-spinner {
-      position: absolute;
-      top: 10px;
-      right: 1rem;
-      @media screen and (min-width: 768px) {
-        top: 20px;
-        right: 4rem;
-      }
-    }
-
-    .loading-hide {
-      display: none;
-    }
-
-    .loading-show {
-      display: block;
-    }
-  `;
+  static styles = css``;
 }
