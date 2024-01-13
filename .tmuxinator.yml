@@ -2,15 +2,15 @@ name: mishos
 root: ~/projects/mishos
 
 windows:
-  - frontend:
-      root: ~/projects/mishos/web
-      layout: main-vertical
-      panes:
-        - nvim .
-        - yarn dev
-  - backend:
+  - api:
       root: ~/projects/mishos/api
-      layout: main-vertical
+      panes:
+        - yarn start:dev
+  - web:
+      root: ~/projects/mishos/web
+      panes:
+        - yarn dev
+  - editor:
+      root: ~/projects/mishos/web
       panes:
         - nvim .
-        - yarn start:dev
