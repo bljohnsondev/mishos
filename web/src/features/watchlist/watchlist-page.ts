@@ -21,7 +21,7 @@ export class WatchListPage extends LitElement {
 
   render() {
     return html`
-      <app-layout icon="list-bullet" headerTitle="Watch List" selected="watchlist">
+      <app-layout icon="check-badge" headerTitle="Watch List" selected="watchlist">
         <shows-search-form slot="header"></shows-search-form>
         <section class="content">
           ${this.episodes

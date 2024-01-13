@@ -1,5 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { sideMenuItems } from '@/layout/side-menu-items';
 import { getTheme, setTheme } from '@/utils';
@@ -9,6 +10,7 @@ import './side-menu';
 
 @customElement('app-layout')
 export class AppLayout extends LitElement {
+  @property() iconLibrary?: string;
   @property() icon?: string;
   @property() headerTitle?: string;
   @property() selected?: string;
@@ -23,9 +25,14 @@ export class AppLayout extends LitElement {
   render() {
     return html`
       <main class="app-container">
-        <side-menu .items=${sideMenuItems} selected=${this.selected}></side-menu>
+        <side-menu .items=${sideMenuItems} selected=${ifDefined(this.selected)}></side-menu>
         <div class="content">
-          <app-header icon=${this.icon ?? 'tv'} title=${this.headerTitle ?? 'Shows'} theme=${this.theme}>
+          <app-header
+            iconLibrary=${ifDefined(this.iconLibrary)}
+            icon=${this.icon ?? 'tv'}
+            title=${this.headerTitle ?? 'Shows'}
+            theme=${ifDefined(this.theme)}
+          >
             <slot name="header"></slot>
           </app-header>
           <slot></slot>
