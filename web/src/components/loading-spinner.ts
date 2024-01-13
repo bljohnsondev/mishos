@@ -73,18 +73,26 @@ export class LoadingSpinner extends LitElement {
       }
 
       sl-spinner {
+        position: fixed;
+        top: var(--sl-spacing-small);
+        right: var(--sl-spacing-medium);
         font-size: 1.5rem;
         z-index: 999;
+        @media screen and (min-width: 640px) {
+          position: inherit;
+        }
       }
 
       .overlay {
         position: fixed;
+        width: 100%;
+        height: 100%;
         top: 0;
         left: 0;
-        height: 100vh;
-        width: 100vw;
+        right: 0;
+        bottom: 0;
         background-color: rgba(0, 0, 0, 0.2);
-        z-index: 998;
+        z-index: 99999;
         overflow: hidden;
       }
     `,
