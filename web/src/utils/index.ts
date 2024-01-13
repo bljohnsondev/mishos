@@ -40,6 +40,6 @@ export const getTheme = () => {
 };
 
 export * from './date-utils';
-export * from './error-handler';
+export * from './form-handler';
 export * from './form-validator';
 export * from './storage';

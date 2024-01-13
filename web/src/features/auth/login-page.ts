@@ -2,7 +2,7 @@ import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 import { Router } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
 import { customElement, state, query } from 'lit/decorators.js';
-import { object, string, ObjectSchema } from 'yup';
+import { z, ZodSchema } from 'zod';
 
 import { sharedStyles } from '@/styles/shared-styles';
 import { ToastMessage } from '@/types';
@@ -21,9 +21,9 @@ interface LoginFormValues {
   password?: string;
 }
 
-const loginSchema: ObjectSchema<LoginFormValues> = object({
-  username: string().required('Username is required'),
-  password: string().required('Password is required'),
+const loginSchema: ZodSchema = z.object({
+  username: z.string().min(1, 'Username is required'),
+  password: z.string().min(1, 'Password is required'),
 });
 
 @customElement('login-page')
@@ -32,7 +32,7 @@ export class LoginPage extends LitElement {
 
   @state() toast?: ToastMessage;
 
-  private formValidator: FormValidator<LoginFormValues> = new FormValidator(loginSchema);
+  private formValidator: FormValidator = new FormValidator(loginSchema);
 
   render() {
     return html`
