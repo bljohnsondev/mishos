@@ -22,13 +22,11 @@ export const sideMenuItems: SideMenuItem[] = [
     iconName: 'tv',
     route: '/shows',
   },
-  /*
   {
     name: 'settings',
     tooltip: 'Settings',
     iconLibrary: 'hi-outline',
-    iconName: 'cog',
+    iconName: 'cog-6-tooth',
     route: '/settings',
   },
-  */
 ];
