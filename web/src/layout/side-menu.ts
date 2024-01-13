@@ -31,12 +31,12 @@ export class SideMenu extends LitElement {
           ${this.items
             ? this.items.map(
                 item => html`
-                  <li class=${this.selected === item.name ? 'selected' : null}>
+                  <li class=${this.selected === item.name ? 'selected' : ''}>
                     <sl-tooltip content=${item.tooltip} placement="right">
                       <sl-icon-button
                         library=${item.iconLibrary}
                         name=${item.iconName}
-                        @click=${() => this.navigate(item)}
+                        @click=${() => this.handleSideItem(item)}
                       ></sl-icon-button>
                     </sl-tooltip>
                   </li>
@@ -48,8 +48,12 @@ export class SideMenu extends LitElement {
     `;
   }
 
-  private navigate(item: SideMenuItem) {
-    this.dispatchEvent(createEvent('side-menu-select', { item }));
+  private handleSideItem(item: SideMenuItem) {
+    if (item.route) {
+      this.dispatchEvent(createEvent('side-menu-select', { item }));
+    } else if (item.action) {
+      item.action();
+    }
   }
 
   static styles = [

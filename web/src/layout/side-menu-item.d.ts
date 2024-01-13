@@ -4,4 +4,5 @@ export interface SideMenuItem {
   iconLibrary: string;
   iconName: string;
   route?: string;
+  action?: () => void;
 }

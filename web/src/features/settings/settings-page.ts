@@ -1,8 +1,9 @@
+import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, query } from 'lit/decorators.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
-import { getTheme } from '@/utils';
+import { getTheme, initializeFormEvents, setTheme } from '@/utils';
 
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
@@ -12,8 +13,14 @@ import '@shoelace-style/shoelace/dist/components/divider/divider.js';
 import '@shoelace-style/shoelace/dist/components/option/option.js';
 import '@shoelace-style/shoelace/dist/components/select/select.js';
 
+interface SettingsFormValues {
+  theme?: string;
+}
+
 @customElement('settings-page')
 export class SettingsPage extends LitElement {
+  @query('form') settingsForm!: HTMLFormElement;
+
   render() {
     return html`
       <app-layout icon="cog-6-tooth" headerTitle="Settings" selected="settings">
@@ -34,6 +41,17 @@ export class SettingsPage extends LitElement {
         </section>
       </app-layout>
     `;
+  }
+
+  private handleSubmit() {
+    const data: SettingsFormValues = serialize(this.settingsForm);
+    if (data.theme) {
+      setTheme(data.theme);
+    }
+  }
+
+  firstUpdated() {
+    initializeFormEvents(this.settingsForm, () => this.handleSubmit());
   }
 
   static styles = [

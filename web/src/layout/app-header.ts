@@ -2,11 +2,9 @@ import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { logout } from '@/lib/auth';
 import { appContext } from '@/store/app-context';
 import { sharedStyles } from '@/styles/shared-styles';
 import { AppStore } from '@/types';
-import { createEvent } from '@/utils';
 
 import '@shoelace-style/shoelace/dist/components/avatar/avatar.js';
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
@@ -26,7 +24,6 @@ export class AppHeader extends LitElement {
   @property() iconlibrary?: string;
   @property() icon?: string;
   @property() title!: string;
-  @property() theme?: string;
 
   render() {
     return html`
@@ -40,31 +37,10 @@ export class AppHeader extends LitElement {
         <slot></slot>
         <div class="right-menu">
           <loading-spinner ?loading=${this.appStore?.loading}></loading-spinner>
-          <button title="Toggle Theme" class="reset-button toggle-theme" @click=${this.handleToggleTheme}>
-            <sl-icon library="hi-solid" name=${this.theme === 'light' ? 'moon' : 'sun'}></sl-icon>
-          </button>
-          <sl-dropdown distance="8" @sl-select=${this.handleAccountSelect}>
-            <sl-avatar slot="trigger" label="User"></sl-avatar>
-            <sl-menu>
-              <sl-menu-item value="logout">Logout</sl-menu-item>
-            </sl-menu>
-          </sl-dropdown>
         </div>
       </header>
       <sl-divider style="--color: var(--content-header-divider-color);"></sl-divider>
     `;
-  }
-
-  private handleAccountSelect(event: Event) {
-    if (event && event instanceof CustomEvent && event.detail?.item?.value) {
-      if (event.detail.item.value === 'logout') {
-        logout();
-      }
-    }
-  }
-
-  private handleToggleTheme() {
-    this.dispatchEvent(createEvent('toggle-theme'));
   }
 
   static styles = [
@@ -105,11 +81,6 @@ export class AppHeader extends LitElement {
         gap: var(--sl-spacing-medium);
         @media screen and (min-width: 1024px) {
           margin-left: auto;
-        }
-        .toggle-theme {
-          cursor: pointer;
-          font-size: var(--sl-font-size-x-large);
-          color: var(--sl-color-neutral-700);
         }
       }
 

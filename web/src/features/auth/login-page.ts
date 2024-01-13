@@ -58,7 +58,7 @@ export class LoginPage extends LitElement {
   }
 
   private handleSubmit() {
-    const data = serialize(this.loginForm) as LoginFormValues;
+    const data: LoginFormValues = serialize(this.loginForm);
     if (this.formValidator.validate(data) && data.username && data.password) {
       this.formValidator.reset();
       this.requestUpdate();

@@ -1,3 +1,5 @@
+import { logout } from '@/lib/auth';
+
 import { SideMenuItem } from './side-menu-item';
 
 export const sideMenuItems: SideMenuItem[] = [
@@ -28,5 +30,14 @@ export const sideMenuItems: SideMenuItem[] = [
     iconLibrary: 'hi-outline',
     iconName: 'cog-6-tooth',
     route: '/settings',
+  },
+  {
+    name: 'logout',
+    tooltip: 'Logout',
+    iconLibrary: 'local',
+    iconName: 'logout',
+    action: () => {
+      logout();
+    },
   },
 ];

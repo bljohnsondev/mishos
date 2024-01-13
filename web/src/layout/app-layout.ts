@@ -17,11 +17,6 @@ export class AppLayout extends LitElement {
 
   @state() theme?: string = getTheme();
 
-  constructor() {
-    super();
-    this.addEventListener('toggle-theme', this.handleToggleTheme);
-  }
-
   render() {
     return html`
       <main class="app-container">
@@ -45,11 +40,6 @@ export class AppLayout extends LitElement {
   private initializeTheme() {
     const theme = getTheme();
     setTheme(theme);
-  }
-
-  private handleToggleTheme() {
-    this.theme = this.theme === 'light' ? 'dark' : 'light';
-    setTheme(this.theme);
   }
 
   firstUpdated() {
