@@ -1,6 +1,7 @@
 import { Router } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
 import { ShowDto } from '@/types';
@@ -14,6 +15,7 @@ import './shows-search-form';
 
 @customElement('shows-page')
 export class ShowsPage extends LitElement {
+  @state() loading: boolean = false;
   @state() shows?: ShowDto[];
 
   render() {
@@ -25,7 +27,11 @@ export class ShowsPage extends LitElement {
             ? this.shows.map(
                 show => html`
                   <a href="#" class="card-link" @click=${(event: Event) => this.handleSelectShow(event, show)}>
-                    <show-card image=${show.imageMedium} name=${show.name} network=${show.network}></show-card>
+                    <show-card
+                      image=${ifDefined(show.imageMedium)}
+                      name=${ifDefined(show.name)}
+                      network=${ifDefined(show.network)}
+                    ></show-card>
                   </a>
                 `
               )
@@ -36,7 +42,9 @@ export class ShowsPage extends LitElement {
   }
 
   private renderEmptyShows() {
-    return html`<div>You are not following any shows. Use the search to find your favorite shows!</div>`;
+    return !this.loading
+      ? html`<div>You are not following any shows. Use the search to find your favorite shows!</div>`
+      : null;
   }
 
   private handleSelectShow(event: Event, show: ShowDto) {
@@ -48,7 +56,9 @@ export class ShowsPage extends LitElement {
 
   async connectedCallback() {
     super.connectedCallback();
+    this.loading = true;
     this.shows = await getFollowedShows();
+    this.loading = false;
   }
 
   static styles = [
