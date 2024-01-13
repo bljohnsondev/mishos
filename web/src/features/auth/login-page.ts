@@ -10,9 +10,9 @@ import { initializeFormEvents, setToken, FormValidator, createEvent } from '@/ut
 
 import { login } from './auth-api';
 
-import '@shoelace-style/shoelace/dist/components/alert/alert';
-import '@shoelace-style/shoelace/dist/components/input/input';
-import '@shoelace-style/shoelace/dist/components/button/button';
+import '@shoelace-style/shoelace/dist/components/alert/alert.js';
+import '@shoelace-style/shoelace/dist/components/input/input.js';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
 
 import '@/components/form-error-message';
 

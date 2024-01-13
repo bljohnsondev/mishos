@@ -5,10 +5,10 @@ import { createEvent } from '../utils';
 
 import { SideMenuItem } from './side-menu-item';
 
-import '@shoelace-style/shoelace/dist/components/divider/divider';
-import '@shoelace-style/shoelace/dist/components/icon/icon';
-import '@shoelace-style/shoelace/dist/components/icon-button/icon-button';
-import '@shoelace-style/shoelace/dist/components/tooltip/tooltip';
+import '@shoelace-style/shoelace/dist/components/divider/divider.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
+import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 
 @customElement('side-menu')
 export class SideMenu extends LitElement {

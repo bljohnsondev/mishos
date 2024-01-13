@@ -3,7 +3,7 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
 
-import '@shoelace-style/shoelace/dist/components/spinner/spinner';
+import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 
 @customElement('loading-spinner')
 export class LoadingSpinner extends LitElement {

@@ -6,11 +6,11 @@ import { sharedStyles } from '@/styles/shared-styles';
 import { ShowDto } from '@/types';
 import { createEvent, formatDate } from '@/utils';
 
-import '@shoelace-style/shoelace/dist/components/button/button';
-import '@shoelace-style/shoelace/dist/components/icon/icon';
-import '@shoelace-style/shoelace/dist/components/option/option';
-import '@shoelace-style/shoelace/dist/components/select/select';
-import '@shoelace-style/shoelace/dist/components/switch/switch';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@shoelace-style/shoelace/dist/components/option/option.js';
+import '@shoelace-style/shoelace/dist/components/select/select.js';
+import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
 import './episode-card';
 
@@ -194,6 +194,7 @@ export class ShowDetails extends LitElement {
 
       .show-info {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         list-style: none;
         margin: 0;

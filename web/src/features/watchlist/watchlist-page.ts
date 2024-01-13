@@ -12,8 +12,8 @@ import { getWatchList } from './wachlist-api';
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
 
-import '@shoelace-style/shoelace/dist/components/button/button';
-import '@shoelace-style/shoelace/dist/components/icon/icon';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 @customElement('watchlist-page')
 export class WatchListPage extends LitElement {
@@ -45,7 +45,11 @@ export class WatchListPage extends LitElement {
       ? html`
           <div class="episode">
             <a href="#" class="show-image-container" @click=${(event: Event) => this.handleClickShow(event, episode)}>
-              <img class="show-image" src=${episode.show.imageMedium} alt=${episode.show.name} />
+              <img
+                class="show-image"
+                src=${episode.show.imageMedium ?? '/images/empty-image.svg'}
+                alt=${episode.show.name ?? 'Unknown show'}
+              />
             </a>
             <div>
               <h1>${episode.show.name}</h1>
@@ -124,7 +128,7 @@ export class WatchListPage extends LitElement {
         display: block;
         width: 100%;
         height: auto;
-        border-radius: var(--sl-border-radius-medium);
+        border-radius: var(--sl-border-radius-large);
       }
 
       .episode-details {

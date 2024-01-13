@@ -4,8 +4,8 @@ export const sideMenuItems: SideMenuItem[] = [
   {
     name: 'watchlist',
     tooltip: 'Watch List',
-    iconLibrary: 'hi-outline',
-    iconName: 'list-bullet',
+    iconLibrary: 'local',
+    iconName: 'viewlist',
     route: '/watchlist',
   },
   {

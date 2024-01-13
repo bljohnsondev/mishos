@@ -3,8 +3,8 @@ import { customElement, property } from 'lit/decorators.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
 
-import '@shoelace-style/shoelace/dist/components/badge/badge';
-import '@shoelace-style/shoelace/dist/components/card/card';
+import '@shoelace-style/shoelace/dist/components/badge/badge.js';
+import '@shoelace-style/shoelace/dist/components/card/card.js';
 
 export type ShowCardBadgeVariant = 'primary' | 'success' | 'neutral' | 'warning' | 'danger';
 

@@ -5,8 +5,8 @@ import { customElement, property, query } from 'lit/decorators.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
 
-import '@shoelace-style/shoelace/dist/components/icon/icon';
-import '@shoelace-style/shoelace/dist/components/input/input';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@shoelace-style/shoelace/dist/components/input/input.js';
 
 interface SearchFormValues {
   query?: string;

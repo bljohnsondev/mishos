@@ -11,7 +11,7 @@ import '@/features/shows/show-card';
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
 
-import '@shoelace-style/shoelace/dist/components/badge/badge';
+import '@shoelace-style/shoelace/dist/components/badge/badge.js';
 
 @customElement('search-results-page')
 export class SearchResultsPage extends LitElement {

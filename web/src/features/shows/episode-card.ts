@@ -6,7 +6,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { EpisodeDto } from '@/types';
 import { createEvent, formatDate } from '@/utils';
 
-import '@shoelace-style/shoelace/dist/components/icon/icon';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 dayjs.extend(isSameOrBefore);
 
