@@ -1,6 +1,7 @@
 import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
 import { ShowDto } from '@/types';
@@ -56,9 +57,9 @@ export class ShowDetails extends LitElement {
         <div class="detail-content">
           <div>
             ${this.show.imageMedium
-              ? html` <img src=${this.show.imageMedium} alt=${this.show.name} class="show-image" /> `
+              ? html` <img src=${this.show.imageMedium} alt=${ifDefined(this.show.name)} class="show-image" /> `
               : html` <div class="no-image-placeholder"></div> `}
-            <a href=${this.show.providerUrl} class="provider-link" target="_blank">view at tvmaze.com</a>
+            <a href=${ifDefined(this.show.providerUrl)} class="provider-link" target="_blank">view at tvmaze.com</a>
           </div>
           <div class="right-content">
             <p class="summary">${this.show.summary}</p>
@@ -78,7 +79,7 @@ export class ShowDetails extends LitElement {
                 @sl-change=${this.handleChangeSeason}
               >
                 ${this.show.seasons?.map(
-                  season => html` <sl-option value=${season.number}>Season ${season.number}</sl-option> `
+                  season => html` <sl-option value=${ifDefined(season.number)}>Season ${season.number}</sl-option> `
                 )}
               </sl-select>
               ${!this.preview
