@@ -39,14 +39,16 @@ export class UpNextPage extends LitElement {
   }
 
   private renderEpisode(episode: UpNextEpisodeDto): TemplateResult | null {
-    return episode && episode.show
+    return episode && episode.show && episode.aired
       ? html`
           <div class="episode">
             <calendar-card .date=${episode.aired}></calendar-card>
             <a href="#" class="show-image-container" @click=${(event: Event) => this.handleClickShow(event, episode)}>
-              ${episode.show.imageMedium
-                ? html` <img class="show-image" src=${episode.show.imageMedium} alt=${episode.show.name} /> `
-                : html` <div class="placeholder-image"></div> `}
+              <img
+                class="show-image"
+                src=${episode.show.imageMedium ?? '/images/empty-image.svg'}
+                alt=${episode.show.name ?? 'Unknown episode'}
+              />
             </a>
             <div>
               <h1>${episode.show.name}</h1>
