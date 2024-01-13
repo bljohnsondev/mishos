@@ -49,7 +49,7 @@
   /* side menu */
   --sm-bg-color: #161B22;
   --sm-border-color: #28313C;
-  --sm-divider-color: var(--sl-color-neutral-300);
+  --sm-divider-color: var(--sl-color-neutral-200);
   --sm-button-selected-bg: #253241;
 
   /* content header */

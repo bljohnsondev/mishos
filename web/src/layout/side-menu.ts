@@ -1,5 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { createEvent } from '../utils';
 
@@ -29,18 +30,20 @@ export class SideMenu extends LitElement {
         <sl-divider style="--color: var(--sm-divider-color);"></sl-divider>
         <ul class="main-menu">
           ${this.items
-            ? this.items.map(
-                item => html`
-                  <li class=${this.selected === item.name ? 'selected' : ''}>
-                    <sl-tooltip content=${item.tooltip} placement="right">
-                      <sl-icon-button
-                        library=${item.iconLibrary}
-                        name=${item.iconName}
-                        @click=${() => this.handleSideItem(item)}
-                      ></sl-icon-button>
-                    </sl-tooltip>
-                  </li>
-                `
+            ? this.items.map(item =>
+                item.name !== 'divider'
+                  ? html`
+                      <li class=${this.selected === item.name ? 'selected' : ''}>
+                        <sl-tooltip content=${ifDefined(item.tooltip)} placement="right">
+                          <sl-icon-button
+                            library=${ifDefined(item.iconLibrary)}
+                            name=${ifDefined(item.iconName)}
+                            @click=${() => this.handleSideItem(item)}
+                          ></sl-icon-button>
+                        </sl-tooltip>
+                      </li>
+                    `
+                  : html` <sl-divider style="--color: var(--sm-divider-color);"></sl-divider> `
               )
             : null}
         </ul>

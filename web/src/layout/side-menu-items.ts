@@ -25,6 +25,9 @@ export const sideMenuItems: SideMenuItem[] = [
     route: '/shows',
   },
   {
+    name: 'divider',
+  },
+  {
     name: 'settings',
     tooltip: 'Settings',
     iconLibrary: 'hi-outline',
