@@ -128,7 +128,7 @@ export class WatchListPage extends LitElement {
         display: block;
         width: 100%;
         height: auto;
-        border-radius: var(--sl-border-radius-large);
+        border-radius: var(--sl-border-radius-medium);
       }
 
       .episode-details {
