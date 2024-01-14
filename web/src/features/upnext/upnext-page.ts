@@ -9,7 +9,7 @@ import { UpNextEpisodeDto } from '@/types';
 
 import { getUpNextList } from './upnext-api';
 
-import '@/components/info-tooltip';
+import '@/components/episode-name-tooltip';
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
 
@@ -61,9 +61,11 @@ export class UpNextPage extends LitElement {
                   : null}
                 ${episode.runtime ? html`&middot; ${episode.runtime}m` : null}
               </div>
-              <div class="episode-title-info">
-                <span>${episode.name}</span>
-                <info-tooltip description=${ifDefined(episode.summary)}></info-tooltip>
+              <div>
+                <episode-name-tooltip
+                  name=${ifDefined(episode.name)}
+                  description=${ifDefined(episode.summary)}
+                ></episode-name-tooltip>
               </div>
             </div>
           </div>
@@ -146,6 +148,10 @@ export class UpNextPage extends LitElement {
         font-size: var(--sl-font-size-small);
         color: var(--sl-color-neutral-500);
         margin: var(--sl-spacing-x-small) 0;
+      }
+
+      episode-name-tooltip {
+        padding-bottom: 0;
       }
     `,
   ];

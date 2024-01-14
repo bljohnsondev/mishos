@@ -31,18 +31,4 @@ export const sharedStyles = css`
     background-color: var(--sl-color-neutral-300);
     border-radius: var(--sl-border-radius-medium);
   }
-
-  .episode-title-info {
-    display: flex;
-    align-items: center;
-    flex-shrink: 1;
-    font-size: var(--sl-font-size-small);
-    color: var(--sl-color-neutral-700);
-    :is(info-tooltip) {
-      margin-left: auto;
-      @media screen and (min-width: 640px) {
-        margin-left: 0;
-      }
-    }
-  }
 `;

@@ -2,12 +2,13 @@ import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
 import { EpisodeDto } from '@/types';
 import { createEvent, formatDate } from '@/utils';
 
-import '@/components/info-tooltip';
+import '@/components/episode-name-tooltip';
 
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
@@ -25,9 +26,11 @@ export class EpisodeCard extends LitElement {
           S${this.episode.seasonNumber} E${this.episode.number} &middot; ${formatDate(this.episode.aired)}
           ${this.episode.runtime ? html`&middot; ${this.episode.runtime}m` : null}
         </div>
-        <div class="episode-title-info title-container">
-          <span>${this.episode.name}</span>
-          ${this.episode.summary ? html`<info-tooltip description=${this.episode.summary}></info-tooltip>` : null}
+        <div class="title-container">
+          <episode-name-tooltip
+            name=${ifDefined(this.episode.name)}
+            description=${ifDefined(this.episode.summary)}
+          ></episode-name-tooltip>
         </div>
         ${this.hasAired()
           ? !this.preview

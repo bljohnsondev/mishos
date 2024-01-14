@@ -10,7 +10,7 @@ import { createToastEvent, formatDate } from '@/utils';
 
 import { getWatchList } from './wachlist-api';
 
-import '@/components/info-tooltip';
+import '@/components/episode-name-tooltip';
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
 
@@ -59,9 +59,11 @@ export class WatchListPage extends LitElement {
                 S${episode.seasonNumber} E${episode.number} &middot; ${formatDate(episode.aired)}
                 ${episode.runtime ? html`&middot; ${episode.runtime}m` : null}
               </div>
-              <div class="episode-title-info">
-                <span>${episode.name}</span>
-                <info-tooltip description=${ifDefined(episode.summary)}></info-tooltip>
+              <div>
+                <episode-name-tooltip
+                  name=${ifDefined(episode.name)}
+                  description=${ifDefined(episode.summary)}
+                ></episode-name-tooltip>
               </div>
               <sl-button variant="default" size="small" @click=${() => this.handleWatch(episode)}>
                 <sl-icon slot="prefix" library="hi-outline" name="eye"></sl-icon>
