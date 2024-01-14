@@ -53,12 +53,12 @@ export class WatchListPage extends LitElement {
                 alt=${episode.show.name ?? 'Unknown show'}
               />
             </a>
-            <div>
+            <div class="episode-info">
               <h1>${episode.show.name}</h1>
               <div class="episode-details">
                 S${episode.seasonNumber} E${episode.number} &middot; ${formatDate(episode.aired)}
               </div>
-              <div class="episode-title">
+              <div class="episode-title-info">
                 <span>${episode.name}</span>
                 <info-tooltip description=${ifDefined(episode.summary)}></info-tooltip>
               </div>
@@ -125,6 +125,10 @@ export class WatchListPage extends LitElement {
         }
       }
 
+      .episode-info {
+        flex-grow: 1;
+      }
+
       .show-image-container {
         width: 80px;
       }
@@ -140,13 +144,6 @@ export class WatchListPage extends LitElement {
         font-size: var(--sl-font-size-small);
         color: var(--sl-color-neutral-500);
         margin: var(--sl-spacing-x-small) 0;
-      }
-
-      .episode-title {
-        display: flex;
-        align-items: center;
-        font-size: var(--sl-font-size-small);
-        color: var(--sl-color-neutral-700);
       }
 
       sl-button {

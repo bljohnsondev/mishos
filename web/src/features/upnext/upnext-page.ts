@@ -52,7 +52,7 @@ export class UpNextPage extends LitElement {
                 alt=${episode.show.name ?? 'Unknown episode'}
               />
             </a>
-            <div>
+            <div class="episode-info">
               <h1>${episode.show.name}</h1>
               <div class="episode-details">
                 S${episode.seasonNumber} E${episode.number}
@@ -60,7 +60,7 @@ export class UpNextPage extends LitElement {
                   ? html` &middot; ${this.formatWeekday(episode.aired)} &middot; ${this.formatAirTime(episode.aired)} `
                   : null}
               </div>
-              <div class="episode-title">
+              <div class="episode-title-info">
                 <span>${episode.name}</span>
                 <info-tooltip description=${ifDefined(episode.summary)}></info-tooltip>
               </div>
@@ -119,6 +119,10 @@ export class UpNextPage extends LitElement {
         }
       }
 
+      .episode-info {
+        width: 100%;
+      }
+
       .show-image-container {
         width: 50px;
       }
@@ -141,13 +145,6 @@ export class UpNextPage extends LitElement {
         font-size: var(--sl-font-size-small);
         color: var(--sl-color-neutral-500);
         margin: var(--sl-spacing-x-small) 0;
-      }
-
-      .episode-title {
-        display: flex;
-        align-items: center;
-        font-size: var(--sl-font-size-small);
-        color: var(--sl-color-neutral-700);
       }
     `,
   ];

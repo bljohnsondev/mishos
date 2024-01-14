@@ -3,6 +3,7 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
+import { sharedStyles } from '@/styles/shared-styles';
 import { EpisodeDto } from '@/types';
 import { createEvent, formatDate } from '@/utils';
 
@@ -24,7 +25,7 @@ export class EpisodeCard extends LitElement {
           <span>S${this.episode.seasonNumber} E${this.episode.number}</span>
           <span>${formatDate(this.episode.aired)}</span>
         </div>
-        <div class="episode-name">
+        <div class="episode-title-info title-container">
           <span>${this.episode.name}</span>
           ${this.episode.summary ? html`<info-tooltip description=${this.episode.summary}></info-tooltip>` : null}
         </div>
@@ -55,57 +56,59 @@ export class EpisodeCard extends LitElement {
     return dayjs(this.episode.aired).isSameOrBefore(dayjs());
   }
 
-  static styles = css`
-    .episode {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--sl-spacing-x-small);
-      width: 240px;
-      border: 1px solid var(--sl-color-neutral-200);
-      border-radius: var(--sl-border-radius-medium);
-      padding: var(--sl-spacing-medium);
-      font-size: var(--sl-font-size-small);
-    }
-
-    .ep-header {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      color: var(--sl-color-neutral-600);
-      :is(span:last-child) {
-        margin-left: auto;
+  static styles = [
+    sharedStyles,
+    css`
+      .episode {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--sl-spacing-x-small);
+        width: 240px;
+        border: 1px solid var(--sl-color-neutral-200);
+        border-radius: var(--sl-border-radius-medium);
+        padding: var(--sl-spacing-medium);
+        font-size: var(--sl-font-size-small);
       }
-    }
 
-    .episode-name {
-      display: flex;
-      align-items: center;
-    }
+      .ep-header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        color: var(--sl-color-neutral-600);
+        :is(span:last-child) {
+          margin-left: auto;
+        }
+      }
 
-    .watch-toggle {
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: var(--sl-spacing-x-small);
-      padding: var(--sl-spacing-x-small);
-      border-radius: var(--sl-border-radius-medium);
-    }
+      .title-container {
+        width: 100%;
+      }
 
-    .watched {
-      background-color: var(--sl-color-green-300);
-      border: 1px solid var(--sl-color-green-100);
-      color: var(--sl-color-neutral-900);
-    }
+      .watch-toggle {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: var(--sl-spacing-x-small);
+        padding: var(--sl-spacing-x-small);
+        border-radius: var(--sl-border-radius-medium);
+      }
 
-    .unwatched {
-      background-color: transparent;
-      border: 1px solid var(--sl-color-neutral-300);
-      color: var(--sl-color-neutral-600);
-    }
+      .watched {
+        background-color: var(--sl-color-green-300);
+        border: 1px solid var(--sl-color-green-100);
+        color: var(--sl-color-neutral-900);
+      }
 
-    .upcoming {
-      color: var(--sl-color-neutral-500);
-    }
-  `;
+      .unwatched {
+        background-color: transparent;
+        border: 1px solid var(--sl-color-neutral-300);
+        color: var(--sl-color-neutral-600);
+      }
+
+      .upcoming {
+        color: var(--sl-color-neutral-500);
+      }
+    `,
+  ];
 }
