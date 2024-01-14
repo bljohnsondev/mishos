@@ -19,9 +19,17 @@ export class InfoTooltip extends LitElement {
   }
 
   static styles = css`
+    :host {
+      line-height: 0;
+    }
+
     sl-icon-button {
       font-size: 1.2rem;
       color: var(--sl-color-neutral-800);
+    }
+
+    sl-icon-button::part(base) {
+      padding: 0 var(--sl-spacing-small);
     }
   `;
 }

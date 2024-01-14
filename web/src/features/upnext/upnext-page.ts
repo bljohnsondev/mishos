@@ -76,8 +76,7 @@ export class UpNextPage extends LitElement {
 
   private formatAirTime(date?: Date): TemplateResult | null {
     if (date) {
-      const timeFormat = dayjs(date).format('mm') === '00' ? 'h a' : 'h:mm a';
-      return html`${dayjs(date).format(timeFormat)}`;
+      return html`${dayjs(date).format('h:mm a')}`;
     } else return null;
   }
 

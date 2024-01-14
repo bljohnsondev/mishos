@@ -6,6 +6,8 @@ import { customElement, property } from 'lit/decorators.js';
 import { EpisodeDto } from '@/types';
 import { createEvent, formatDate } from '@/utils';
 
+import '@/components/info-tooltip';
+
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 dayjs.extend(isSameOrBefore);
@@ -22,7 +24,10 @@ export class EpisodeCard extends LitElement {
           <span>S${this.episode.seasonNumber} E${this.episode.number}</span>
           <span>${formatDate(this.episode.aired)}</span>
         </div>
-        <div>${this.episode.name}</div>
+        <div class="episode-name">
+          <span>${this.episode.name}</span>
+          ${this.episode.summary ? html`<info-tooltip description=${this.episode.summary}></info-tooltip>` : null}
+        </div>
         ${this.hasAired()
           ? !this.preview
             ? html`
@@ -71,6 +76,11 @@ export class EpisodeCard extends LitElement {
       :is(span:last-child) {
         margin-left: auto;
       }
+    }
+
+    .episode-name {
+      display: flex;
+      align-items: center;
     }
 
     .watch-toggle {
