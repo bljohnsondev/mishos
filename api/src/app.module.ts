@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AuthModule } from './auth/auth.module';
 import { databaseConfig } from './common/config/db-config';
+import { InitModule } from './init/init.module';
 import { ShowModule } from './show/show.module';
 import { TasksModule } from './tasks/tasks.module';
 import { UpNextModule } from './upnext/upnext.module';
@@ -20,6 +21,7 @@ import { WatchListModule } from './watchlist/watchlist.module';
       inject: [ConfigService],
     }),
     AuthModule,
+    InitModule,
     ShowModule,
     TasksModule,
     UpNextModule,
