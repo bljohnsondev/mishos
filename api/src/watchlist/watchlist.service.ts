@@ -79,6 +79,7 @@ export class WatchListService {
           'ep.number',
           'ep.aired',
           'ep.summary',
+          'ep.runtime',
           'show.id',
           'show.name',
           'show.imageMedium',
