@@ -53,7 +53,10 @@ export class UpNextPage extends LitElement {
             <div>
               <h1>${episode.show.name}</h1>
               <div class="episode-details">
-                S${episode.seasonNumber} E${episode.number} &middot; ${this.formatWeekday(episode.aired)}
+                S${episode.seasonNumber} E${episode.number}
+                ${episode.aired
+                  ? html` &middot; ${this.formatWeekday(episode.aired)} &middot; ${this.formatAirTime(episode.aired)} `
+                  : null}
               </div>
               <div class="episode-title">${episode.name}</div>
             </div>
@@ -64,6 +67,13 @@ export class UpNextPage extends LitElement {
 
   private formatWeekday(date?: Date): TemplateResult | null {
     return date ? html`${dayjs(date).format('dddd')}` : null;
+  }
+
+  private formatAirTime(date?: Date): TemplateResult | null {
+    if (date) {
+      const timeFormat = dayjs(date).format('mm') === '00' ? 'h a' : 'h:mm a';
+      return html`${dayjs(date).format(timeFormat)}`;
+    } else return null;
   }
 
   private handleClickShow(event: Event, episode: UpNextEpisodeDto) {
