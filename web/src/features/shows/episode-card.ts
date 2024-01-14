@@ -22,8 +22,8 @@ export class EpisodeCard extends LitElement {
     return html`
       <div class="episode">
         <div class="ep-header">
-          <span>S${this.episode.seasonNumber} E${this.episode.number}</span>
-          <span>${formatDate(this.episode.aired)}</span>
+          S${this.episode.seasonNumber} E${this.episode.number} &middot; ${formatDate(this.episode.aired)}
+          ${this.episode.runtime ? html`&middot; ${this.episode.runtime}m` : null}
         </div>
         <div class="episode-title-info title-container">
           <span>${this.episode.name}</span>
@@ -73,12 +73,7 @@ export class EpisodeCard extends LitElement {
 
       .ep-header {
         width: 100%;
-        display: flex;
-        align-items: center;
         color: var(--sl-color-neutral-600);
-        :is(span:last-child) {
-          margin-left: auto;
-        }
       }
 
       .title-container {

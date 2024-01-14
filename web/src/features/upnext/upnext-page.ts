@@ -59,6 +59,7 @@ export class UpNextPage extends LitElement {
                 ${episode.aired
                   ? html` &middot; ${this.formatWeekday(episode.aired)} &middot; ${this.formatAirTime(episode.aired)} `
                   : null}
+                ${episode.runtime ? html`&middot; ${episode.runtime}m` : null}
               </div>
               <div class="episode-title-info">
                 <span>${episode.name}</span>

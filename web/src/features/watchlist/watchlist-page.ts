@@ -57,6 +57,7 @@ export class WatchListPage extends LitElement {
               <h1>${episode.show.name}</h1>
               <div class="episode-details">
                 S${episode.seasonNumber} E${episode.number} &middot; ${formatDate(episode.aired)}
+                ${episode.runtime ? html`&middot; ${episode.runtime}m` : null}
               </div>
               <div class="episode-title-info">
                 <span>${episode.name}</span>
