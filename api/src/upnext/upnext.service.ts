@@ -24,6 +24,7 @@ export class UpNextService {
         name: true,
         number: true,
         aired: true,
+        summary: true,
         season: {
           id: true,
           number: true,
@@ -59,6 +60,7 @@ export class UpNextService {
       number: episode.number,
       seasonNumber: episode.season?.number,
       aired: episode.aired,
+      summary: episode.summary,
       show: {
         id: episode.season?.show?.id,
         name: episode.season.show?.name,
