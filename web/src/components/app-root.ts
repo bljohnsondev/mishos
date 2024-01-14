@@ -3,8 +3,9 @@ import { Router } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
+import { kyWrapper } from '@/lib/ky-wrapper';
 import { appContext } from '@/store/app-context';
-import { ToastMessage, AppStore } from '@/types';
+import { AppStore, InitData, ToastMessage } from '@/types';
 
 import '@shoelace-style/shoelace/dist/components/alert/alert.js';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
@@ -94,13 +95,24 @@ export class AppRoot extends LitElement {
     }
   }
 
-  connectedCallback() {
+  async loadInitData() {
+    const initData: InitData | undefined = await kyWrapper.get('init/view').json();
+    this.appStore = {
+      ...this.appStore,
+      initData,
+    };
+  }
+
+  async connectedCallback() {
     super.connectedCallback();
 
     // add a window event listener to catch any top-level events
     // https://lit.dev/docs/components/events/#adding-event-listeners-to-other-elements
     window.addEventListener('error-message', event => this.handleErrorMessage(event));
     window.addEventListener('api-loading', event => this.handleApiLoading(event));
+    window.addEventListener('load-initdata', () => this.loadInitData());
+
+    this.loadInitData();
   }
 
   static styles = css``;
