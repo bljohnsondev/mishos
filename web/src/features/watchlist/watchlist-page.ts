@@ -1,6 +1,7 @@
 import { Router } from '@vaadin/router';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { addWatch } from '@/features/shows/shows-api';
 import { sharedStyles } from '@/styles/shared-styles';
@@ -9,6 +10,7 @@ import { createToastEvent, formatDate } from '@/utils';
 
 import { getWatchList } from './wachlist-api';
 
+import '@/components/info-tooltip';
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
 
@@ -56,7 +58,10 @@ export class WatchListPage extends LitElement {
               <div class="episode-details">
                 S${episode.seasonNumber} E${episode.number} &middot; ${formatDate(episode.aired)}
               </div>
-              <div class="episode-title">${episode.name}</div>
+              <div class="episode-title">
+                <span>${episode.name}</span>
+                <info-tooltip description=${ifDefined(episode.summary)}></info-tooltip>
+              </div>
               <sl-button variant="default" size="small" @click=${() => this.handleWatch(episode)}>
                 <sl-icon slot="prefix" library="hi-outline" name="eye"></sl-icon>
                 Mark Watched
@@ -138,6 +143,8 @@ export class WatchListPage extends LitElement {
       }
 
       .episode-title {
+        display: flex;
+        align-items: center;
         font-size: var(--sl-font-size-small);
         color: var(--sl-color-neutral-700);
       }

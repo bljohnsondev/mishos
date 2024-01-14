@@ -2,12 +2,14 @@ import { Router } from '@vaadin/router';
 import dayjs from 'dayjs';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
 import { UpNextEpisodeDto } from '@/types';
 
 import { getUpNextList } from './upnext-api';
 
+import '@/components/info-tooltip';
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
 
@@ -58,7 +60,10 @@ export class UpNextPage extends LitElement {
                   ? html` &middot; ${this.formatWeekday(episode.aired)} &middot; ${this.formatAirTime(episode.aired)} `
                   : null}
               </div>
-              <div class="episode-title">${episode.name}</div>
+              <div class="episode-title">
+                <span>${episode.name}</span>
+                <info-tooltip description=${ifDefined(episode.summary)}></info-tooltip>
+              </div>
             </div>
           </div>
         `
@@ -140,6 +145,8 @@ export class UpNextPage extends LitElement {
       }
 
       .episode-title {
+        display: flex;
+        align-items: center;
         font-size: var(--sl-font-size-small);
         color: var(--sl-color-neutral-700);
       }

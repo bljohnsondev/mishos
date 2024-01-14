@@ -6,5 +6,6 @@ export class UpNextEpisodeDto {
   number?: number;
   seasonNumber?: number;
   aired?: Date;
+  summary?: string;
   show?: ShowDto;
 }
