@@ -42,6 +42,10 @@ This project is in it's early stages and there isn't currently a Docker image (y
 
 ![Screenshot of the up next screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/upnext-screenshot1.png "Up next screenshot")
 
+## Settings
+
+![Screenshot of the settings general screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/settings-general-screenshot1.png "Settings screenshot")
+
 ## Gotify Notification
 
 The current backend code is designed to use an [Apprise](https://github.com/caronc/apprise) endpoint for notifications.  I currently use [Gotify](https://github.com/gotify/server) for notifications.  Since the backend server uses Apprise you have a **lot** of notification options.
