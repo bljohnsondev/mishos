@@ -44,37 +44,37 @@ export class UpNextPage extends LitElement {
     return episode && episode.show && episode.aired
       ? html`
           <div class="episode">
-            <calendar-card .date=${episode.aired}></calendar-card>
-            <a href="#" class="show-image-container" @click=${(event: Event) => this.handleClickShow(event, episode)}>
-              <img
-                class="show-image"
-                src=${episode.show.imageMedium ?? '/images/empty-image.svg'}
-                alt=${episode.show.name ?? 'Unknown episode'}
-              />
-            </a>
+            <div>
+              <calendar-card .date=${episode.aired}></calendar-card>
+              <div class="weekday">Tue</div>
+            </div>
+            <div>
+              <a href="#" class="show-image-container" @click=${(event: Event) => this.handleClickShow(event, episode)}>
+                <img
+                  class="show-image"
+                  src=${episode.show.imageMedium ?? '/images/empty-image.svg'}
+                  alt=${episode.show.name ?? 'Unknown episode'}
+                />
+              </a>
+            </div>
             <div class="episode-info">
               <h1>${episode.show.name}</h1>
-              <div class="episode-details">
-                S${episode.seasonNumber} E${episode.number}
-                ${episode.aired
-                  ? html` &middot; ${this.formatWeekday(episode.aired)} &middot; ${this.formatAirTime(episode.aired)} `
-                  : null}
-                ${episode.runtime ? html`&middot; ${episode.runtime}m` : null}
-              </div>
-              <div>
+              <div class="episode-name">
                 <episode-name-tooltip
                   name=${ifDefined(episode.name)}
                   description=${ifDefined(episode.summary)}
                 ></episode-name-tooltip>
               </div>
+              <ul class="detail-list">
+                <li>S${episode.seasonNumber} E${episode.number}</li>
+                ${episode.show?.network ? html`<li>${episode.show.network}</li>` : null}
+                ${episode.aired ? html`<li>${this.formatAirTime(episode.aired)}</li>` : null}
+                ${episode.runtime ? html`<li>${episode.runtime}m</li>` : null}
+              </ul>
             </div>
           </div>
         `
       : null;
-  }
-
-  private formatWeekday(date?: Date): TemplateResult | null {
-    return date ? html`${dayjs(date).format('dddd')}` : null;
   }
 
   private formatAirTime(date?: Date): TemplateResult | null {
@@ -113,7 +113,7 @@ export class UpNextPage extends LitElement {
         align-items: start;
         gap: var(--sl-spacing-small);
         border-bottom: 1px solid var(--sl-color-neutral-100);
-        padding-bottom: var(--sl-spacing-medium);
+        padding-bottom: var(--sl-spacing-small);
         :is(h1) {
           margin: 0;
           padding: 0;
@@ -122,32 +122,52 @@ export class UpNextPage extends LitElement {
         }
       }
 
-      .episode-info {
-        width: 100%;
+      .weekday {
+        color: var(--sl-color-neutral-500);
+        font-size: var(--sl-font-size-small);
+        text-align: center;
+        padding-top: var(--sl-spacing-2x-small);
       }
 
-      .show-image-container {
-        width: 50px;
+      .episode-name {
+        padding-top: var(--sl-spacing-2x-small);
+      }
+
+      .image-link {
+        display: block;
+        object-fit: contain;
       }
 
       .show-image {
-        display: block;
-        width: 100%;
-        height: auto;
         border-radius: var(--sl-border-radius-medium);
+        max-width: 3rem;
+        @media screen and (min-width: 640px) {
+          max-width: 5rem;
+        }
       }
 
-      .placeholder-image {
-        width: 50px;
-        height: 70px;
-        background-color: var(--sl-color-neutral-300);
-        border-radius: var(--sl-border-radius-medium);
-      }
-
-      .episode-details {
+      .detail-list {
+        list-style: none;
+        padding: 0;
         font-size: var(--sl-font-size-small);
         color: var(--sl-color-neutral-500);
-        margin: var(--sl-spacing-x-small) 0;
+
+        :is(li) {
+          padding: var(--sl-spacing-3x-small) 0;
+        }
+
+        @media screen and (min-width: 640px) {
+          display: flex;
+          align-items: center;
+          padding-top: var(--sl-spacing-2x-small);
+
+          :is(li) {
+            &:not(:last-child):after {
+              content: ' · ';
+              padding-right: var(--sl-spacing-2x-small);
+            }
+          }
+        }
       }
 
       episode-name-tooltip {

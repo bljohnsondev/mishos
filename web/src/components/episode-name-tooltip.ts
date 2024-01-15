@@ -22,6 +22,9 @@ export class EpisodeNameTooltip extends LitElement {
   static styles = css`
     sl-button::part(base) {
       min-height: 0;
+      white-space: normal;
+      word-wrap: break-word;
+      text-align: left;
     }
 
     sl-button::part(label) {
