@@ -53,6 +53,7 @@ export class AppHeader extends LitElement {
         flex-direction: column;
         gap: var(--sl-spacing-medium);
         background-color: var(--content-header-bg-color);
+        min-height: 2.5rem;
         @media screen and (min-width: 1024px) {
           flex-direction: row;
           padding-left: var(--sl-spacing-large);

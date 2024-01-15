@@ -7,15 +7,6 @@ import { ErrorMessage } from '@/types';
 
 @customElement('form-error-message')
 export class FormErrorMessage extends LitElement {
-  static styles = [
-    sharedStyles,
-    css`
-      .hidden {
-        display: none;
-      }
-    `,
-  ];
-
   @property({ attribute: false }) errors?: ErrorMessage[];
 
   @property() for!: string;
@@ -30,4 +21,17 @@ export class FormErrorMessage extends LitElement {
         `
       : null;
   }
+
+  static styles = [
+    sharedStyles,
+    css`
+      .hidden {
+        display: none;
+      }
+
+      div {
+        padding-top: var(--sl-spacing-2x-small);
+      }
+    `,
+  ];
 }

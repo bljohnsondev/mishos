@@ -1,16 +1,13 @@
 import { consume } from '@lit/context';
-import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 import { css, html } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
+import { customElement, property, state, query } from 'lit/decorators.js';
+import { choose } from 'lit/directives/choose.js';
+import { classMap } from 'lit/directives/class-map.js';
 
 import { BaseElement } from '@/components/base-element';
 import { appContext } from '@/store/app-context';
 import { sharedStyles } from '@/styles/shared-styles';
 import { AppStore } from '@/types';
-import { createEvent, getTheme, initializeFormEvents, setTheme } from '@/utils';
-
-import { saveConfig } from './settings-api';
 
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
@@ -21,10 +18,8 @@ import '@shoelace-style/shoelace/dist/components/input/input.js';
 import '@shoelace-style/shoelace/dist/components/option/option.js';
 import '@shoelace-style/shoelace/dist/components/select/select.js';
 
-interface SettingsFormValues {
-  theme?: string;
-  notifierUrl?: string;
-}
+import './settings-account';
+import './settings-general';
 
 @customElement('settings-page')
 export class SettingsPage extends BaseElement {
@@ -32,75 +27,69 @@ export class SettingsPage extends BaseElement {
   @property({ attribute: false })
   public appStore?: AppStore;
 
+  @state() section: string = 'general';
+
   @query('form') settingsForm!: HTMLFormElement;
 
   render() {
-    const notifierUrl = this.appStore?.initData?.userConfig?.notifierUrl;
-
     return html`
       <app-layout icon="cog-6-tooth" headerTitle="Settings" selected="settings">
-        <shows-search-form slot="header"></shows-search-form>
+        <ul class="header" slot="header">
+          <li>
+            <sl-button
+              variant="text"
+              size="medium"
+              class=${classMap({ 'header-selected': this.section === 'general' })}
+              @click=${() => (this.section = 'general')}
+            >
+              General
+            </sl-button>
+          </li>
+          <li>
+            <sl-button
+              variant="text"
+              size="medium"
+              class=${classMap({ 'header-selected': this.section === 'account' })}
+              @click=${() => (this.section = 'account')}
+            >
+              Account
+            </sl-button>
+          </li>
+        </ul>
         <section class="content">
-          <form>
-            <div>
-              <sl-select name="theme" label="Theme" value=${getTheme()}>
-                <sl-option value="dark">Dark</sl-option>
-                <sl-option value="light">Light</sl-option>
-              </sl-select>
-            </div>
-            <div>
-              <sl-input name="notifierUrl" label="Notifier URL" value=${ifDefined(notifierUrl)}></sl-input>
-            </div>
-            <div>
-              <sl-button variant="primary" type="submit">Save</sl-button>
-            </div>
-          </form>
+          ${choose(this.section, [
+            ['general', () => html`<settings-general></settings-general>`],
+            ['account', () => html`<settings-account></settings-account>`],
+          ])}
         </section>
       </app-layout>
     `;
   }
 
-  private async handleSubmit() {
-    const data: SettingsFormValues = serialize(this.settingsForm);
-    if (data.theme) {
-      setTheme(data.theme);
-    }
-
-    if (this.appStore?.initData?.userConfig) {
-      if (data.notifierUrl !== this.appStore?.initData?.userConfig?.notifierUrl) {
-        await saveConfig({
-          notifierUrl: data.notifierUrl,
-        });
-        this.dispatchEvent(createEvent('load-initdata'));
-      }
-    }
-
-    this.toast({ variant: 'success', message: 'Settings saved' });
-  }
-
-  firstUpdated() {
-    initializeFormEvents(this.settingsForm, () => this.handleSubmit());
-  }
-
   static styles = [
     sharedStyles,
     css`
-      .content {
-        margin: var(--sl-spacing-large);
-      }
-
-      form {
+      .header {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        margin-left: 1rem;
         display: flex;
-        flex-direction: column;
-        gap: var(--sl-spacing-medium);
-        @media screen and (min-width: 640px) {
-          width: 400px;
+        align-items: center;
+        gap: var(--sl-spacing-large);
+        :is(li) {
+          font-size: var(--sl-font-size-small);
+        }
+        :is(sl-button)::part(label) {
+          color: var(--sl-color-neutral-800);
+        }
+        :is(sl-button).header-selected::part(label) {
+          color: var(--sl-color-sky-500);
         }
       }
 
-      sl-input::part(form-control-label),
-      sl-select::part(form-control-label) {
-        padding-bottom: var(--sl-spacing-2x-small);
+      .content {
+        margin: var(--sl-spacing-large);
       }
     `,
   ];
