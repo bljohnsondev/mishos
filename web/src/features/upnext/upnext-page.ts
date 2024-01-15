@@ -123,7 +123,7 @@ export class UpNextPage extends LitElement {
       }
 
       .weekday {
-        color: var(--sl-color-neutral-500);
+        color: var(--sl-color-neutral-700);
         font-size: var(--sl-font-size-small);
         text-align: center;
         padding-top: var(--sl-spacing-2x-small);
