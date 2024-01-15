@@ -66,6 +66,7 @@ export class LoginPage extends LitElement {
         .then(response => {
           if (response.user && response.token) {
             setToken(response.token);
+            this.dispatchEvent(createEvent('load-initdata'));
             Router.go('/');
           }
         })
