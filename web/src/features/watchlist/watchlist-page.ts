@@ -1,4 +1,5 @@
 import { Router } from '@vaadin/router';
+import dayjs from 'dayjs';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -6,7 +7,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { addWatch } from '@/features/shows/shows-api';
 import { sharedStyles } from '@/styles/shared-styles';
 import { EpisodeDto } from '@/types';
-import { createToastEvent, formatDate } from '@/utils';
+import { createToastEvent } from '@/utils';
 
 import { getWatchList } from './wachlist-api';
 
@@ -55,16 +56,18 @@ export class WatchListPage extends LitElement {
             </a>
             <div class="episode-info">
               <h1>${episode.show.name}</h1>
-              <div class="episode-details">
-                S${episode.seasonNumber} E${episode.number} &middot; ${formatDate(episode.aired)}
-                ${episode.runtime ? html`&middot; ${episode.runtime}m` : null}
-              </div>
-              <div>
+              <div class="episode-name">
                 <episode-name-tooltip
                   name=${ifDefined(episode.name)}
                   description=${ifDefined(episode.summary)}
                 ></episode-name-tooltip>
               </div>
+              <ul class="detail-list">
+                <li>S${episode.seasonNumber} E${episode.number}</li>
+                ${episode.show?.network ? html`<li>${episode.show.network}</li>` : null}
+                ${episode.aired ? html`<li>${this.formatAirTime(episode.aired)}</li>` : null}
+                ${episode.runtime ? html`<li>${episode.runtime}m</li>` : null}
+              </ul>
               <sl-button variant="default" size="small" @click=${() => this.handleWatch(episode)}>
                 <sl-icon slot="prefix" library="hi-outline" name="eye"></sl-icon>
                 Mark Watched
@@ -73,6 +76,12 @@ export class WatchListPage extends LitElement {
           </div>
         `
       : null;
+  }
+
+  private formatAirTime(date?: Date): TemplateResult | null {
+    if (date) {
+      return html`${dayjs(date).format('h:mm a')}`;
+    } else return null;
   }
 
   private handleClickShow(event: Event, episode: EpisodeDto) {
@@ -133,7 +142,7 @@ export class WatchListPage extends LitElement {
       }
 
       .show-image-container {
-        width: 80px;
+        width: 6rem;
       }
 
       .show-image {
@@ -143,10 +152,36 @@ export class WatchListPage extends LitElement {
         border-radius: var(--sl-border-radius-medium);
       }
 
-      .episode-details {
+      .episode-name {
+        padding-top: var(--sl-spacing-2x-small);
+      }
+
+      .detail-list {
+        list-style: none;
+        padding: 0;
         font-size: var(--sl-font-size-small);
         color: var(--sl-color-neutral-500);
-        margin: var(--sl-spacing-x-small) 0;
+
+        :is(li) {
+          padding: var(--sl-spacing-3x-small) 0;
+        }
+
+        @media screen and (min-width: 640px) {
+          display: flex;
+          align-items: center;
+          padding-top: var(--sl-spacing-2x-small);
+
+          :is(li) {
+            &:not(:last-child):after {
+              content: ' · ';
+              padding-right: var(--sl-spacing-2x-small);
+            }
+          }
+        }
+      }
+
+      episode-name-tooltip {
+        padding-bottom: 0;
       }
 
       sl-button {

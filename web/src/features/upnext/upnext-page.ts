@@ -57,7 +57,7 @@ export class UpNextPage extends LitElement {
                 />
               </a>
             </div>
-            <div class="episode-info">
+            <div>
               <h1>${episode.show.name}</h1>
               <div class="episode-name">
                 <episode-name-tooltip
