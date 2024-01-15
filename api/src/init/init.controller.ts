@@ -18,8 +18,19 @@ export class InitController {
     };
   }
 
-  @Post('/saveconfig')
-  async saveUserConfig(@CurrentUser() user: UserDto, @Body() saveUserConfigDto: SaveUserConfigDto): Promise<any> {
-    await this.initService.saveUserConfig(user, saveUserConfigDto.userConfig);
+  @Post('/saveconfig/general')
+  async saveUserConfigGeneral(
+    @CurrentUser() user: UserDto,
+    @Body() saveUserConfigDto: SaveUserConfigDto
+  ): Promise<any> {
+    await this.initService.saveUserConfigGeneral(user, saveUserConfigDto.userConfig);
+  }
+
+  @Post('/saveconfig/account')
+  async saveUserConfigAccount(
+    @CurrentUser() user: UserDto,
+    @Body() saveUserConfigDto: SaveUserConfigDto
+  ): Promise<any> {
+    await this.initService.saveUserConfigAccount(user, saveUserConfigDto.userConfig);
   }
 }
