@@ -80,7 +80,7 @@ export class WatchListPage extends LitElement {
 
   private formatAirTime(date?: Date): TemplateResult | null {
     if (date) {
-      return html`${dayjs(date).format('h:mm a')}`;
+      return html`${dayjs(date).format('MM-DD-YYYY [·] h:mm a')}`;
     } else return null;
   }
 
@@ -160,7 +160,7 @@ export class WatchListPage extends LitElement {
         list-style: none;
         padding: 0;
         font-size: var(--sl-font-size-small);
-        color: var(--sl-color-neutral-500);
+        color: var(--sl-color-neutral-600);
 
         :is(li) {
           padding: var(--sl-spacing-3x-small) 0;
