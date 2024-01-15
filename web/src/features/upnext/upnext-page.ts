@@ -150,7 +150,7 @@ export class UpNextPage extends LitElement {
         list-style: none;
         padding: 0;
         font-size: var(--sl-font-size-small);
-        color: var(--sl-color-neutral-500);
+        color: var(--sl-color-neutral-600);
 
         :is(li) {
           padding: var(--sl-spacing-3x-small) 0;
