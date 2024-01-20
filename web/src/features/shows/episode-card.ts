@@ -10,6 +10,7 @@ import { createEvent, formatDate } from '@/utils';
 
 import '@/components/episode-name-tooltip';
 
+import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 dayjs.extend(isSameOrBefore);
@@ -35,13 +36,19 @@ export class EpisodeCard extends LitElement {
         ${this.hasAired()
           ? !this.preview
             ? html`
-                <button
-                  class=${`watch-toggle ${this.episode.watched ? 'watched' : 'unwatched'}`}
+                <sl-button
+                  size="small"
+                  variant=${this.episode.watched ? 'default' : 'neutral'}
+                  class=${`watched-button ${this.episode.watched ? 'watched' : 'unwatched'}`}
                   @click=${this.handleToggleWatched}
                 >
-                  <sl-icon library="hi-outline" name=${this.episode.watched ? 'eye' : 'eye-slash'}></sl-icon>
+                  <sl-icon
+                    slot="prefix"
+                    library="hi-outline"
+                    name=${this.episode.watched ? 'eye' : 'eye-slash'}
+                  ></sl-icon>
                   ${this.episode.watched ? 'Watched' : 'Unwatched'}
-                </button>
+                </sl-button>
               `
             : null
           : html` <div class="upcoming">Upcoming episode</div> `}
@@ -83,15 +90,28 @@ export class EpisodeCard extends LitElement {
         width: 100%;
       }
 
-      .watch-toggle {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: var(--sl-spacing-x-small);
-        padding: var(--sl-spacing-x-small);
-        border-radius: var(--sl-border-radius-medium);
+      .watched-button::part(label),
+      .watched-button::part(prefix) {
+        font-size: var(--sl-font-size-x-small);
       }
 
+      .watched::part(base) {
+        background-color: var(--sl-color-green-300);
+      }
+
+      .watched::part(base):hover {
+        border-color: var(--sl-color-green-400);
+      }
+
+      .watched::part(label),
+      .watched::part(prefix) {
+        color: var(--sl-color-neutral-900);
+        &:hover {
+          color: var(--sl-color-neutral-900);
+        }
+      }
+
+      /*
       .watched {
         background-color: var(--sl-color-green-300);
         border: 1px solid var(--sl-color-green-100);
@@ -103,6 +123,7 @@ export class EpisodeCard extends LitElement {
         border: 1px solid var(--sl-color-neutral-300);
         color: var(--sl-color-neutral-600);
       }
+      */
 
       .upcoming {
         color: var(--sl-color-neutral-500);

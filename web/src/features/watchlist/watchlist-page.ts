@@ -68,7 +68,7 @@ export class WatchListPage extends LitElement {
                 ${episode.aired ? html`<li>${this.formatAirTime(episode.aired)}</li>` : null}
                 ${episode.runtime ? html`<li>${episode.runtime}m</li>` : null}
               </ul>
-              <sl-button variant="default" size="small" @click=${() => this.handleWatch(episode)}>
+              <sl-button variant="neutral" size="small" @click=${() => this.handleWatch(episode)}>
                 <sl-icon slot="prefix" library="hi-outline" name="eye"></sl-icon>
                 Mark Watched
               </sl-button>
