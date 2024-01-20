@@ -10,7 +10,7 @@ Ads?  Episode comments?  Sharing?  Badges?  No thanks.  Just track my TV shows.
 - Open source and self hosted
 - Keep a list of followed shows
 - Mark episodes as watched
-- Watch list for next unwatched episodes
+- Watch list for next unwatched episodes and recently watched episodes
 - Up next view to see upcoming airings of episodes
 - Receive notifications prior to air of new episodes (currently via [Apprise](https://github.com/caronc/apprise) notification)
 
