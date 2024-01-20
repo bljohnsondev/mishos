@@ -1,5 +1,4 @@
 import { consume } from '@lit/context';
-import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 import { css, html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -7,7 +6,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { BaseElement } from '@/components/base-element';
 import { appContext } from '@/store/app-context';
 import { AppStore } from '@/types';
-import { getTheme, setTheme, initializeFormEvents } from '@/utils';
+import { getTheme, setTheme, initializeForm } from '@/utils';
 
 import { saveConfigGeneral } from './settings-api';
 
@@ -45,16 +44,15 @@ export class SettingsGeneral extends BaseElement {
     `;
   }
 
-  private async handleSubmit() {
-    const data: SettingsFormValues = serialize(this.settingsForm);
-    if (data.theme) {
-      setTheme(data.theme);
+  private async handleSubmit(values: SettingsFormValues) {
+    if (values.theme) {
+      setTheme(values.theme);
     }
 
     if (this.appStore?.initData?.userConfig) {
-      if (data.notifierUrl !== this.appStore?.initData?.userConfig?.notifierUrl) {
+      if (values.notifierUrl !== this.appStore?.initData?.userConfig?.notifierUrl) {
         await saveConfigGeneral({
-          notifierUrl: data.notifierUrl,
+          notifierUrl: values.notifierUrl,
         });
         this.dispatchCustomEvent('load-initdata');
       }
@@ -64,7 +62,9 @@ export class SettingsGeneral extends BaseElement {
   }
 
   firstUpdated() {
-    initializeFormEvents(this.settingsForm, () => this.handleSubmit());
+    initializeForm<SettingsFormValues>(this.settingsForm, {
+      onSubmit: values => this.handleSubmit(values),
+    });
   }
 
   static styles = css`

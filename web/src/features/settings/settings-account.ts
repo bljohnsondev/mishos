@@ -1,11 +1,11 @@
-import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 import { css, html } from 'lit';
 import { customElement, state, query } from 'lit/decorators.js';
 import * as yup from 'yup';
 
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
-import { initializeFormEvents, FormValidator } from '@/utils';
+import { ErrorMessage } from '@/types';
+import { initializeForm } from '@/utils';
 
 import { saveConfigAccount } from './settings-api';
 
@@ -23,26 +23,24 @@ type AccountFormValues = yup.InferType<typeof settingsSchema>;
 export class SettingsAccount extends BaseElement {
   @query('form') settingsForm!: HTMLFormElement;
 
-  @state() errorMessage?: string;
-
-  private formValidator: FormValidator<AccountFormValues> = new FormValidator(settingsSchema);
+  @state() errorMessages?: ErrorMessage[];
 
   render() {
     return html`
       <form>
         <div>
           <sl-input type="password" name="passwordCurrent" label="Current Password"></sl-input>
-          <form-error-message for="passwordCurrent" .errors=${this.formValidator.errors}></form-error-message>
+          <form-error-message for="passwordCurrent" .errors=${this.errorMessages}></form-error-message>
         </div>
         <div>
           <sl-input type="password" name="passwordNew1" label="New Password"></sl-input>
-          <form-error-message for="passwordNew1" .errors=${this.formValidator.errors}></form-error-message>
+          <form-error-message for="passwordNew1" .errors=${this.errorMessages}></form-error-message>
         </div>
         <div>
           <sl-input type="password" name="passwordNew2" label="Confirm Password"></sl-input>
-          <form-error-message for="passwordNew2" .errors=${this.formValidator.errors}></form-error-message>
+          <form-error-message for="passwordNew2" .errors=${this.errorMessages}></form-error-message>
+          <form-error-message for="matching" .errors=${this.errorMessages}></form-error-message>
         </div>
-        ${this.errorMessage ? html`<div class="error-message">${this.errorMessage}</div>` : null}
         <div>
           <sl-button variant="primary" type="submit">Save</sl-button>
         </div>
@@ -50,31 +48,29 @@ export class SettingsAccount extends BaseElement {
     `;
   }
 
-  private async handleSubmit() {
-    const data = serialize(this.settingsForm) as AccountFormValues;
-    this.errorMessage = undefined;
+  private async handleSubmit(values: AccountFormValues) {
+    this.requestUpdate();
+    this.errorMessages = [];
 
-    if (this.formValidator.validate(data)) {
-      this.formValidator.reset();
-      this.requestUpdate();
-      if (data.passwordNew1 !== data.passwordNew2) {
-        this.errorMessage = 'Password do not match';
-      } else {
-        await saveConfigAccount({
-          passwordCurrent: data.passwordCurrent,
-          passwordNew1: data.passwordNew1,
-          passwordNew2: data.passwordNew2,
-        });
-        this.toast({ variant: 'success', message: 'Your password has been changed' });
-        this.settingsForm.reset();
-      }
+    if (values.passwordNew1 !== values.passwordNew2) {
+      this.errorMessages = [{ name: 'matching', message: 'Passwords do not match' }];
     } else {
-      this.requestUpdate();
+      await saveConfigAccount({
+        passwordCurrent: values.passwordCurrent,
+        passwordNew1: values.passwordNew1,
+        passwordNew2: values.passwordNew2,
+      });
+      this.toast({ variant: 'success', message: 'Your password has been changed' });
+      this.settingsForm.reset();
     }
   }
 
   firstUpdated() {
-    initializeFormEvents(this.settingsForm, () => this.handleSubmit());
+    initializeForm<AccountFormValues>(this.settingsForm, {
+      schema: settingsSchema,
+      onSubmit: values => this.handleSubmit(values),
+      onError: errors => (this.errorMessages = errors),
+    });
   }
 
   static styles = [

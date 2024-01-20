@@ -1,12 +1,11 @@
-import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 import { Router } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
 import { customElement, state, query } from 'lit/decorators.js';
 import * as yup from 'yup';
 
 import { sharedStyles } from '@/styles/shared-styles';
-import { ToastMessage } from '@/types';
-import { initializeFormEvents, setToken, FormValidator, createEvent } from '@/utils';
+import { ErrorMessage, ToastMessage } from '@/types';
+import { initializeForm, setToken, createEvent } from '@/utils';
 
 import { login } from './auth-api';
 
@@ -28,8 +27,7 @@ export class LoginPage extends LitElement {
   @query('form') loginForm!: HTMLFormElement;
 
   @state() toast?: ToastMessage;
-
-  private formValidator: FormValidator<LoginFormValues> = new FormValidator(loginSchema);
+  @state() errorMessages: ErrorMessage[] = [];
 
   render() {
     return html`
@@ -40,11 +38,11 @@ export class LoginPage extends LitElement {
             <form>
               <div>
                 <sl-input name="username" label="Username" placeholder="Username"></sl-input>
-                <form-error-message for="username" .errors=${this.formValidator.errors}></form-error-message>
+                <form-error-message for="username" .errors=${this.errorMessages}></form-error-message>
               </div>
               <div>
                 <sl-input name="password" label="Password" placeholder="Password" type="password"></sl-input>
-                <form-error-message for="password" .errors=${this.formValidator.errors}></form-error-message>
+                <form-error-message for="password" .errors=${this.errorMessages}></form-error-message>
               </div>
               <sl-button type="submit" variant="primary">Login</sl-button>
             </form>
@@ -54,30 +52,30 @@ export class LoginPage extends LitElement {
     `;
   }
 
-  private handleSubmit() {
-    const data = serialize(this.loginForm) as LoginFormValues;
-    if (this.formValidator.validate(data) && data.username && data.password) {
-      this.formValidator.reset();
-      this.requestUpdate();
-      login(data.username, data.password)
-        .then(response => {
-          if (response.user && response.token) {
-            setToken(response.token);
-            this.dispatchEvent(createEvent('load-initdata'));
-            Router.go('/');
-          }
-        })
-        .catch(() => {
-          const toast = { variant: 'danger', message: 'Login failed' };
-          this.dispatchEvent(createEvent('toast', toast));
-        });
-    } else {
-      this.requestUpdate();
-    }
+  private handleSubmit(values: LoginFormValues) {
+    this.requestUpdate();
+    this.errorMessages = [];
+
+    login(values.username, values.password)
+      .then(response => {
+        if (response.user && response.token) {
+          setToken(response.token);
+          this.dispatchEvent(createEvent('load-initdata'));
+          Router.go('/');
+        }
+      })
+      .catch(() => {
+        const toast = { variant: 'danger', message: 'Login failed' };
+        this.dispatchEvent(createEvent('toast', toast));
+      });
   }
 
   firstUpdated() {
-    initializeFormEvents(this.loginForm, () => this.handleSubmit());
+    initializeForm<LoginFormValues>(this.loginForm, {
+      schema: loginSchema,
+      onSubmit: values => this.handleSubmit(values),
+      onError: errors => (this.errorMessages = errors),
+    });
   }
 
   static styles = [
