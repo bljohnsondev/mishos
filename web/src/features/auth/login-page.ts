@@ -2,7 +2,7 @@ import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 import { Router } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
 import { customElement, state, query } from 'lit/decorators.js';
-import { z, ZodSchema } from 'zod';
+import * as yup from 'yup';
 
 import { sharedStyles } from '@/styles/shared-styles';
 import { ToastMessage } from '@/types';
@@ -16,15 +16,12 @@ import '@shoelace-style/shoelace/dist/components/button/button.js';
 
 import '@/components/form-error-message';
 
-interface LoginFormValues {
-  username?: string;
-  password?: string;
-}
-
-const loginSchema: ZodSchema = z.object({
-  username: z.string().min(1, 'Username is required'),
-  password: z.string().min(1, 'Password is required'),
+const loginSchema = yup.object({
+  username: yup.string().required('Username is required'),
+  password: yup.string().required('Password is required'),
 });
+
+type LoginFormValues = yup.InferType<typeof loginSchema>;
 
 @customElement('login-page')
 export class LoginPage extends LitElement {
@@ -32,7 +29,7 @@ export class LoginPage extends LitElement {
 
   @state() toast?: ToastMessage;
 
-  private formValidator: FormValidator = new FormValidator(loginSchema);
+  private formValidator: FormValidator<LoginFormValues> = new FormValidator(loginSchema);
 
   render() {
     return html`
@@ -58,7 +55,7 @@ export class LoginPage extends LitElement {
   }
 
   private handleSubmit() {
-    const data: LoginFormValues = serialize(this.loginForm);
+    const data = serialize(this.loginForm) as LoginFormValues;
     if (this.formValidator.validate(data) && data.username && data.password) {
       this.formValidator.reset();
       this.requestUpdate();

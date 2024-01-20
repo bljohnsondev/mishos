@@ -1,7 +1,7 @@
 import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 import { css, html } from 'lit';
 import { customElement, state, query } from 'lit/decorators.js';
-import { z, ZodSchema } from 'zod';
+import * as yup from 'yup';
 
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
@@ -11,17 +11,13 @@ import { saveConfigAccount } from './settings-api';
 
 import '@/components/form-error-message';
 
-interface AccountFormValues {
-  passwordCurrent?: string;
-  passwordNew1?: string;
-  passwordNew2?: string;
-}
-
-const settingsSchema: ZodSchema = z.object({
-  passwordCurrent: z.string().min(1, 'Current Password is required'),
-  passwordNew1: z.string().min(1, 'New Password is required'),
-  passwordNew2: z.string().min(1, 'Confirm Password is required'),
+const settingsSchema = yup.object({
+  passwordCurrent: yup.string().required('Current password is required'),
+  passwordNew1: yup.string().required('New password is required'),
+  passwordNew2: yup.string().required('Confirm password is required'),
 });
+
+type AccountFormValues = yup.InferType<typeof settingsSchema>;
 
 @customElement('settings-account')
 export class SettingsAccount extends BaseElement {
@@ -29,7 +25,7 @@ export class SettingsAccount extends BaseElement {
 
   @state() errorMessage?: string;
 
-  private formValidator: FormValidator = new FormValidator(settingsSchema);
+  private formValidator: FormValidator<AccountFormValues> = new FormValidator(settingsSchema);
 
   render() {
     return html`
@@ -55,7 +51,7 @@ export class SettingsAccount extends BaseElement {
   }
 
   private async handleSubmit() {
-    const data: AccountFormValues = serialize(this.settingsForm);
+    const data = serialize(this.settingsForm) as AccountFormValues;
     this.errorMessage = undefined;
 
     if (this.formValidator.validate(data)) {
