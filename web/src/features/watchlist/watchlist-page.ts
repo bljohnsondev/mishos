@@ -19,7 +19,7 @@ import './watchlist-recent';
 @customElement('watchlist-page')
 export class WatchListPage extends LitElement {
   @state() episodes?: EpisodeDto[];
-  @state() section: string = 'recent';
+  @state() section: string = 'unwatched';
 
   render() {
     return html`
