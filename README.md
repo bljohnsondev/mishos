@@ -34,9 +34,13 @@ This project is in it's early stages and there isn't currently a Docker image (y
 
 ![Screenshot of the show details screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/show-screenshot1.png "Show details screenshot")
 
-## Watch List
+## Watch List - Unwatched
 
-![Screenshot of the watch list screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/watchlist-screenshot1.png "Watch list screenshot")
+![Screenshot of the watch list unwatched screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/watchlist-screenshot1.png "Watch list unwatched screenshot")
+
+## Watch List - Recently Watched
+
+![Screenshot of the watch list recent screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/watchlist-recent-screenshot1.png "Watch list recent screenshot")
 
 ## Up Next
 
