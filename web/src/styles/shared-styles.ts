@@ -31,4 +31,28 @@ export const sharedStyles = css`
     background-color: var(--sl-color-neutral-300);
     border-radius: var(--sl-border-radius-medium);
   }
+
+  .header-tabs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--sl-spacing-large);
+    @media screen and (min-width: 1024px) {
+      margin-left: 1rem;
+    }
+    :is(li) {
+      font-size: var(--sl-font-size-small);
+    }
+    :is(sl-button)::part(label) {
+      color: var(--sl-color-neutral-800);
+    }
+    :is(sl-button)::part(label):hover {
+      color: var(--sl-color-neutral-950);
+    }
+    :is(sl-button).header-selected::part(label) {
+      color: var(--sl-color-sky-500);
+    }
+  }
 `;

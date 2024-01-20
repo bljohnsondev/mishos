@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, Repository } from 'typeorm';
 
@@ -11,6 +12,7 @@ import { EpisodeMapper } from '@/common/mapper';
 export class WatchListService {
   constructor(
     private episodeMapper: EpisodeMapper,
+    private configService: ConfigService,
     @InjectRepository(Episode) private episodeRepository: Repository<Episode>,
     @InjectRepository(FollowedShow) private followedShowRepository: Repository<FollowedShow>,
     @InjectRepository(Season) private seasonRepository: Repository<Season>,
@@ -107,6 +109,53 @@ export class WatchListService {
       ...this.episodeMapper.toDto(ep),
       show: {
         ...ep.season.show,
+      },
+    }));
+  }
+
+  async findWatchListRecent(authUser: UserDto): Promise<EpisodeDto[]> {
+    let limit = parseInt(this.configService.get('WATCHLIST_RECENT_LIMIT'));
+    if (isNaN(limit)) limit = 10;
+
+    const recentEpisodes: Episode[] = await this.episodeRepository.find({
+      select: {
+        id: true,
+        name: true,
+        number: true,
+        summary: true,
+        aired: true,
+        runtime: true,
+        season: {
+          number: true,
+        },
+      },
+      where: {
+        watches: {
+          user: {
+            id: authUser.id,
+          },
+        },
+      },
+      order: {
+        watches: {
+          createdAt: 'DESC',
+        },
+      },
+      relations: {
+        season: {
+          show: true,
+        },
+        watches: true,
+      },
+      take: limit,
+    });
+
+    return recentEpisodes.map(ep => ({
+      ...this.episodeMapper.toDto(ep),
+      show: {
+        id: ep.season?.show?.id,
+        name: ep.season?.show?.name,
+        imageMedium: ep.season?.show?.imageMedium,
       },
     }));
   }

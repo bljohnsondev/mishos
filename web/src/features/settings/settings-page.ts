@@ -34,7 +34,7 @@ export class SettingsPage extends BaseElement {
   render() {
     return html`
       <app-layout icon="cog-6-tooth" headerTitle="Settings" selected="settings">
-        <ul class="header" slot="header">
+        <ul class="header-tabs" slot="header">
           <li>
             <sl-button
               variant="text"
@@ -69,25 +69,6 @@ export class SettingsPage extends BaseElement {
   static styles = [
     sharedStyles,
     css`
-      .header {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        margin-left: 1rem;
-        display: flex;
-        align-items: center;
-        gap: var(--sl-spacing-large);
-        :is(li) {
-          font-size: var(--sl-font-size-small);
-        }
-        :is(sl-button)::part(label) {
-          color: var(--sl-color-neutral-800);
-        }
-        :is(sl-button).header-selected::part(label) {
-          color: var(--sl-color-sky-500);
-        }
-      }
-
       .content {
         margin: var(--sl-spacing-large);
       }
