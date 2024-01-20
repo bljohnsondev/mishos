@@ -78,7 +78,7 @@ export class WatchListRecent extends LitElement {
   async handleWatch(episode: EpisodeDto) {
     if (episode && episode.id) {
       await addWatch(episode.id, true, 'single');
-      this.episodes = await getWatchList();
+      this.episodes = await getWatchListRecent();
       this.dispatchEvent(
         createToastEvent({
           variant: 'success',
