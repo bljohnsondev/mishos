@@ -10,6 +10,7 @@ export interface EpisodeDto {
   summary?: string;
   createdAt?: Date;
   watched?: boolean;
+  watchedDate?: Date;
   seasonNumber?: number;
   show?: ShowDto;
 }

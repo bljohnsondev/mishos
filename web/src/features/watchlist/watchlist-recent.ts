@@ -1,5 +1,6 @@
 import { Router } from '@vaadin/router';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
@@ -16,6 +17,8 @@ import '@/layout/app-layout';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+
+dayjs.extend(relativeTime);
 
 @customElement('watchlist-recent')
 export class WatchListRecent extends LitElement {
@@ -58,6 +61,7 @@ export class WatchListRecent extends LitElement {
                 ${episode.aired ? html`<li>${this.formatAirTime(episode.aired)}</li>` : null}
                 ${episode.runtime ? html`<li>${episode.runtime}m</li>` : null}
               </ul>
+              <div class="watched-date">Watched ${dayjs(episode.watchedDate).fromNow()}</div>
             </div>
           </div>
         `
@@ -169,6 +173,12 @@ export class WatchListRecent extends LitElement {
 
       episode-name-tooltip {
         padding-bottom: 0;
+      }
+
+      .watched-date {
+        font-size: var(--sl-font-size-x-small);
+        margin-top: var(--sl-spacing-2x-small);
+        color: var(--sl-color-neutral-700);
       }
     `,
   ];
