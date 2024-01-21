@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { FollowedShow } from './followed-show';
 import { UserConfig } from './user-config';
@@ -6,7 +6,7 @@ import { WatchedEpisode } from './watched-episode';
 
 @Entity()
 export class User {
-  @PrimaryColumn('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
@@ -28,7 +28,9 @@ export class User {
   })
   watchedEpisodes?: WatchedEpisode[];
 
-  @OneToOne(() => UserConfig)
+  @OneToOne(() => UserConfig, {
+    cascade: true,
+  })
   @JoinColumn()
   config: UserConfig;
 }

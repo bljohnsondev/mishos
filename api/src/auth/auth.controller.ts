@@ -17,6 +17,19 @@ export class AuthController {
     return await this.authService.login(loginDto.username, loginDto.password);
   }
 
+  @Public()
+  @Get('onboarding/ready')
+  async onboardingReady() {
+    const ready = await this.authService.isOnboardingReady();
+    return { ready };
+  }
+
+  @Public()
+  @Post('onboarding/create')
+  async onboardingCreate(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
+    return await this.authService.onboardingCreate(loginDto.username, loginDto.password);
+  }
+
   @Get('user')
   async currentUser(@Request() req): Promise<UserDto> {
     const user: User | null = await this.authService.findUserById(req.user.id);
