@@ -9,6 +9,6 @@ export class BaseElement extends LitElement {
   }
 
   dispatchCustomEvent(name: string, detail?: any) {
-    createEvent(name, detail);
+    this.dispatchEvent(createEvent(name, detail));
   }
 }
