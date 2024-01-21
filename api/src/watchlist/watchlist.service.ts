@@ -128,6 +128,9 @@ export class WatchListService {
         season: {
           number: true,
         },
+        watches: {
+          createdAt: true,
+        },
       },
       where: {
         watches: {
@@ -152,6 +155,7 @@ export class WatchListService {
 
     return recentEpisodes.map(ep => ({
       ...this.episodeMapper.toDto(ep),
+      watchedDate: ep.watches && ep.watches.length > 0 ? ep.watches[0].createdAt : undefined,
       show: {
         id: ep.season?.show?.id,
         name: ep.season?.show?.name,
