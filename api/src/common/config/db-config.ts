@@ -11,6 +11,7 @@ export const databaseConfig = (configService: ConfigService): TypeOrmModuleOptio
   const initConfig = {
     entities,
     synchronize: runningEnv !== 'production',
+    timezone: 'Z',
   };
 
   switch (dbType) {
