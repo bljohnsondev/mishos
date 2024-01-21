@@ -18,8 +18,8 @@ This project is in it's early stages and there isn't currently a Docker image (y
 
 ## Technology
 
-- *Frontend* - [Lit](https://lit.dev) web components
-- *Backend* - NestJS
+- *Frontend* - [Lit](https://lit.dev) web components, [Shoelace](https://shoelace.style/) UI library
+- *Backend* - [NestJS](https://nestjs.com/)
 	- The default setup uses a SQLite database but can be used with MySQL or PostgreSQL
 
 ## Followed Shows
