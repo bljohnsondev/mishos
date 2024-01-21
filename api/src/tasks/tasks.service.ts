@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 
 import { EpisodeMapper, ShowMapper, UserMapper } from '@/common/mapper';
 

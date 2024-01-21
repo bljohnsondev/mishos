@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 import { DataSource } from 'typeorm';
 
 import { AuthService } from '@/auth/auth.service';

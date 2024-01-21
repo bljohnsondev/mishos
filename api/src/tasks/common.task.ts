@@ -1,7 +1,7 @@
 import { Inject, Logger } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob, CronTime } from 'cron';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 
 export abstract class CommonTaskService {
   abstract runTask(taskName: string): void;
