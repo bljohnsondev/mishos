@@ -1,5 +1,6 @@
 import './components/not-found-page';
 import './features/auth/login-page';
+import './features/auth/onboarding-page';
 import './features/search/search-results-page';
 import './features/settings/settings-page';
 import './features/shows/shows-page';
@@ -8,10 +9,11 @@ import './features/shows/show-preview-page';
 import './features/upnext/upnext-page';
 import './features/watchlist/watchlist-page';
 
-import { authGuard } from '@/features/auth/auth-guard';
+import { authGuard, onboardingGuard } from '@/features/auth/auth-guard';
 
 export const routes = [
   { path: '/', redirect: '/watchlist' },
+  { path: '/onboarding', component: 'onboarding-page', action: onboardingGuard },
   { path: '/login', component: 'login-page' },
   { path: '/shows', component: 'shows-page', action: authGuard },
   { path: '/show/search', component: 'search-results-page', action: authGuard },

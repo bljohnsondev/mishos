@@ -7,16 +7,24 @@ export interface LoginResponse {
   token?: string;
 }
 
-const LOGIN_API = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const login = async (username: string, password: string): Promise<LoginResponse> => {
   return await ky
-    .post(`${LOGIN_API}/auth/login`, {
+    .post(`${API_URL}/auth/login`, {
       json: { username, password },
     })
     .json();
 };
 
-export const getUser = async (): Promise<UserDto | undefined> => {
-  return await ky.get('/auth/user').json();
+export const getOnboardReady = async (): Promise<any | undefined> => {
+  return await ky.get(`${API_URL}/auth/onboarding/ready`).json();
+};
+
+export const createInitialUser = async (username: string, password: string): Promise<LoginResponse> => {
+  return await ky
+    .post(`${API_URL}/auth/onboarding/create`, {
+      json: { username, password },
+    })
+    .json();
 };

@@ -12,3 +12,14 @@ export const authGuard = async (context: Context, commands: Commands) => {
 
   return undefined;
 };
+
+export const onboardingGuard = async (context: Context, commands: Commands) => {
+  const isOnboardReady = await new AuthService().isOnboardReady();
+
+  if (!isOnboardReady) {
+    console.warn('Onboarding is not available', context.pathname);
+    return commands.redirect('/login');
+  }
+
+  return undefined;
+};
