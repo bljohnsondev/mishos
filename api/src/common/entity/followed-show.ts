@@ -5,7 +5,7 @@ import { User } from './user';
 
 @Entity()
 export class FollowedShow {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: string;
 
   @ManyToOne(() => User, user => user.followedShows)

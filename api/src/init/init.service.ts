@@ -33,7 +33,7 @@ export class InitService {
     const isPasswordValid = await bcrypt.compare(userConfig.passwordCurrent, user.password);
 
     if (!isPasswordValid) {
-      throw new ShowException('Current password is not correct');
+      throw new ShowException('Current password is incorrect');
     }
 
     if (userConfig.passwordNew1 !== userConfig.passwordNew2) {

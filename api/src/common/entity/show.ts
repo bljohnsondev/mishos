@@ -4,7 +4,7 @@ import { Season } from './season';
 
 @Entity()
 export class Show {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: string;
 
   @Column({ unique: true })

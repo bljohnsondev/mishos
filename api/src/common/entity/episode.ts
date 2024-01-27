@@ -5,7 +5,7 @@ import { WatchedEpisode } from './watched-episode';
 
 @Entity()
 export class Episode {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: string;
 
   @Column({ unique: true, nullable: true })

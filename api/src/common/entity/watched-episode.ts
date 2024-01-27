@@ -6,7 +6,7 @@ import { User } from './user';
 @Entity()
 @Unique(['user', 'episode'])
 export class WatchedEpisode {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: string;
 
   @ManyToOne(() => User, user => user.watchedEpisodes, { nullable: false })
