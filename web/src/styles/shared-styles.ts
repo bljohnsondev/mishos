@@ -55,4 +55,10 @@ export const sharedStyles = css`
       color: var(--sl-color-sky-500);
     }
   }
+
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: var(--sl-spacing-medium);
+  }
 `;

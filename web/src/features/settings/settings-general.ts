@@ -5,10 +5,11 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { BaseElement } from '@/components/base-element';
 import { appContext } from '@/store/app-context';
+import { sharedStyles } from '@/styles/shared-styles';
 import { AppStore } from '@/types';
 import { getTheme, setTheme, initializeForm } from '@/utils';
 
-import { saveConfigGeneral } from './settings-api';
+import { getExportData, saveConfigGeneral } from './settings-api';
 
 interface SettingsFormValues {
   theme?: string;
@@ -37,11 +38,26 @@ export class SettingsGeneral extends BaseElement {
         <div>
           <sl-input name="notifierUrl" label="Notifier URL" value=${ifDefined(notifierUrl)}></sl-input>
         </div>
-        <div>
+        <div class="action-buttons">
           <sl-button variant="primary" type="submit">Save</sl-button>
+          <sl-button variant="neutral" @click=${this.handleExport}>Export Data</sl-button>
         </div>
       </form>
     `;
+  }
+
+  private async handleExport() {
+    const exported = await getExportData();
+
+    // hacky way to download JSON from an in-memory object
+    const url = window.URL.createObjectURL(exported);
+    const link = document.createElement('a');
+    link.style.display = 'none';
+    link.href = url;
+    link.download = 'exported-shows.json';
+    document.body.appendChild(link);
+    link.click();
+    window.URL.revokeObjectURL(url);
   }
 
   private async handleSubmit(values: SettingsFormValues) {
@@ -69,19 +85,22 @@ export class SettingsGeneral extends BaseElement {
     });
   }
 
-  static styles = css`
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: var(--sl-spacing-medium);
-      @media screen and (min-width: 640px) {
-        width: 400px;
+  static styles = [
+    sharedStyles,
+    css`
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: var(--sl-spacing-medium);
+        @media screen and (min-width: 640px) {
+          width: 400px;
+        }
       }
-    }
 
-    sl-input::part(form-control-label),
-    sl-select::part(form-control-label) {
-      padding-bottom: var(--sl-spacing-2x-small);
-    }
-  `;
+      sl-input::part(form-control-label),
+      sl-select::part(form-control-label) {
+        padding-bottom: var(--sl-spacing-2x-small);
+      }
+    `,
+  ];
 }

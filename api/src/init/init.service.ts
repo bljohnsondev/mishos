@@ -44,4 +44,8 @@ export class InitService {
     user.password = newPassword;
     await this.dataSource.manager.save(user);
   }
+
+  async generateExportData(authUser: UserDto): Promise<any> {
+    return { userId: authUser.id, message: 'This is a test' };
+  }
 }

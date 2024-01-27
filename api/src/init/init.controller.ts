@@ -33,4 +33,9 @@ export class InitController {
   ): Promise<any> {
     await this.initService.saveUserConfigAccount(user, saveUserConfigDto.userConfig);
   }
+
+  @Get('/exportdata')
+  async exportData(@CurrentUser() user: UserDto) {
+    return await this.initService.generateExportData(user);
+  }
 }

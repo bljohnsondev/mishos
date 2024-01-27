@@ -24,3 +24,7 @@ export const saveConfigAccount = async (config: UserConfigDto): Promise<boolean>
 
   return true;
 };
+
+export const getExportData = async (): Promise<any> => {
+  return await kyWrapper.get('init/exportdata').blob();
+};
