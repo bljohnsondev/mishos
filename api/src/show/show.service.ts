@@ -367,7 +367,7 @@ export class ShowService {
         newWatched.push(this.watchedEpisodeRepository.create({ user, episode: unwatched }));
       }
 
-      await this.dataSource.manager.save(newWatched);
+      await this.watchedEpisodeRepository.insert(newWatched);
     }
   }
 
