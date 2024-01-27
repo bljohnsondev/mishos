@@ -1,14 +1,71 @@
+import { HTTPError } from 'ky';
 import { LitElement } from 'lit';
+import { state } from 'lit/decorators.js';
 
 import { ToastMessage } from '@/types';
-import { createEvent, createToastEvent } from '@/utils';
+import { createEvent } from '@/utils';
+
+export interface CallApiOptions {
+  target?: HTMLElement;
+  toastErrors?: boolean;
+  loadingSpinner?: boolean;
+}
 
 export class BaseElement extends LitElement {
-  toast(message: ToastMessage) {
-    this.dispatchEvent(createToastEvent(message));
+  @state() protected loading: boolean = false;
+
+  protected startLoading(target?: HTMLElement) {
+    this.loading = true;
+    this.dispatchCustomEvent('app-loading', true, target);
   }
 
-  dispatchCustomEvent(name: string, detail?: any) {
-    this.dispatchEvent(createEvent(name, detail));
+  protected stopLoading(target?: HTMLElement) {
+    this.loading = false;
+    this.dispatchCustomEvent('app-loading', false, target);
+  }
+
+  protected toast(message: ToastMessage, target?: HTMLElement) {
+    this.dispatchCustomEvent('toast', message, target);
+  }
+
+  protected dispatchCustomEvent<T>(eventName: string, payload?: T, target?: HTMLElement): void {
+    if (target) target.dispatchEvent(createEvent(eventName, payload));
+    else this.dispatchEvent(createEvent(eventName, payload));
+  }
+
+  protected async callApi<T>(
+    func: () => any,
+    options: CallApiOptions = { target: this, toastErrors: true, loadingSpinner: true }
+  ): Promise<T | undefined> {
+    const { target = this, toastErrors = true, loadingSpinner = true } = options;
+
+    try {
+      if (loadingSpinner) this.dispatchCustomEvent('app-loading', true, target);
+      const json = await func();
+      if (loadingSpinner) this.dispatchCustomEvent('app-loading', false, target);
+
+      const isError = json?.error === true && json?.errorMessage;
+
+      if (toastErrors && isError) {
+        this.toast({ variant: 'danger', message: json.errorMessage }, target);
+      } else if (!isError) {
+        return json;
+      }
+    } catch (error) {
+      if (loadingSpinner) this.dispatchCustomEvent('app-loading', false, target);
+
+      if (toastErrors && error instanceof HTTPError && error.response?.status === 400) {
+        const errorJson = await error.response.json();
+        if (errorJson?.message) {
+          this.toast({ variant: 'danger', message: errorJson.message }, target);
+        } else {
+          this.toast({ variant: 'danger', message: error.message ?? 'An unknown error occurred' }, target);
+        }
+      } else if (toastErrors && error instanceof Error) {
+        this.toast({ variant: 'danger', message: error.message ?? 'An unknown error occurred' }, target);
+      }
+    }
+
+    return undefined;
   }
 }

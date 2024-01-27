@@ -1,9 +1,10 @@
 import { Router } from '@vaadin/router';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { css, html, LitElement, TemplateResult } from 'lit';
+import { css, html, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
+import { BaseElement } from '@/components/base-element';
 import { addWatch } from '@/features/shows/shows-api';
 import { sharedStyles } from '@/styles/shared-styles';
 import { EpisodeDto } from '@/types';
@@ -21,7 +22,7 @@ import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 dayjs.extend(relativeTime);
 
 @customElement('watchlist-recent')
-export class WatchListRecent extends LitElement {
+export class WatchListRecent extends BaseElement {
   @state() episodes?: EpisodeDto[];
 
   render() {
@@ -82,7 +83,7 @@ export class WatchListRecent extends LitElement {
   async handleWatch(episode: EpisodeDto) {
     if (episode && episode.id) {
       await addWatch(episode.id, true, 'single');
-      this.episodes = await getWatchListRecent();
+      this.episodes = await this.callApi(() => getWatchListRecent());
       this.dispatchEvent(
         createToastEvent({
           variant: 'success',
@@ -94,7 +95,7 @@ export class WatchListRecent extends LitElement {
 
   async connectedCallback() {
     super.connectedCallback();
-    this.episodes = await getWatchListRecent();
+    this.episodes = await this.callApi(() => getWatchListRecent());
   }
 
   static styles = [

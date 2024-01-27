@@ -1,9 +1,11 @@
 import { Router, RouterLocation } from '@vaadin/router';
-import { css, html, LitElement } from 'lit';
+import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
+import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
-import { ShowDto } from '@/types';
+import { ShowCardBadge, ShowDto } from '@/types';
 
 import { searchShowsFromProvider } from './search-api';
 
@@ -14,36 +16,40 @@ import '@/layout/app-layout';
 import '@shoelace-style/shoelace/dist/components/badge/badge.js';
 
 @customElement('search-results-page')
-export class SearchResultsPage extends LitElement {
+export class SearchResultsPage extends BaseElement {
   @property({ type: Object }) location?: RouterLocation;
 
   @state() query?: string | null;
   @state() results?: ShowDto[];
 
+  private addedBadge: ShowCardBadge = { variant: 'primary', label: 'Added' };
+
   render() {
-    return html`
-      <app-layout icon="magnifying-glass" headerTitle="Search Results" selected="shows">
-        <shows-search-form slot="header" query=${this.query}></shows-search-form>
-        <section class="content" @select-show=${this.handleSelectShow}>
-          <div class="results">
-            ${this.results && this.results.length > 0
-              ? this.results.map(
-                  show => html`
-                    <a href="#" class="card-link" @click=${(event: Event) => this.handleSelectShow(event, show)}>
-                      <show-card
-                        image=${show.imageMedium}
-                        name=${show.name}
-                        network=${show.network}
-                        .badge=${show.added ? { label: 'Added' } : undefined}
-                      ></show-card>
-                    </a>
-                  `
-                )
-              : null}
-          </div>
-        </section>
-      </app-layout>
-    `;
+    return this.query
+      ? html`
+          <app-layout icon="magnifying-glass" headerTitle="Search Results" selected="shows">
+            <shows-search-form slot="header" query=${this.query}></shows-search-form>
+            <section class="content" @select-show=${this.handleSelectShow}>
+              <div class="results">
+                ${this.results && this.results.length > 0
+                  ? this.results.map(
+                      show => html`
+                        <a href="#" class="card-link" @click=${(event: Event) => this.handleSelectShow(event, show)}>
+                          <show-card
+                            image=${ifDefined(show.imageMedium)}
+                            name=${ifDefined(show.name)}
+                            network=${ifDefined(show.network)}
+                            .badge=${show.added ? this.addedBadge : undefined}
+                          ></show-card>
+                        </a>
+                      `
+                    )
+                  : null}
+              </div>
+            </section>
+          </app-layout>
+        `
+      : null;
   }
 
   private handleSelectShow(event: Event, show: ShowDto) {
@@ -62,7 +68,7 @@ export class SearchResultsPage extends LitElement {
       const query = new URLSearchParams(this.location.search).get('q');
       if (query && query !== this.query) {
         this.query = query;
-        this.results = await searchShowsFromProvider(query);
+        this.results = await this.callApi(() => searchShowsFromProvider(query));
       }
     }
   }

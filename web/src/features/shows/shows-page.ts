@@ -1,8 +1,9 @@
 import { Router } from '@vaadin/router';
-import { css, html, LitElement } from 'lit';
+import { css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
+import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
 import { ShowDto } from '@/types';
 
@@ -14,7 +15,7 @@ import './show-card';
 import './shows-search-form';
 
 @customElement('shows-page')
-export class ShowsPage extends LitElement {
+export class ShowsPage extends BaseElement {
   @state() loading: boolean = false;
   @state() shows?: ShowDto[];
 
@@ -57,7 +58,7 @@ export class ShowsPage extends LitElement {
   async connectedCallback() {
     super.connectedCallback();
     this.loading = true;
-    this.shows = await getFollowedShows();
+    this.shows = await this.callApi(() => getFollowedShows());
     this.loading = false;
   }
 

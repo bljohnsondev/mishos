@@ -1,7 +1,8 @@
 import { Router, RouterLocation } from '@vaadin/router';
-import { css, html, LitElement } from 'lit';
+import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
+import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
 import { ShowDto } from '@/types';
 import { createToastEvent } from '@/utils';
@@ -14,7 +15,7 @@ import '@/layout/app-layout';
 import './show-details';
 
 @customElement('show-view-page')
-export class ShowViewPage extends LitElement {
+export class ShowViewPage extends BaseElement {
   @property({ type: Object }) location?: RouterLocation;
 
   @state() show?: ShowDto | null;
@@ -45,7 +46,9 @@ export class ShowViewPage extends LitElement {
     if (event && event instanceof CustomEvent) {
       const watchData = event.detail;
       if (watchData.episodeId && this.show?.id) {
-        await addWatch(watchData.episodeId, watchData.watched, this.togglePrevious ? 'previous' : 'single');
+        await this.callApi(() =>
+          addWatch(watchData.episodeId, watchData.watched, this.togglePrevious ? 'previous' : 'single')
+        );
         await this.loadShow(this.show.id);
       }
     }
@@ -60,7 +63,7 @@ export class ShowViewPage extends LitElement {
   private async handleRefreshShow(event: Event) {
     if (event && event instanceof CustomEvent && event.detail && this.show?.id) {
       const showId = event.detail;
-      await refreshShow(showId);
+      await this.callApi(() => refreshShow(showId));
       await this.loadShow(this.show.id);
       this.dispatchEvent(
         createToastEvent({
@@ -74,7 +77,7 @@ export class ShowViewPage extends LitElement {
   private async handleRemoveShow(event: Event) {
     if (event && event instanceof CustomEvent && event.detail.providerId && event.detail.id) {
       const show = event.detail;
-      await unfollowShow(show);
+      await this.callApi(() => unfollowShow(show));
       this.dispatchEvent(
         createToastEvent({
           variant: 'success',
@@ -86,7 +89,7 @@ export class ShowViewPage extends LitElement {
   }
 
   private async loadShow(showId: string) {
-    const show = await getShowDetails(showId);
+    const show = await this.callApi(() => getShowDetails(showId));
     this.show = show ? show : null;
   }
 

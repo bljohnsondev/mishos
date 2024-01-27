@@ -1,9 +1,10 @@
 import { Router } from '@vaadin/router';
 import dayjs from 'dayjs';
-import { css, html, LitElement, TemplateResult } from 'lit';
+import { css, html, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
+import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
 import { UpNextEpisodeDto } from '@/types';
 
@@ -16,7 +17,7 @@ import '@/layout/app-layout';
 import './calendar-card';
 
 @customElement('upnext-page')
-export class UpNextPage extends LitElement {
+export class UpNextPage extends BaseElement {
   @state() episodes?: UpNextEpisodeDto[];
 
   render() {
@@ -89,7 +90,7 @@ export class UpNextPage extends LitElement {
   }
 
   async firstUpdated() {
-    this.episodes = await getUpNextList();
+    this.episodes = await this.callApi(() => getUpNextList());
   }
 
   static styles = [

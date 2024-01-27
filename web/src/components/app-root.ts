@@ -1,17 +1,18 @@
 import { provide } from '@lit/context';
-import { Router } from '@vaadin/router';
-import { html, LitElement } from 'lit';
+import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 import { kyWrapper } from '@/lib/ky-wrapper';
 import { appContext } from '@/store/app-context';
 import { AppStore, InitData, ToastMessage } from '@/types';
 
+import { BaseElement } from './base-element';
+
 import '@shoelace-style/shoelace/dist/components/alert/alert.js';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 
 @customElement('app-root')
-export class AppRoot extends LitElement {
+export class AppRoot extends BaseElement {
   @provide({ context: appContext })
   appStore: AppStore = {
     loading: false,
@@ -20,13 +21,12 @@ export class AppRoot extends LitElement {
   constructor() {
     super();
     this.addEventListener('toast', this.handleToastEvent);
-    this.addEventListener('side-menu-select', this.handleSideMenuSelect);
+    this.addEventListener('error-message', event => this.handleErrorMessage(event));
+    this.addEventListener('app-loading', event => this.handleApiLoading(event));
+    this.addEventListener('load-initdata', () => this.loadInitData());
 
     // add a window event listener to catch any top-level events
     // https://lit.dev/docs/components/events/#adding-event-listeners-to-other-elements
-    window.addEventListener('error-message', event => this.handleErrorMessage(event));
-    window.addEventListener('api-loading', event => this.handleApiLoading(event));
-    window.addEventListener('load-initdata', () => this.loadInitData());
   }
 
   render() {
@@ -36,12 +36,6 @@ export class AppRoot extends LitElement {
         <slot></slot>
       </div>
     `;
-  }
-
-  private handleSideMenuSelect(event: Event) {
-    if (event && event instanceof CustomEvent && event.detail?.item && event.detail.item.route) {
-      Router.go(event.detail.item.route);
-    }
   }
 
   private handleToastEvent(event: Event) {
@@ -102,7 +96,9 @@ export class AppRoot extends LitElement {
   }
 
   async loadInitData() {
-    const initData: InitData | undefined = await kyWrapper.get('init/view').json();
+    const initData: InitData | undefined = await this.callApi<InitData>(() => kyWrapper.get('init/view').json(), {
+      toastErrors: false,
+    });
     this.appStore = {
       ...this.appStore,
       initData,

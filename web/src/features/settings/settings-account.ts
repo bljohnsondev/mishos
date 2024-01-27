@@ -55,13 +55,18 @@ export class SettingsAccount extends BaseElement {
     if (values.passwordNew1 !== values.passwordNew2) {
       this.errorMessages = [{ name: 'matching', message: 'Passwords do not match' }];
     } else {
-      await saveConfigAccount({
-        passwordCurrent: values.passwordCurrent,
-        passwordNew1: values.passwordNew1,
-        passwordNew2: values.passwordNew2,
-      });
-      this.toast({ variant: 'success', message: 'Your password has been changed' });
-      this.settingsForm.reset();
+      const result = await this.callApi<boolean>(() =>
+        saveConfigAccount({
+          passwordCurrent: values.passwordCurrent,
+          passwordNew1: values.passwordNew1,
+          passwordNew2: values.passwordNew2,
+        })
+      );
+
+      if (result) {
+        this.toast({ variant: 'success', message: 'Your password has been changed' });
+        this.settingsForm.reset();
+      }
     }
   }
 

@@ -1,6 +1,7 @@
 export * from './app-store';
 export * from './error-message';
 export * from './init-data';
+export * from './show-card-badge';
 export * from './toast-message';
 export * from './dto/episode.dto';
 export * from './dto/season.dto';

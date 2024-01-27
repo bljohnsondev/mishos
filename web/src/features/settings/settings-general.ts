@@ -51,9 +51,11 @@ export class SettingsGeneral extends BaseElement {
 
     if (this.appStore?.initData?.userConfig) {
       if (values.notifierUrl !== this.appStore?.initData?.userConfig?.notifierUrl) {
-        await saveConfigGeneral({
-          notifierUrl: values.notifierUrl,
-        });
+        await this.callApi(() =>
+          saveConfigGeneral({
+            notifierUrl: values.notifierUrl,
+          })
+        );
         this.dispatchCustomEvent('load-initdata');
       }
     }

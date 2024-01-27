@@ -1,7 +1,8 @@
 import { Router, RouterLocation } from '@vaadin/router';
-import { css, html, LitElement } from 'lit';
+import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
+import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
 import { ShowDto } from '@/types';
 import { createToastEvent } from '@/utils';
@@ -14,7 +15,7 @@ import '@/layout/app-layout';
 import './show-details';
 
 @customElement('show-preview-page')
-export class ShowPreviewPage extends LitElement {
+export class ShowPreviewPage extends BaseElement {
   @property({ type: Object }) location?: RouterLocation;
 
   @state() show?: ShowDto;
@@ -35,8 +36,8 @@ export class ShowPreviewPage extends LitElement {
 
   private async handleAddShow(event: Event) {
     if (event && event instanceof CustomEvent && event.detail?.providerId) {
-      const newShow: ShowDto = await followShow(event.detail.providerId);
-      if (newShow.id) {
+      const newShow: ShowDto | undefined = await this.callApi(() => followShow(event.detail.providerId));
+      if (newShow?.id) {
         this.dispatchEvent(
           createToastEvent({
             variant: 'success',
@@ -49,7 +50,7 @@ export class ShowPreviewPage extends LitElement {
   }
 
   private async loadPreview(providerId: string) {
-    this.show = await getProviderPreview(providerId);
+    this.show = await this.callApi(() => getProviderPreview(providerId));
   }
 
   async connectedCallback() {

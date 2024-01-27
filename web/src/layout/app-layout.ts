@@ -1,3 +1,4 @@
+import { Router } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -17,6 +18,11 @@ export class AppLayout extends LitElement {
 
   @state() theme?: string = getTheme();
 
+  constructor() {
+    super();
+    this.addEventListener('side-menu-select', this.handleSideMenuSelect);
+  }
+
   render() {
     return html`
       <main class="app-container">
@@ -35,6 +41,12 @@ export class AppLayout extends LitElement {
       </main>
       <slot name="footer"></slot>
     `;
+  }
+
+  private handleSideMenuSelect(event: Event) {
+    if (event && event instanceof CustomEvent && event.detail?.item && event.detail.item.route) {
+      Router.go(event.detail.item.route);
+    }
   }
 
   private initializeTheme() {

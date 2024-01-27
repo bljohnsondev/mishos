@@ -2,16 +2,10 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
+import { ShowCardBadge } from '@/types';
 
 import '@shoelace-style/shoelace/dist/components/badge/badge.js';
 import '@shoelace-style/shoelace/dist/components/card/card.js';
-
-export type ShowCardBadgeVariant = 'primary' | 'success' | 'neutral' | 'warning' | 'danger';
-
-export interface ShowCardBadge {
-  variant: ShowCardBadgeVariant;
-  label: string;
-}
 
 @customElement('show-card')
 export class ShowCard extends LitElement {
@@ -24,7 +18,7 @@ export class ShowCard extends LitElement {
     return html`
       <sl-card class="show-card">
         ${this.image
-          ? html`<img slot="image" src=${this.image} alt=${this.name} />`
+          ? html`<img slot="image" src=${this.image} alt=${this.name ?? 'Unknown Show'} />`
           : html`<div slot="image" class="no-image-placeholder"></div>`}
         <div>
           <strong>${this.name}</strong>

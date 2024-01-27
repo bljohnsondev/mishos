@@ -1,9 +1,10 @@
 import { Router } from '@vaadin/router';
 import dayjs from 'dayjs';
-import { css, html, LitElement, TemplateResult } from 'lit';
+import { css, html, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
+import { BaseElement } from '@/components/base-element';
 import { addWatch } from '@/features/shows/shows-api';
 import { sharedStyles } from '@/styles/shared-styles';
 import { EpisodeDto } from '@/types';
@@ -19,7 +20,7 @@ import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 @customElement('watchlist-unwatched')
-export class WatchListUnwatched extends LitElement {
+export class WatchListUnwatched extends BaseElement {
   @state() episodes?: EpisodeDto[];
 
   render() {
@@ -92,7 +93,7 @@ export class WatchListUnwatched extends LitElement {
   async handleWatch(episode: EpisodeDto) {
     if (episode && episode.id) {
       await addWatch(episode.id, true, 'single');
-      this.episodes = await getWatchList();
+      this.episodes = await this.callApi(() => getWatchList());
       this.dispatchEvent(
         createToastEvent({
           variant: 'success',
@@ -104,7 +105,7 @@ export class WatchListUnwatched extends LitElement {
 
   async connectedCallback() {
     super.connectedCallback();
-    this.episodes = await getWatchList();
+    this.episodes = await this.callApi(() => getWatchList());
   }
 
   static styles = [
