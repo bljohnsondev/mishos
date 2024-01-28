@@ -23,6 +23,7 @@ This project is in it's early stages and there isn't currently a Docker image (y
 - *Frontend* - [Lit](https://lit.dev) web components, [Shoelace](https://shoelace.style/) UI library
 - *Backend* - [NestJS](https://nestjs.com/)
 	- The default setup uses a SQLite database but can be used with MySQL or PostgreSQL
+- *TV Provider Data* - [TVmaze.com](https://www.tvmaze.com/) - great service that provides free TV show data
 
 ## Followed Shows
 
