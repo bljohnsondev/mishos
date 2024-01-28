@@ -92,7 +92,8 @@ export class WatchListUnwatched extends BaseElement {
 
   async handleWatch(episode: EpisodeDto) {
     if (episode && episode.id) {
-      await addWatch(episode.id, true, 'single');
+      const episodeId = episode.id;
+      await this.callApi(() => addWatch(episodeId, true, 'single'));
       this.episodes = await this.callApi(() => getWatchList());
       this.dispatchEvent(
         createToastEvent({
