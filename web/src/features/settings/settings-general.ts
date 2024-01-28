@@ -40,7 +40,7 @@ export class SettingsGeneral extends BaseElement {
         </div>
         <div class="action-buttons">
           <sl-button variant="primary" type="submit">Save</sl-button>
-          <sl-button variant="neutral" @click=${this.handleExport}>Export Data</sl-button>
+          <sl-button variant="neutral" @click=${this.handleExport}>Export Shows</sl-button>
         </div>
       </form>
     `;
