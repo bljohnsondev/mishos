@@ -16,6 +16,8 @@ Ads?  Episode comments?  Sharing?  Badges?  No thanks.  Just track my TV shows.
 
 This project is in it's early stages and there isn't currently a Docker image (yet).  Want to try it out?  You'll need to clone the repo and build it.
 
+**WARNING**: this project is under active development.  There will absolutely be breaking changes that could result in data loss.  I've added an *Export Data* button to the *Settings* screen to export your followed shows and watched episodes.  I'm working on an *Import Data* option that will re-add followed shows and watched episodes in the event of a database change that breaks an existing database.
+
 ## Technology
 
 - *Frontend* - [Lit](https://lit.dev) web components, [Shoelace](https://shoelace.style/) UI library
@@ -55,4 +57,3 @@ This project is in it's early stages and there isn't currently a Docker image (y
 The current backend code is designed to use an [Apprise](https://github.com/caronc/apprise) endpoint for notifications.  I currently use [Gotify](https://github.com/gotify/server) for notifications.  Since the backend server uses Apprise you have a **lot** of notification options.
 
 ![Screenshot of Gotify notifications](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/gotify.png "Gotify notifications screenshot")
-
