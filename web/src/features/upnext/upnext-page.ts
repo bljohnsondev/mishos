@@ -1,5 +1,4 @@
 import { Router } from '@vaadin/router';
-import dayjs from 'dayjs';
 import { css, html, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -7,6 +6,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
 import { UpNextEpisodeDto } from '@/types';
+import { formatDate } from '@/utils';
 
 import { getUpNextList } from './upnext-api';
 
@@ -47,7 +47,7 @@ export class UpNextPage extends BaseElement {
           <div class="episode">
             <div>
               <calendar-card .date=${episode.aired}></calendar-card>
-              <div class="weekday">Tue</div>
+              <div class="weekday">${formatDate(episode.aired, 'ddd')}</div>
             </div>
             <div>
               <a href="#" class="show-image-container" @click=${(event: Event) => this.handleClickShow(event, episode)}>
@@ -69,19 +69,13 @@ export class UpNextPage extends BaseElement {
               <ul class="detail-list">
                 <li>S${episode.seasonNumber} E${episode.number}</li>
                 ${episode.show?.network ? html`<li>${episode.show.network}</li>` : null}
-                ${episode.aired ? html`<li>${this.formatAirTime(episode.aired)}</li>` : null}
+                ${episode.aired ? html`<li>${formatDate(episode.aired, 'h:mm a')}</li>` : null}
                 ${episode.runtime ? html`<li>${episode.runtime}m</li>` : null}
               </ul>
             </div>
           </div>
         `
       : null;
-  }
-
-  private formatAirTime(date?: Date): TemplateResult | null {
-    if (date) {
-      return html`${dayjs(date).format('h:mm a')}`;
-    } else return null;
   }
 
   private handleClickShow(event: Event, episode: UpNextEpisodeDto) {
