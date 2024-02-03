@@ -14,10 +14,9 @@ Ads?  Episode comments?  Sharing?  Badges?  No thanks.  Just track my TV shows.
 - Upcoming view to see upcoming airings of episodes
 - Receive notifications prior to air of new episodes (currently via [Apprise](https://github.com/caronc/apprise) notification)
 
-This project is in it's early stages and there isn't currently a Docker image (yet).  Want to try it out?  You'll need to clone the repo and build it.
-
 **WARNING**: this project is under active development.  There could be breaking changes that result in data loss.  I've added an *Export Data* button to the *Settings* screen to export your followed shows and watched episodes.  I'm working on an *Import Data* option that will re-add followed shows and watched episodes in the event of a database change that breaks an existing database.
 
+Ready to give it a try?  Head on over to the [Docker instructions](https://github.com/bljohnsondev/mishos/blob/main/docs/docker.md) and give it a shot.
 ## Technology
 
 - *Frontend* - [Lit](https://lit.dev) web components, [Shoelace](https://shoelace.style/) UI library
