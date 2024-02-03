@@ -50,7 +50,7 @@ Not sure what to set this to or what this means?  Just change the hostname `mish
 Want to use SQLite?  You will need these environment variables:
 
 ```
-DB_TYPE=sqlite`
+DB_TYPE=sqlite
 DB_PATH=/db/mishos.db
 ```
 
