@@ -10,5 +10,5 @@ COPY ./.env.prod ./.env
 RUN yarn build
 
 FROM nginx
-COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx/default.conf.template /etc/nginx/templates/
 COPY --from=build /app/dist /usr/share/nginx/html
