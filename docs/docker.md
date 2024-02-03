@@ -42,16 +42,19 @@ Here is a quick breakdown of the environment variables:
 This is the *internal* URL that the frontend container uses to connect to the backend.  The frontend container runs an [nginx](https://nginx.org/en/) server that serves the frontend code.  It redirects requests to `/api` to the backend container via this `DOCKER_BE_URL`.
 
 Not sure what to set this to or what this means?  Just change the hostname `mishos-be` to whatever you use for the `container_name` of the backend container.
+
 #### Backend
 
 **SQLite**
 
 Want to use SQLite?  You will need these environment variables:
 
-`DB_TYPE=sqlite`
-`DB_PATH=/db/mishos.db`
+```
+DB_TYPE=sqlite`
+DB_PATH=/db/mishos.db
+```
 
-You will also need to mount a volume to your SQLite database so I would also add the following:
+You will also need to mount a volume to your SQLite database so I would also add the following to your docker-compose file:
 
 ```
     volumes:
@@ -62,12 +65,14 @@ You will also need to mount a volume to your SQLite database so I would also add
 
 Want to use MySQL or PostgreSQL?  Don't use the SQLite variables!  Use these instead:
 
-`DB_TYPE=mysql`
-`DB_URL=mysql://MYSQL_USER:MYSQL_PASS@MYSQL_HOST:3306/YOUR_MISHOS_DB`
+```
+DB_TYPE=mysql
+DB_URL=mysql://MYSQL_USER:MYSQL_PASS@MYSQL_HOST:3306/YOUR_MISHOS_DB
+```
 
 Here are some other important environment variables:
 
 - `CORS` - this should match the URL you are using to access the application in your browser.
 - `API_URL` - leave it alone.  [TVmaze](https://www.tvmaze.com/) is the excellent provider that Mishos uses to get all the TV data.
 - `TOKEN_SECRET` - set this to whatever you want but definitely set it to something.  This is the signing key used for authentication.
-- `TOKEN_EXPIRES` - this is the time before the token expires and required you to login again.  In this example it is set to 30 days.
+- `TOKEN_EXPIRES` - this is the time before the token expires and requires you to login again.  In this example it is set to 30 days.
