@@ -11,7 +11,7 @@ Ads?  Episode comments?  Sharing?  Badges?  No thanks.  Just track my TV shows.
 - Keep a list of followed shows
 - Mark episodes as watched
 - Watch list for next unwatched episodes and recently watched episodes
-- Up next view to see upcoming airings of episodes
+- Upcoming view to see upcoming airings of episodes
 - Receive notifications prior to air of new episodes (currently via [Apprise](https://github.com/caronc/apprise) notification)
 
 This project is in it's early stages and there isn't currently a Docker image (yet).  Want to try it out?  You'll need to clone the repo and build it.
@@ -45,9 +45,9 @@ This project is in it's early stages and there isn't currently a Docker image (y
 
 ![Screenshot of the watch list recent screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/watchlist-recent-screenshot1.png "Watch list recent screenshot")
 
-## Up Next
+## Upcoming
 
-![Screenshot of the up next screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/upnext-screenshot1.png "Up next screenshot")
+![Screenshot of the upcoming screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/upcoming-screenshot1.png "Upcoming screenshot")
 
 ## Settings
 

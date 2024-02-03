@@ -11,11 +11,11 @@ export const sideMenuItems: SideMenuItem[] = [
     route: '/watchlist',
   },
   {
-    name: 'upnext',
-    tooltip: 'Up Next',
+    name: 'upcoming',
+    tooltip: 'Upcoming',
     iconLibrary: 'hi-outline',
     iconName: 'calendar-days',
-    route: '/upnext',
+    route: '/upcoming',
   },
   {
     name: 'shows',

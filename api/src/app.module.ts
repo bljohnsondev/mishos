@@ -8,7 +8,7 @@ import { databaseConfig } from './common/config/db-config';
 import { InitModule } from './init/init.module';
 import { ShowModule } from './show/show.module';
 import { TasksModule } from './tasks/tasks.module';
-import { UpNextModule } from './upnext/upnext.module';
+import { UpcomingModule } from './upcoming/upcoming.module';
 import { WatchListModule } from './watchlist/watchlist.module';
 
 @Module({
@@ -24,7 +24,7 @@ import { WatchListModule } from './watchlist/watchlist.module';
     InitModule,
     ShowModule,
     TasksModule,
-    UpNextModule,
+    UpcomingModule,
     WatchListModule,
   ],
 })

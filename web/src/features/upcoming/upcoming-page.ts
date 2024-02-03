@@ -5,10 +5,10 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
-import { UpNextEpisodeDto } from '@/types';
+import { UpcomingEpisodeDto } from '@/types';
 import { formatDate } from '@/utils';
 
-import { getUpNextList } from './upnext-api';
+import { getUpcomingList } from './upcoming-api';
 
 import '@/components/episode-name-tooltip';
 import '@/features/shows/shows-search-form';
@@ -16,13 +16,13 @@ import '@/layout/app-layout';
 
 import './calendar-card';
 
-@customElement('upnext-page')
-export class UpNextPage extends BaseElement {
-  @state() episodes?: UpNextEpisodeDto[];
+@customElement('upcoming-page')
+export class UpcomingPage extends BaseElement {
+  @state() episodes?: UpcomingEpisodeDto[];
 
   render() {
     return html`
-      <app-layout icon="calendar-days" headerTitle="Up Next" selected="upnext">
+      <app-layout icon="calendar-days" headerTitle="Upcoming" selected="upcoming">
         <shows-search-form slot="header"></shows-search-form>
         <section class="content">
           ${this.episodes
@@ -34,14 +34,14 @@ export class UpNextPage extends BaseElement {
                     })}
                   </ul>
                 `
-              : html`<div class="nonext">No upcoming episodes</div>`
+              : html`<div class="noupcoming">No upcoming episodes</div>`
             : null}
         </section>
       </app-layout>
     `;
   }
 
-  private renderEpisode(episode: UpNextEpisodeDto): TemplateResult | null {
+  private renderEpisode(episode: UpcomingEpisodeDto): TemplateResult | null {
     return episode && episode.show && episode.aired
       ? html`
           <div class="episode">
@@ -78,13 +78,13 @@ export class UpNextPage extends BaseElement {
       : null;
   }
 
-  private handleClickShow(event: Event, episode: UpNextEpisodeDto) {
+  private handleClickShow(event: Event, episode: UpcomingEpisodeDto) {
     event.preventDefault();
     Router.go(`/show/view/${episode.show?.id}`);
   }
 
   async firstUpdated() {
-    this.episodes = await this.callApi(() => getUpNextList());
+    this.episodes = await this.callApi(() => getUpcomingList());
   }
 
   static styles = [
