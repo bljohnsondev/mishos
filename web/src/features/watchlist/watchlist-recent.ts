@@ -8,7 +8,7 @@ import { BaseElement } from '@/components/base-element';
 import { addWatch } from '@/features/shows/shows-api';
 import { sharedStyles } from '@/styles/shared-styles';
 import { EpisodeDto } from '@/types';
-import { createToastEvent } from '@/utils';
+import { createToastEvent, formatAirTime } from '@/utils';
 
 import { getWatchListRecent } from './wachlist-api';
 
@@ -59,7 +59,7 @@ export class WatchListRecent extends BaseElement {
               <ul class="detail-list">
                 <li>S${episode.seasonNumber} E${episode.number}</li>
                 ${episode.show?.network ? html`<li>${episode.show.network}</li>` : null}
-                ${episode.aired ? html`<li>${this.formatAirTime(episode.aired)}</li>` : null}
+                ${episode.aired ? html`<li>${formatAirTime(episode.aired)}</li>` : null}
                 ${episode.runtime ? html`<li>${episode.runtime}m</li>` : null}
               </ul>
               <div class="watched-date">Watched ${dayjs(episode.watchedDate).fromNow()}</div>
@@ -67,12 +67,6 @@ export class WatchListRecent extends BaseElement {
           </div>
         `
       : null;
-  }
-
-  private formatAirTime(date?: Date): TemplateResult | null {
-    if (date) {
-      return html`${dayjs(date).format('MM-DD-YYYY [·] h:mm a')}`;
-    } else return null;
   }
 
   private handleClickShow(event: Event, episode: EpisodeDto) {

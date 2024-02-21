@@ -1,5 +1,4 @@
 import { Router } from '@vaadin/router';
-import dayjs from 'dayjs';
 import { css, html, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -8,7 +7,7 @@ import { BaseElement } from '@/components/base-element';
 import { addWatch } from '@/features/shows/shows-api';
 import { sharedStyles } from '@/styles/shared-styles';
 import { EpisodeDto } from '@/types';
-import { createToastEvent } from '@/utils';
+import { createToastEvent, formatAirTime } from '@/utils';
 
 import { getWatchList } from './wachlist-api';
 
@@ -61,7 +60,7 @@ export class WatchListUnwatched extends BaseElement {
               <ul class="detail-list">
                 <li>S${episode.seasonNumber} E${episode.number}</li>
                 ${episode.show?.network ? html`<li>${episode.show.network}</li>` : null}
-                ${episode.aired ? html`<li>${this.formatAirTime(episode.aired)}</li>` : null}
+                ${episode.aired ? html`<li>${formatAirTime(episode.aired)}</li>` : null}
                 ${episode.runtime ? html`<li>${episode.runtime}m</li>` : null}
               </ul>
               <sl-button
@@ -77,12 +76,6 @@ export class WatchListUnwatched extends BaseElement {
           </div>
         `
       : null;
-  }
-
-  private formatAirTime(date?: Date): TemplateResult | null {
-    if (date) {
-      return html`${dayjs(date).format('MM-DD-YYYY [·] h:mm a')}`;
-    } else return null;
   }
 
   private handleClickShow(event: Event, episode: EpisodeDto) {
