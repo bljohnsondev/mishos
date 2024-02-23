@@ -398,12 +398,10 @@ export class ShowService {
           throw new ShowException('Show already watched');
         }
 
-        const watchedEpisode: WatchedEpisode = this.watchedEpisodeRepository.create({
+        await this.watchedEpisodeRepository.insert({
           user,
           episode,
         });
-
-        await this.dataSource.manager.save(watchedEpisode);
       } else {
         await this.watchPreviousEpisodes(user, episode);
       }
