@@ -7,7 +7,7 @@ export class Show {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({ unique: true })
+  @Column()
   providerId: string;
 
   @Column()

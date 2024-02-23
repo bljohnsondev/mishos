@@ -8,7 +8,7 @@ export class Season {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({ unique: true, nullable: true })
+  @Column({ nullable: true })
   providerId: string;
 
   @Column()
