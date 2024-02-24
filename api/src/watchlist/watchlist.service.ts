@@ -86,6 +86,7 @@ export class WatchListService {
           'show.name',
           'show.imageMedium',
           'show.imageOriginal',
+          'show.network',
           'season.number',
           'watches.id',
           'watches.createdAt',
@@ -160,6 +161,7 @@ export class WatchListService {
         id: ep.season?.show?.id,
         name: ep.season?.show?.name,
         imageMedium: ep.season?.show?.imageMedium,
+        network: ep.season?.show?.network,
       },
     }));
   }
