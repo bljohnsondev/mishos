@@ -7,7 +7,7 @@ import { sharedStyles } from '@/styles/shared-styles';
 import { ShowDto } from '@/types';
 import { createToastEvent } from '@/utils';
 
-import { addWatch, getShowDetails, refreshShow, unfollowShow } from './shows-api';
+import { getShowDetails, refreshShow, unfollowShow, watchEpisode } from './shows-api';
 
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
@@ -29,7 +29,8 @@ export class ShowViewPage extends BaseElement {
           ${this.show
             ? html`<show-details
                 .show=${this.show}
-                @toggle-watched=${this.handleToggleWatched}
+                @watch-episode=${this.handleWatch}
+                @unwatch-episode=${this.handleUnwatch}
                 @toggle-previous=${this.handleTogglePrevious}
                 @remove-show=${this.handleRemoveShow}
                 @refresh-show=${this.handleRefreshShow}
@@ -42,14 +43,20 @@ export class ShowViewPage extends BaseElement {
     `;
   }
 
-  private async handleToggleWatched(event: Event) {
+  private async handleWatch(event: Event) {
+    this.handleToggleWatch(event, true);
+  }
+
+  private async handleUnwatch(event: Event) {
+    this.handleToggleWatch(event, false);
+  }
+
+  private async handleToggleWatch(event: Event, watched: boolean) {
     if (event && event instanceof CustomEvent) {
       const watchData = event.detail;
-      if (watchData.episodeId && this.show?.id) {
-        await this.callApi(() =>
-          addWatch(watchData.episodeId, watchData.watched, this.togglePrevious ? 'previous' : 'single')
-        );
-        await this.loadShow(this.show.id);
+      if (watchData.episodeId && this.show?.ID) {
+        await this.callApi(() => watchEpisode(watchData.episodeId, watched, this.togglePrevious));
+        await this.loadShow(this.show.ID);
       }
     }
   }
@@ -61,10 +68,10 @@ export class ShowViewPage extends BaseElement {
   }
 
   private async handleRefreshShow(event: Event) {
-    if (event && event instanceof CustomEvent && event.detail && this.show?.id) {
+    if (event && event instanceof CustomEvent && event.detail && this.show?.ID) {
       const showId = event.detail;
       await this.callApi(() => refreshShow(showId));
-      await this.loadShow(this.show.id);
+      await this.loadShow(this.show.ID);
       this.dispatchEvent(
         createToastEvent({
           variant: 'success',
@@ -75,9 +82,9 @@ export class ShowViewPage extends BaseElement {
   }
 
   private async handleRemoveShow(event: Event) {
-    if (event && event instanceof CustomEvent && event.detail.providerId && event.detail.id) {
+    if (event && event instanceof CustomEvent && event.detail) {
       const show = event.detail;
-      await this.callApi(() => unfollowShow(show));
+      await this.callApi(() => unfollowShow(event.detail));
       this.dispatchEvent(
         createToastEvent({
           variant: 'success',

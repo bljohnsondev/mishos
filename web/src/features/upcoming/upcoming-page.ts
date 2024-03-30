@@ -80,7 +80,7 @@ export class UpcomingPage extends BaseElement {
 
   private handleClickShow(event: Event, episode: UpcomingEpisodeDto) {
     event.preventDefault();
-    Router.go(`/show/view/${episode.show?.id}`);
+    Router.go(`/show/view/${episode.show?.ID}`);
   }
 
   async firstUpdated() {

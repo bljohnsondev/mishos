@@ -4,7 +4,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
-import { ShowDto } from '@/types';
+import { FollowShowResponseDto, ShowDto } from '@/types';
 import { createToastEvent } from '@/utils';
 
 import { followShow, getProviderPreview } from './shows-api';
@@ -36,15 +36,15 @@ export class ShowPreviewPage extends BaseElement {
 
   private async handleAddShow(event: Event) {
     if (event && event instanceof CustomEvent && event.detail?.providerId) {
-      const newShow: ShowDto | undefined = await this.callApi(() => followShow(event.detail.providerId));
-      if (newShow?.id) {
+      const response: FollowShowResponseDto | undefined = await this.callApi(() => followShow(event.detail.providerId));
+      if (response && response.ID) {
         this.dispatchEvent(
           createToastEvent({
             variant: 'success',
-            message: `${newShow.name} has been added`,
+            message: `${response.name} has been added`,
           })
         );
-        Router.go(`/show/view/${newShow.id}`);
+        Router.go(`/show/view/${response.ID}`);
       }
     }
   }

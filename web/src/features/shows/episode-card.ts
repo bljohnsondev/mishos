@@ -40,7 +40,7 @@ export class EpisodeCard extends LitElement {
                   size="small"
                   variant=${this.episode.watched ? 'default' : 'neutral'}
                   class=${`watched-button ${this.episode.watched ? 'watched' : 'unwatched'}`}
-                  @click=${this.handleToggleWatched}
+                  @click=${this.handleWatch}
                 >
                   <sl-icon
                     slot="prefix"
@@ -56,9 +56,13 @@ export class EpisodeCard extends LitElement {
     `;
   }
 
-  private async handleToggleWatched() {
-    if (this.episode?.id) {
-      this.dispatchEvent(createEvent('toggle-watched', { episodeId: this.episode.id, watched: !this.episode.watched }));
+  private async handleWatch() {
+    if (this.episode?.ID) {
+      this.dispatchEvent(
+        createEvent(this.episode.watched ? 'unwatch-episode' : 'watch-episode', {
+          episodeId: this.episode.ID,
+        })
+      );
     }
   }
 

@@ -96,7 +96,7 @@ export class AppRoot extends BaseElement {
   }
 
   async loadInitData() {
-    const initData: InitData | undefined = await this.callApi<InitData>(() => kyWrapper.get('init/view').json(), {
+    const initData: InitData | undefined = await this.callApi<InitData>(() => kyWrapper.get('auth/init').json(), {
       toastErrors: false,
     });
     this.appStore = {

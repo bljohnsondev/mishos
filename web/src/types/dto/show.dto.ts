@@ -1,7 +1,7 @@
 import { SeasonDto } from './season.dto';
 
 export interface ShowDto {
-  id?: string;
+  ID?: string;
   providerId?: string;
   name?: string;
   providerUrl?: string;

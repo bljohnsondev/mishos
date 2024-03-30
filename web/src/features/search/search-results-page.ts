@@ -5,7 +5,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
-import { ShowCardBadge, ShowDto } from '@/types';
+import { ShowCardBadge, SearchResultDto } from '@/types';
 
 import { searchShowsFromProvider } from './search-api';
 
@@ -20,7 +20,7 @@ export class SearchResultsPage extends BaseElement {
   @property({ type: Object }) location?: RouterLocation;
 
   @state() query?: string | null;
-  @state() results?: ShowDto[];
+  @state() results?: SearchResultDto[];
 
   private addedBadge: ShowCardBadge = { variant: 'primary', label: 'Added' };
 
@@ -39,7 +39,7 @@ export class SearchResultsPage extends BaseElement {
                             image=${ifDefined(show.imageMedium)}
                             name=${ifDefined(show.name)}
                             network=${ifDefined(show.network)}
-                            .badge=${show.added ? this.addedBadge : undefined}
+                            .badge=${show.following ? this.addedBadge : undefined}
                           ></show-card>
                         </a>
                       `
@@ -52,11 +52,11 @@ export class SearchResultsPage extends BaseElement {
       : null;
   }
 
-  private handleSelectShow(event: Event, show: ShowDto) {
+  private handleSelectShow(event: Event, show: SearchResultDto) {
     event.preventDefault();
     if (show && this.results && show.providerId) {
-      if (show.added && show.id) {
-        Router.go(`/show/view/${show.id}`);
+      if (show.following && show.showId) {
+        Router.go(`/show/view/${show.showId}`);
       } else {
         Router.go(`/show/preview/${show.providerId}`);
       }

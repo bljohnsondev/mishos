@@ -5,7 +5,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
-import { ShowDto } from '@/types';
+import { FollowedShowDto } from '@/types';
 
 import { getFollowedShows } from './shows-api';
 
@@ -17,7 +17,7 @@ import './shows-search-form';
 @customElement('shows-page')
 export class ShowsPage extends BaseElement {
   @state() loading: boolean = false;
-  @state() shows?: ShowDto[];
+  @state() shows?: FollowedShowDto[];
 
   render() {
     return html`
@@ -48,10 +48,10 @@ export class ShowsPage extends BaseElement {
       : null;
   }
 
-  private handleSelectShow(event: Event, show: ShowDto) {
+  private handleSelectShow(event: Event, show: FollowedShowDto) {
     event.preventDefault();
     if (show && this.shows) {
-      Router.go(`/show/view/${show.id}`);
+      Router.go(`/show/view/${show.showId}`);
     }
   }
 

@@ -4,7 +4,7 @@ import { customElement, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { BaseElement } from '@/components/base-element';
-import { addWatch } from '@/features/shows/shows-api';
+import { watchEpisode } from '@/features/shows/shows-api';
 import { sharedStyles } from '@/styles/shared-styles';
 import { EpisodeDto } from '@/types';
 import { createToastEvent, formatAirTime } from '@/utils';
@@ -80,13 +80,13 @@ export class WatchListUnwatched extends BaseElement {
 
   private handleClickShow(event: Event, episode: EpisodeDto) {
     event.preventDefault();
-    Router.go(`/show/view/${episode.show?.id}`);
+    Router.go(`/show/view/${episode.show?.ID}`);
   }
 
   async handleWatch(episode: EpisodeDto) {
-    if (episode && episode.id) {
-      const episodeId = episode.id;
-      await this.callApi(() => addWatch(episodeId, true, 'single'));
+    if (episode && episode.ID) {
+      const episodeId = episode.ID;
+      await this.callApi(() => watchEpisode(episodeId, true));
       this.episodes = await this.callApi(() => getWatchList());
       this.dispatchEvent(
         createToastEvent({

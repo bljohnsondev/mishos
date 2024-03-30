@@ -5,7 +5,7 @@ import { css, html, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 import { BaseElement } from '@/components/base-element';
-import { addWatch } from '@/features/shows/shows-api';
+import { watchEpisode } from '@/features/shows/shows-api';
 import { sharedStyles } from '@/styles/shared-styles';
 import { EpisodeDto } from '@/types';
 import { createToastEvent, formatAirTime } from '@/utils';
@@ -71,12 +71,12 @@ export class WatchListRecent extends BaseElement {
 
   private handleClickShow(event: Event, episode: EpisodeDto) {
     event.preventDefault();
-    Router.go(`/show/view/${episode.show?.id}`);
+    Router.go(`/show/view/${episode.show?.ID}`);
   }
 
   async handleWatch(episode: EpisodeDto) {
-    if (episode && episode.id) {
-      await addWatch(episode.id, true, 'single');
+    if (episode && episode.ID) {
+      await watchEpisode(episode.ID, true);
       this.episodes = await this.callApi(() => getWatchListRecent());
       this.dispatchEvent(
         createToastEvent({
