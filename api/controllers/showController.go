@@ -88,7 +88,7 @@ func (sc ShowController) AddOrFollowShow(context *gin.Context) {
 		message = "show followed"
 	}
 
-	context.JSON(200, gin.H{"message": message, "show": gin.H{"ID": show.ID, "name": show.Name}})
+	context.JSON(200, gin.H{"message": message, "show": gin.H{"id": show.ID, "name": show.Name}})
 }
 
 func (sc ShowController) Follow(context *gin.Context) {
