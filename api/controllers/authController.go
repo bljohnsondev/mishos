@@ -66,44 +66,6 @@ func (ac AuthController) Login(context *gin.Context) {
 	context.JSON(200, gin.H{"user": sanitizedUser, "token": tokenString})
 }
 
-func (ac AuthController) Signup(context *gin.Context) {
-	var body struct {
-		Username string `json:"username" binding:"required"`
-		Password string `json:"password" binding:"required"`
-	}
-
-	if context.BindJSON(&body) != nil {
-		services.SendError(context, "bad request")
-		return
-	}
-
-	existingCount := int64(0)
-	if err := db.DB.Model(&modelsdb.User{}).Where("username = ?", body.Username).Count(&existingCount).Error; err != nil {
-		services.SendError(context, err.Error())
-		return
-	}
-
-	if existingCount > 0 {
-		services.SendError(context, "username already exists")
-		return
-	}
-
-	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
-	if err != nil {
-		services.SendError(context, err.Error())
-		return
-	}
-
-	user := modelsdb.User{Username: body.Username, Password: string(hash)}
-
-	if result := db.DB.Create(&user); result.Error != nil {
-		services.SendError(context, result.Error.Error())
-		return
-	}
-
-	context.JSON(200, gin.H{"user": services.SanitizeUser(user)})
-}
-
 func (ac AuthController) InitData(context *gin.Context) {
 	user, err := services.GetUserFromContext(context)
 	if err != nil {
@@ -121,9 +83,80 @@ func (ac AuthController) InitData(context *gin.Context) {
 	initData := modelsdto.InitDataDto{
 		UserConfig: modelsdto.UserConfigDto{
 			NotifierTimezone: config.NotifierTimezone,
-			NotifierUrl: config.NotifierUrl,
+			NotifierUrl:      config.NotifierUrl,
 		},
 	}
 
 	context.JSON(200, initData)
+}
+
+func (ac AuthController) IsOnboardingReady(context *gin.Context) {
+	ready, err := isOnboardingReady()
+	if err != nil {
+		services.SendError(context, err.Error())
+		return
+	}
+
+	context.JSON(200, gin.H{"ready": ready})
+}
+
+func (ac AuthController) OnboardingCreate(context *gin.Context) {
+	ready, err := isOnboardingReady()
+	if err != nil {
+		services.SendError(context, err.Error())
+		return
+	}
+
+  // no funny business! onboarding should only happen when there are no users
+  if !ready {
+		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		return
+  }
+
+	var body struct {
+		Username string `json:"username" binding:"required"`
+		Password string `json:"password" binding:"required"`
+	}
+
+	if context.BindJSON(&body) != nil {
+		services.SendError(context, "bad request")
+		return
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
+	if err != nil {
+		services.SendError(context, err.Error())
+		return
+	}
+
+	user := modelsdb.User{
+		Username: body.Username,
+		Password: string(hash),
+	}
+
+	if result := db.DB.Create(&user); result.Error != nil {
+		services.SendError(context, result.Error.Error())
+		return
+	}
+
+	// NOTE: cascading create for an empty config object doesnt create the record so save it separately
+	config := modelsdb.UserConfig{
+		UserID: user.ID,
+	}
+
+	if result := db.DB.Create(&config); result.Error != nil {
+		services.SendError(context, result.Error.Error())
+		return
+	}
+
+	context.JSON(200, gin.H{"user": services.SanitizeUser(user)})
+}
+
+func isOnboardingReady() (ready bool, err error) {
+	var count int64
+	if err := db.DB.Model(&modelsdb.User{}).Count(&count).Error; err != nil {
+		return false, err
+	}
+
+	return count == 0, nil
 }

@@ -5,7 +5,7 @@ import * as yup from 'yup';
 
 import { sharedStyles } from '@/styles/shared-styles';
 import { ErrorMessage, ToastMessage } from '@/types';
-import { createEvent, initializeForm, setToken } from '@/utils';
+import { createEvent, initializeForm } from '@/utils';
 
 import '@shoelace-style/shoelace/dist/components/alert/alert.js';
 import '@shoelace-style/shoelace/dist/components/input/input.js';
@@ -66,12 +66,10 @@ export class OnboardingPage extends LitElement {
     this.errorMessages = [];
 
     createInitialUser(values.username, values.password)
-      .then(response => {
-        if (response.user && response.token) {
-          setToken(response.token);
-          this.dispatchEvent(createEvent('load-initdata'));
-          Router.go('/');
-        }
+      .then(() => {
+        const toast = { variant: 'success', message: 'User created' };
+        this.dispatchEvent(createEvent('toast', toast));
+        Router.go('/login');
       })
       .catch(() => {
         const toast = { variant: 'danger', message: 'Create user failed' };

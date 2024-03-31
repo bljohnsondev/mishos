@@ -13,7 +13,8 @@ func AddAuthRoutes(router *gin.Engine) {
 	authRoutes := router.Group("/api/auth")
 	{
 		authRoutes.POST("/login", authController.Login)
-		authRoutes.POST("/signup", authController.Signup)
 		authRoutes.GET("/init", middlewares.AuthRequired(), authController.InitData)
+		authRoutes.GET("/onboarding/ready", authController.IsOnboardingReady)
+		authRoutes.POST("/onboarding/create", authController.OnboardingCreate)
 	}
 }

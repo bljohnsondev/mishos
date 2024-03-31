@@ -37,7 +37,14 @@ func (setc SettingsController) SaveConfigGeneral(context *gin.Context) {
 		return
 	}
 
+	if user.UserConfig.ID == 0 {
+		// this shouldn't happen but throw an error if it does
+		services.SendError(context, "config data could not be found")
+		return
+	}
+
 	user.UserConfig.NotifierUrl = body.NotifierURL
+
 	if err := db.DB.Save(user.UserConfig).Error; err != nil {
 		services.SendError(context, err.Error())
 		return
