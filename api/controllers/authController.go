@@ -18,16 +18,6 @@ import (
 
 type AuthController struct{}
 
-func (ac AuthController) AuthTest(context *gin.Context) {
-	user, err := services.GetUserFromContext(context)
-	if err != nil {
-		context.AbortWithStatusJSON(http.StatusUnauthorized, modelsdto.ErrorDto{Error: "unauthorized: could not find valid user"})
-		return
-	}
-
-	context.JSON(200, gin.H{"message": "This is a test", "user": user})
-}
-
 func (ac AuthController) Login(context *gin.Context) {
 	var body struct {
 		Username string `json:"username" binding:"required"`
