@@ -8,12 +8,12 @@ type Episode struct {
 	Model
 	ProviderID   *string          `json:"providerId"`
 	Name         *string          `json:"name"`
-	Number       *uint16          `json:"number"`
+	Number       *uint16          `json:"number" gorm:"uniqueIndex:idx_episode_uni"`
 	Type         *string          `json:"type"`
 	Aired        *time.Time       `json:"aired"`
 	Runtime      *uint16          `json:"runtime"`
 	Summary      *string          `json:"summary" gorm:"type:text"`
-	SeasonID     uint             `json:"-"`
+	SeasonID     uint             `json:"-" gorm:"uniqueIndex:idx_episode_uni"`
 	Season       Season           `json:"-"`
 	Watches      []WatchedEpisode `json:"-"`
 	Watched      bool             `gorm:"-" json:"watched"`

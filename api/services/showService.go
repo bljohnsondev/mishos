@@ -188,7 +188,7 @@ func (showService ShowService) GetShow(userId uint, showId uint64) (show *models
 		show := shows[0]
 
 		var watchedIds []uint
-		
+
 		err := showService.GetWatchedEpisodeIds(userId, showId, &watchedIds)
 		if err != nil {
 			return nil, err
@@ -207,4 +207,23 @@ func (showService ShowService) GetShow(userId uint, showId uint64) (show *models
 	} else {
 		return nil, nil
 	}
+}
+
+func (showService ShowService) RefreshShow(showId uint64) error {
+	var show modelsdb.Show
+	if err := db.DB.Preload("Seasons").Preload("Seasons.Episodes").First(&show, showId).Error; err != nil {
+		return err
+	}
+
+	providerClient := tvproviders.ProviderClient{}
+
+	if err := providerClient.GetShow(*show.ProviderID, &show); err != nil {
+		return err
+	}
+
+	if err := db.DB.Save(&show).Error; err != nil {
+		return err
+	}
+
+	return nil
 }

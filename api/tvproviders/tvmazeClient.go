@@ -76,39 +76,57 @@ func (pc ProviderClient) GetSeasonsAndEpisodes(show *modelsdb.Show) error {
 	seasonsJson.ForEach(func(key, value gjson.Result) bool {
 		seasonNumber := value.Get("number").Uint()
 
-		season := modelsdb.Season{
-			ProviderID:   StrPtr(value.Get("id").String()),
-			Number:       uint8(seasonNumber),
-			Premiered:    getJsonDatePtr(value, "premiereDate", ""),
-			Ended:        getJsonDatePtr(value, "endDate", ""),
-			Network:      getNetworkOrWebChannel(value),
-			EpisodeOrder: Uint16Ptr(value.Get("number").Uint()),
+		season := &modelsdb.Season{}
+
+		// if an existing season already exists update the values
+		for _, existingSeason := range show.Seasons {
+			if existingSeason.Number == uint8(seasonNumber) {
+				season = &existingSeason
+				break
+			}
 		}
+
+		season.ProviderID = StrPtr(value.Get("id").String())
+		season.Number = uint8(seasonNumber)
+		season.Premiered = getJsonDatePtr(value, "premiereDate", "")
+		season.Ended = getJsonDatePtr(value, "endDate", "")
+		season.Network = getNetworkOrWebChannel(value)
+		season.EpisodeOrder = Uint16Ptr(value.Get("number").Uint())
 
 		filteredEpisodesJson := episodesJson.Get(fmt.Sprintf("#(season==%d)#", seasonNumber))
 
 		episodes := []modelsdb.Episode{}
 
 		filteredEpisodesJson.ForEach(func(episodeKey, episodeValue gjson.Result) bool {
-			episode := modelsdb.Episode{
-				ProviderID:   StrPtr(episodeValue.Get("id").String()),
-				Name:         StrPtr(episodeValue.Get("name").String()),
-				Number:       Uint16Ptr(episodeValue.Get("number").Uint()),
-				Type:         StrPtr(episodeValue.Get("type").String()),
-				Aired:        getJsonDatePtr(episodeValue, "airstamp", time.RFC3339),
-				Runtime:      Uint16Ptr(episodeValue.Get("runtime").Uint()),
-				Summary:      StrPtr(strip.StripTags(episodeValue.Get("summary").String())),
-				SeasonNumber: &season.Number,
+			episodeNumber := uint16(episodeValue.Get("number").Uint())
+
+			episode := &modelsdb.Episode{}
+
+			// if an existing episode already exists update the values
+			for _, existingEpisode := range season.Episodes {
+				if *existingEpisode.Number == uint16(episodeNumber) {
+					episode = &existingEpisode
+					break
+				}
 			}
 
-			episodes = append(episodes, episode)
+			episode.ProviderID = StrPtr(episodeValue.Get("id").String())
+			episode.Name = StrPtr(episodeValue.Get("name").String())
+			episode.Number = &episodeNumber
+			episode.Type = StrPtr(episodeValue.Get("type").String())
+			episode.Aired = getJsonDatePtr(episodeValue, "airstamp", time.RFC3339)
+			episode.Runtime = Uint16Ptr(episodeValue.Get("runtime").Uint())
+			episode.Summary = StrPtr(strip.StripTags(episodeValue.Get("summary").String()))
+			episode.SeasonNumber = &season.Number
+
+			episodes = append(episodes, *episode)
 
 			return true
 		})
 
 		season.Episodes = episodes
 
-		seasons = append(seasons, season)
+		seasons = append(seasons, *season)
 
 		return true
 	})

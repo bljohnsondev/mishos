@@ -91,6 +91,33 @@ func (sc ShowController) AddOrFollowShow(context *gin.Context) {
 	context.JSON(200, gin.H{"message": message, "show": gin.H{"id": show.ID, "name": show.Name}})
 }
 
+func (sc ShowController) UpdateShow(context *gin.Context) {
+	_, err := services.GetUserFromContext(context)
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusUnauthorized, modelsdto.ErrorDto{Error: err.Error()})
+		return
+	}
+
+	idParam := context.Param("showId")
+	if idParam == "" {
+		services.SendError(context, "show id not found")
+		return
+	}
+
+	showId, err := strconv.ParseUint(idParam, 10, 32)
+	if err != nil {
+		services.SendError(context, "invalid show id")
+		return
+	}
+
+	if err := showService.RefreshShow(showId); err != nil {
+		services.SendError(context, err.Error())
+		return
+	}
+
+	context.JSON(200, gin.H{"message": "show refreshed"})
+}
+
 func (sc ShowController) Follow(context *gin.Context) {
 	user, err := services.GetUserFromContext(context)
 	if err != nil {
