@@ -26,5 +26,37 @@ func (wc WatchListController) GetUnwatched(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"message": "getting watchlist data", "unwatched": unwatched})
+	context.JSON(200, gin.H{"unwatched": unwatched})
+}
+
+func (wc WatchListController) GetRecent(context *gin.Context) {
+	user, err := services.GetUserFromContext(context)
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusUnauthorized, modelsdto.ErrorDto{Error: err.Error()})
+		return
+	}
+
+	watched, err := watchlistService.GetRecent(user.ID)
+	if err != nil {
+		services.SendError(context, err.Error())
+		return
+	}
+
+	context.JSON(200, gin.H{"recent": watched})
+}
+
+func (wc WatchListController) GetUpcoming(context *gin.Context) {
+	user, err := services.GetUserFromContext(context)
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusUnauthorized, modelsdto.ErrorDto{Error: err.Error()})
+		return
+	}
+
+	upcoming, err := watchlistService.GetUpcoming(user.ID)
+	if err != nil {
+		services.SendError(context, err.Error())
+		return
+	}
+
+	context.JSON(200, gin.H{"upcoming": upcoming})
 }

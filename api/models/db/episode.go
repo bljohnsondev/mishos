@@ -2,12 +2,10 @@ package modelsdb
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type Episode struct {
-	gorm.Model
+	Model
 	ProviderID   *string          `json:"providerId"`
 	Name         *string          `json:"name"`
 	Number       *uint16          `json:"number"`

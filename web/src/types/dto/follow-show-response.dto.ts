@@ -1,4 +1,4 @@
 export interface FollowShowResponseDto {
-  ID: number;
+  id: number;
   name: string;
 }

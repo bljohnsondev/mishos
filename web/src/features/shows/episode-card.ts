@@ -57,10 +57,10 @@ export class EpisodeCard extends LitElement {
   }
 
   private async handleWatch() {
-    if (this.episode?.ID) {
+    if (this.episode?.id) {
       this.dispatchEvent(
         createEvent(this.episode.watched ? 'unwatch-episode' : 'watch-episode', {
-          episodeId: this.episode.ID,
+          episodeId: this.episode.id,
         })
       );
     }

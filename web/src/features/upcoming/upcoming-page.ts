@@ -5,7 +5,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
-import { UpcomingEpisodeDto } from '@/types';
+import { WatchlistEpisodeDto } from '@/types';
 import { formatDate } from '@/utils';
 
 import { getUpcomingList } from './upcoming-api';
@@ -18,7 +18,7 @@ import './calendar-card';
 
 @customElement('upcoming-page')
 export class UpcomingPage extends BaseElement {
-  @state() episodes?: UpcomingEpisodeDto[];
+  @state() episodes?: WatchlistEpisodeDto[];
 
   render() {
     return html`
@@ -41,8 +41,8 @@ export class UpcomingPage extends BaseElement {
     `;
   }
 
-  private renderEpisode(episode: UpcomingEpisodeDto): TemplateResult | null {
-    return episode && episode.show && episode.aired
+  private renderEpisode(episode: WatchlistEpisodeDto): TemplateResult | null {
+    return episode && episode.aired
       ? html`
           <div class="episode">
             <div>
@@ -53,13 +53,13 @@ export class UpcomingPage extends BaseElement {
               <a href="#" class="show-image-container" @click=${(event: Event) => this.handleClickShow(event, episode)}>
                 <img
                   class="show-image"
-                  src=${episode.show.imageMedium ?? '/images/empty-image.svg'}
-                  alt=${episode.show.name ?? 'Unknown episode'}
+                  src=${episode.imageMedium ?? '/images/empty-image.svg'}
+                  alt=${episode.showName ?? 'Unknown episode'}
                 />
               </a>
             </div>
             <div>
-              <h1>${episode.show.name}</h1>
+              <h1>${episode.showName}</h1>
               <div class="episode-name">
                 <episode-name-tooltip
                   name=${ifDefined(episode.name)}
@@ -68,7 +68,7 @@ export class UpcomingPage extends BaseElement {
               </div>
               <ul class="detail-list">
                 <li>S${episode.seasonNumber} E${episode.number}</li>
-                ${episode.show?.network ? html`<li>${episode.show.network}</li>` : null}
+                ${episode.network ? html`<li>${episode.network}</li>` : null}
                 ${episode.aired ? html`<li>${formatDate(episode.aired, 'h:mm a')}</li>` : null}
                 ${episode.runtime ? html`<li>${episode.runtime}m</li>` : null}
               </ul>
@@ -78,9 +78,9 @@ export class UpcomingPage extends BaseElement {
       : null;
   }
 
-  private handleClickShow(event: Event, episode: UpcomingEpisodeDto) {
+  private handleClickShow(event: Event, episode: WatchlistEpisodeDto) {
     event.preventDefault();
-    Router.go(`/show/view/${episode.show?.ID}`);
+    Router.go(`/show/view/${episode.showId}`);
   }
 
   async firstUpdated() {

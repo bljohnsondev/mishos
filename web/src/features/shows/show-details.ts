@@ -37,7 +37,7 @@ export class ShowDetails extends LitElement {
       <section>
         <div class="show-header">
           <h1>${this.show.name}</h1>
-          ${this.show.ID
+          ${this.show.id
             ? html`
                 <div class="show-header-buttons">
                   <sl-button variant="warning" size="small" @click=${this.handleClickRemove}>
@@ -122,7 +122,7 @@ export class ShowDetails extends LitElement {
 
   private handleClickRefresh() {
     if (this.show) {
-      this.dispatchEvent(createEvent('refresh-show', this.show?.ID));
+      this.dispatchEvent(createEvent('refresh-show', this.show?.id));
     }
   }
 

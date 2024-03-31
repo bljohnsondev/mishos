@@ -61,6 +61,9 @@ export class BaseElement extends LitElement {
         } else {
           this.toast({ variant: 'danger', message: error.message ?? 'An unknown error occurred' }, target);
         }
+      } else if (toastErrors && error instanceof HTTPError) {
+        const json = await error.response.json();
+        this.toast({ variant: 'danger', message: json.error ?? 'An unknown error occurred' }, target);
       } else if (toastErrors && error instanceof Error) {
         this.toast({ variant: 'danger', message: error.message ?? 'An unknown error occurred' }, target);
       }

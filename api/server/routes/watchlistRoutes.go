@@ -13,6 +13,7 @@ func AddWatchListRoutes(router *gin.Engine) {
 	authRoutes := router.Group("/api/watchlist", middlewares.AuthRequired())
 	{
 		authRoutes.GET("/unwatched", watchlistController.GetUnwatched)
-		//authRoutes.GET("/recent", watchlistController.WatchList)
+		authRoutes.GET("/recent", watchlistController.GetRecent)
+		authRoutes.GET("/upcoming", watchlistController.GetUpcoming)
 	}
 }

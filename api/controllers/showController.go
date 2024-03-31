@@ -68,7 +68,7 @@ func (sc ShowController) AddOrFollowShow(context *gin.Context) {
 	}
 
 	if show.ID == 0 {
-		context.JSON(200, gin.H{"success": false, "message": "could not identify show to add"})
+		services.SendError(context, "Could not identify show to add")
 		return
 	}
 
@@ -88,7 +88,7 @@ func (sc ShowController) AddOrFollowShow(context *gin.Context) {
 		message = "show followed"
 	}
 
-	context.JSON(200, gin.H{"success": true, "message": message, "show": gin.H{"ID": show.ID, "name": show.Name}})
+	context.JSON(200, gin.H{"message": message, "show": gin.H{"ID": show.ID, "name": show.Name}})
 }
 
 func (sc ShowController) Follow(context *gin.Context) {
@@ -112,7 +112,7 @@ func (sc ShowController) Follow(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"success": true, "message": "show followed"})
+	context.JSON(200, gin.H{"message": "show followed"})
 }
 
 func (sc ShowController) Unfollow(context *gin.Context) {
@@ -136,7 +136,7 @@ func (sc ShowController) Unfollow(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"success": true, "message": "show unfollowed"})
+	context.JSON(200, gin.H{"message": "show unfollowed"})
 }
 
 func (sc ShowController) Followed(context *gin.Context) {

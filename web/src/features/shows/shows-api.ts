@@ -12,7 +12,7 @@ export const getShowDetails = async (showId: string): Promise<ShowDto | undefine
   return response.show as ShowDto;
 };
 
-export const watchEpisode = async (episodeId: string, watch: boolean, previous: boolean = false) => {
+export const watchEpisode = async (episodeId: number, watch: boolean, previous: boolean = false) => {
   // toggle previous should only apply when marking watched
   if (watch && previous) {
     const response: any = await kyWrapper.post('episode/watchprevious', {
@@ -46,7 +46,7 @@ export const followShow = async (providerId: string): Promise<FollowShowResponse
     .json();
 
   return {
-    ID: response?.show?.ID,
+    id: response?.show?.id,
     name: response?.show?.name,
   };
 };
@@ -54,7 +54,7 @@ export const followShow = async (providerId: string): Promise<FollowShowResponse
 export const unfollowShow = async (show: ShowDto): Promise<void> => {
   await kyWrapper.post('show/unfollow', {
     json: {
-      showId: show.ID,
+      showId: show.id,
     },
   });
 };

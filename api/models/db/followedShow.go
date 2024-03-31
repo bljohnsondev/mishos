@@ -1,11 +1,7 @@
 package modelsdb
 
-import (
-	"gorm.io/gorm"
-)
-
 type FollowedShow struct {
-	gorm.Model
+	Model
 	UserID uint
 	ShowID uint
 	Show   Show

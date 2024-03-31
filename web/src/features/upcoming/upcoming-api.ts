@@ -1,7 +1,7 @@
 import { kyWrapper } from '@/lib/ky-wrapper';
-import { EpisodeDto } from '@/types';
+import { WatchlistEpisodeDto } from '@/types';
 
-export const getUpcomingList = async (): Promise<EpisodeDto[]> => {
-  const episodes: EpisodeDto[] = await kyWrapper.get('upcoming').json();
-  return episodes;
+export const getUpcomingList = async (): Promise<WatchlistEpisodeDto[]> => {
+  const episodes: any = await kyWrapper.get('watchlist/upcoming').json();
+  return episodes.upcoming;
 };

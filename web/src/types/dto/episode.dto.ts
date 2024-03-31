@@ -1,7 +1,7 @@
 import { ShowDto } from '@/types/dto/show.dto';
 
 export interface EpisodeDto {
-  ID?: string;
+  id?: string;
   name?: string;
   number?: number;
   type?: string;

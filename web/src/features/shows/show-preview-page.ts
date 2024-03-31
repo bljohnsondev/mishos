@@ -37,14 +37,14 @@ export class ShowPreviewPage extends BaseElement {
   private async handleAddShow(event: Event) {
     if (event && event instanceof CustomEvent && event.detail?.providerId) {
       const response: FollowShowResponseDto | undefined = await this.callApi(() => followShow(event.detail.providerId));
-      if (response && response.ID) {
+      if (response && response.id) {
         this.dispatchEvent(
           createToastEvent({
             variant: 'success',
             message: `${response.name} has been added`,
           })
         );
-        Router.go(`/show/view/${response.ID}`);
+        Router.go(`/show/view/${response.id}`);
       }
     }
   }

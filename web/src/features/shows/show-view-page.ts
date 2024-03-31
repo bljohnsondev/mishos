@@ -54,9 +54,9 @@ export class ShowViewPage extends BaseElement {
   private async handleToggleWatch(event: Event, watched: boolean) {
     if (event && event instanceof CustomEvent) {
       const watchData = event.detail;
-      if (watchData.episodeId && this.show?.ID) {
+      if (watchData.episodeId && this.show?.id) {
         await this.callApi(() => watchEpisode(watchData.episodeId, watched, this.togglePrevious));
-        await this.loadShow(this.show.ID);
+        await this.loadShow(this.show.id);
       }
     }
   }
@@ -68,10 +68,10 @@ export class ShowViewPage extends BaseElement {
   }
 
   private async handleRefreshShow(event: Event) {
-    if (event && event instanceof CustomEvent && event.detail && this.show?.ID) {
+    if (event && event instanceof CustomEvent && event.detail && this.show?.id) {
       const showId = event.detail;
       await this.callApi(() => refreshShow(showId));
-      await this.loadShow(this.show.ID);
+      await this.loadShow(this.show.id);
       this.dispatchEvent(
         createToastEvent({
           variant: 'success',

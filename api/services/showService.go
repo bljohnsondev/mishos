@@ -79,7 +79,11 @@ func (showService ShowService) CreateShow(providerId string, show *modelsdb.Show
 			return false, err
 		}
 
-		db.DB.Create(show)
+		result := db.DB.Create(show)
+		if result.Error != nil {
+			return false, result.Error
+		}
+
 		return true, nil
 	} else {
 		// assign the loaded show to the show pointer param

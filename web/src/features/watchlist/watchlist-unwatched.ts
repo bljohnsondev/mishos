@@ -6,7 +6,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { BaseElement } from '@/components/base-element';
 import { watchEpisode } from '@/features/shows/shows-api';
 import { sharedStyles } from '@/styles/shared-styles';
-import { EpisodeDto } from '@/types';
+import { WatchlistEpisodeDto } from '@/types';
 import { createToastEvent, formatAirTime } from '@/utils';
 
 import { getWatchList } from './wachlist-api';
@@ -20,7 +20,7 @@ import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 @customElement('watchlist-unwatched')
 export class WatchListUnwatched extends BaseElement {
-  @state() episodes?: EpisodeDto[];
+  @state() episodes?: WatchlistEpisodeDto[];
 
   render() {
     return html`
@@ -38,19 +38,19 @@ export class WatchListUnwatched extends BaseElement {
     `;
   }
 
-  private renderEpisode(episode: EpisodeDto): TemplateResult | null {
-    return episode.show
+  private renderEpisode(episode: WatchlistEpisodeDto): TemplateResult | null {
+    return episode
       ? html`
           <div class="episode">
             <a href="#" class="show-image-container" @click=${(event: Event) => this.handleClickShow(event, episode)}>
               <img
                 class="show-image"
-                src=${episode.show.imageMedium ?? '/images/empty-image.svg'}
-                alt=${episode.show.name ?? 'Unknown show'}
+                src=${episode.imageMedium ?? '/images/empty-image.svg'}
+                alt=${episode.showName ?? 'Unknown show'}
               />
             </a>
             <div class="episode-info">
-              <h1>${episode.show.name}</h1>
+              <h1>${episode.showName}</h1>
               <div class="episode-name">
                 <episode-name-tooltip
                   name=${ifDefined(episode.name)}
@@ -59,7 +59,7 @@ export class WatchListUnwatched extends BaseElement {
               </div>
               <ul class="detail-list">
                 <li>S${episode.seasonNumber} E${episode.number}</li>
-                ${episode.show?.network ? html`<li>${episode.show.network}</li>` : null}
+                ${episode.network ? html`<li>${episode.network}</li>` : null}
                 ${episode.aired ? html`<li>${formatAirTime(episode.aired)}</li>` : null}
                 ${episode.runtime ? html`<li>${episode.runtime}m</li>` : null}
               </ul>
@@ -78,14 +78,14 @@ export class WatchListUnwatched extends BaseElement {
       : null;
   }
 
-  private handleClickShow(event: Event, episode: EpisodeDto) {
+  private handleClickShow(event: Event, episode: WatchlistEpisodeDto) {
     event.preventDefault();
-    Router.go(`/show/view/${episode.show?.ID}`);
+    Router.go(`/show/view/${episode.showId}`);
   }
 
-  async handleWatch(episode: EpisodeDto) {
-    if (episode && episode.ID) {
-      const episodeId = episode.ID;
+  async handleWatch(episode: WatchlistEpisodeDto) {
+    if (episode && episode.id) {
+      const episodeId = episode.id;
       await this.callApi(() => watchEpisode(episodeId, true));
       this.episodes = await this.callApi(() => getWatchList());
       this.dispatchEvent(
