@@ -13,5 +13,6 @@ func AddSettingsRoutes(router *gin.Engine) {
 	authRoutes := router.Group("/api/settings", middlewares.AuthRequired())
 	{
 		authRoutes.POST("/savegeneral", settingsController.SaveConfigGeneral)
+		authRoutes.POST("/saveaccount", settingsController.SaveConfigAccount)
 	}
 }

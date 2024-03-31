@@ -8,6 +8,7 @@ export * from './dto/follow-show-response.dto';
 export * from './dto/followed-show.dto';
 export * from './dto/search-result.dto';
 export * from './dto/season.dto';
+export * from './dto/settings-account.dto';
 export * from './dto/settings-general.dto';
 export * from './dto/show.dto';
 export * from './dto/task.dto';
