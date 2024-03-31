@@ -97,11 +97,11 @@ func (ac AuthController) OnboardingCreate(context *gin.Context) {
 		return
 	}
 
-  // no funny business! onboarding should only happen when there are no users
-  if !ready {
+	// no funny business! onboarding should only happen when there are no users
+	if !ready {
 		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 		return
-  }
+	}
 
 	var body struct {
 		Username string `json:"username" binding:"required"`
