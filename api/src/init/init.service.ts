@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcrypt';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Equal, IsNull, Or, Repository } from 'typeorm';
 
 import { AuthService } from '@/auth/auth.service';
 import { UserDto } from '@/auth/dto';
@@ -57,20 +57,30 @@ export class InitService {
     if (!user) throw new ShowException('User not found');
 
     const followedShows = await this.followedShowRepository.find({
-      select: {
-        show: {
-          id: true,
-          name: true,
-          providerId: true,
-        },
-      },
       where: {
         user: {
           id: user.id,
         },
+        show: {
+          seasons: {
+            episodes: {
+              watches: {
+                user: {
+                  id: Or(Equal(user.id), IsNull()),
+                },
+              },
+            },
+          },
+        },
       },
       relations: {
-        show: true,
+        show: {
+          seasons: {
+            episodes: {
+              watches: true,
+            },
+          },
+        },
       },
       order: {
         show: {
@@ -79,66 +89,19 @@ export class InitService {
       },
     });
 
-    const allWatched = await this.watchedRepository.find({
-      select: {
-        episode: {
-          providerId: true,
-          name: true,
-          number: true,
-          season: {
-            number: true,
-            show: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      },
-      where: {
-        user: {
-          id: user.id,
-        },
-      },
-      relations: {
-        episode: {
-          season: {
-            show: true,
-          },
-        },
-      },
-      order: {
-        episode: {
-          season: {
-            number: 'ASC',
-          },
-          number: 'ASC',
-        },
-      },
-    });
-
     const exportedShows = followedShows.map(followed => {
-      const episodes = allWatched
-        .filter(watched => {
-          return watched.episode?.season?.show?.id === followed.show.id;
-        })
-        .map(ep => ({
-          id: ep.id,
-          providerId: ep.episode.providerId,
-          name: ep.episode.name,
-          seasonNumber: ep.episode.season?.number,
-          episodeNumber: ep.episode.number,
-        }));
-
-      return {
-        id: followed.show.id,
-        providerId: followed.show.providerId,
-        name: followed.show.name,
-        episodes,
-      };
+      return followed.show;
     });
+
+    const watchedEpisodes = await this.watchedRepository
+      .createQueryBuilder('we')
+      .select(['we.id as id', 'we.user.id as userId', 'we.episode.id as episodeId', 'we.createdAt as createdAt'])
+      .where('we.user.id = :uid', { uid: user.id })
+      .getRawMany();
 
     return {
       shows: exportedShows,
+      watched: watchedEpisodes,
     };
   }
 }
