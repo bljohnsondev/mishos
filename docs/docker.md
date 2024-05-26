@@ -63,6 +63,7 @@ Here are some other important environment variables:
 - `SECRET` - Set this to whatever you want but definitely set it to something.  This is the signing key used for authentication.
 - `WATCHLIST_RECENT_LIMIT` - This is how many episodes to show on the recently watched tab.
 - `CRON_PROVIDER_UPDATE` - This is a cron string that defines the interval to get show updates from the provider.  If unset it defaults to 12 AM.
+- `RUN_MIGRATION` - This should be set to `1` for the **first run of the app** only.  This instructs the backend to initialize the empty database.
 
 ## First Run
 
