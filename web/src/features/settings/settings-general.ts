@@ -9,7 +9,13 @@ import { sharedStyles } from '@/styles/shared-styles';
 import { AppStore } from '@/types';
 import { getTheme, setTheme, initializeForm } from '@/utils';
 
-import { getExportData, saveConfigGeneral } from './settings-api';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
+import '@shoelace-style/shoelace/dist/components/input/input.js';
+import '@shoelace-style/shoelace/dist/components/option/option.js';
+import '@shoelace-style/shoelace/dist/components/select/select.js';
+
+import { saveConfigGeneral } from './settings-api';
 
 interface SettingsFormValues {
   theme?: string;
@@ -22,13 +28,12 @@ export class SettingsGeneral extends BaseElement {
   @property({ attribute: false })
   public appStore?: AppStore;
 
-  @query('form') settingsForm!: HTMLFormElement;
-
+  @query('#settings-form') settingsForm!: HTMLFormElement;
   render() {
     const notifierUrl = this.appStore?.initData?.userConfig?.notifierUrl;
 
     return html`
-      <form>
+      <form id="settings-form">
         <div>
           <sl-select name="theme" label="Theme" value=${getTheme()}>
             <sl-option value="dark">Dark</sl-option>
@@ -40,24 +45,9 @@ export class SettingsGeneral extends BaseElement {
         </div>
         <div class="action-buttons">
           <sl-button variant="primary" type="submit">Save</sl-button>
-          <sl-button variant="neutral" @click=${this.handleExport}>Export Shows</sl-button>
         </div>
       </form>
     `;
-  }
-
-  private async handleExport() {
-    const exported = await getExportData();
-
-    // hacky way to download JSON from an in-memory object
-    const url = window.URL.createObjectURL(exported);
-    const link = document.createElement('a');
-    link.style.display = 'none';
-    link.href = url;
-    link.download = 'exported-shows.json';
-    document.body.appendChild(link);
-    link.click();
-    window.URL.revokeObjectURL(url);
   }
 
   private async handleSubmit(values: SettingsFormValues) {
@@ -88,7 +78,7 @@ export class SettingsGeneral extends BaseElement {
   static styles = [
     sharedStyles,
     css`
-      form {
+      #settings-form {
         display: flex;
         flex-direction: column;
         gap: var(--sl-spacing-medium);

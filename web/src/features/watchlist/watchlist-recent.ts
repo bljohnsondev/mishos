@@ -62,7 +62,7 @@ export class WatchListRecent extends BaseElement {
                 ${episode.aired ? html`<li>${formatAirTime(episode.aired)}</li>` : null}
                 ${episode.runtime ? html`<li>${episode.runtime}m</li>` : null}
               </ul>
-              <div class="watched-date">Watched ${dayjs(episode.watchedDate).fromNow()}</div>
+              <div class="watched-date">Watched ${dayjs(episode.watchedAt).fromNow()}</div>
             </div>
           </div>
         `

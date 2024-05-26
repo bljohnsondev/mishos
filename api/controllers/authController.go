@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"mishosapi/config"
 	"mishosapi/db"
 	modelsdb "mishosapi/models/db"
 	modelsdto "mishosapi/models/dto"
@@ -43,7 +44,7 @@ func (ac AuthController) Login(context *gin.Context) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"userID": fmt.Sprintf("%d", user.ID),
-		"exp":    time.Now().Add(time.Hour * 24 * 30).Unix(),
+		"exp":    time.Now().Add(config.JwtTokenDuration).Unix(),
 	})
 
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
@@ -53,7 +54,7 @@ func (ac AuthController) Login(context *gin.Context) {
 	}
 
 	sanitizedUser := services.SanitizeUser(user)
-	context.JSON(200, gin.H{"user": sanitizedUser, "token": tokenString})
+	context.JSON(http.StatusOK, gin.H{"user": sanitizedUser, "token": tokenString})
 }
 
 func (ac AuthController) InitData(context *gin.Context) {
@@ -65,6 +66,7 @@ func (ac AuthController) InitData(context *gin.Context) {
 
 	var config modelsdb.UserConfig
 	err = db.DB.Where("user_id = ?", user.ID).Find(&config).Error
+
 	if err != nil {
 		services.SendError(context, err.Error())
 		return
@@ -77,7 +79,7 @@ func (ac AuthController) InitData(context *gin.Context) {
 		},
 	}
 
-	context.JSON(200, initData)
+	context.JSON(http.StatusOK, initData)
 }
 
 func (ac AuthController) IsOnboardingReady(context *gin.Context) {
@@ -87,7 +89,7 @@ func (ac AuthController) IsOnboardingReady(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"ready": ready})
+	context.JSON(http.StatusOK, gin.H{"ready": ready})
 }
 
 func (ac AuthController) OnboardingCreate(context *gin.Context) {
@@ -113,7 +115,7 @@ func (ac AuthController) OnboardingCreate(context *gin.Context) {
 		return
 	}
 
-	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
+	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), config.BcryptCost)
 	if err != nil {
 		services.SendError(context, err.Error())
 		return
@@ -139,7 +141,7 @@ func (ac AuthController) OnboardingCreate(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"user": services.SanitizeUser(user)})
+	context.JSON(http.StatusOK, gin.H{"user": services.SanitizeUser(user)})
 }
 
 func isOnboardingReady() (ready bool, err error) {

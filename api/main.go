@@ -1,18 +1,34 @@
 package main
 
 import (
+	"os"
+	"time"
+
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
+
 	"mishosapi/config"
 	"mishosapi/db"
-	"mishosapi/tasks"
+	"mishosapi/migrations"
 	"mishosapi/server"
+	"mishosapi/tasks"
 )
 
 func init() {
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: time.RFC3339})
+
 	config.LoadEnv()
-	db.DBInit()
+	config.InitTimezone()
+
+	db.Init()
+	migrations.RunMigrationIfEnv()
 }
 
 func main() {
-	tasks.InitializeTasks()
+	taskRunner := tasks.TaskRunner{}
+	taskRunner.InitializeTasks()
+
+	log.Info().Msg("server starting...")
 	server.Start()
 }

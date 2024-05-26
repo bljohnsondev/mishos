@@ -1,17 +1,15 @@
-package main
+package migrations
 
 import (
-	"mishosapi/config"
+	"os"
+
 	"mishosapi/db"
 	modelsdb "mishosapi/models/db"
+
+	"github.com/rs/zerolog/log"
 )
 
-func init() {
-	config.LoadEnv()
-	db.DBInit()
-}
-
-func main() {
+func RunMigration() {
 	err := db.DB.AutoMigrate(&modelsdb.User{})
 	if err != nil {
 		panic("migrating User failed")
@@ -47,3 +45,23 @@ func main() {
 		panic("migrating WatchedEpisode failed")
 	}
 }
+
+func RunMigrationIfEnv() {
+	runMigration, ok := os.LookupEnv("RUN_MIGRATION")
+
+	if ok && runMigration == "1" {
+		log.Info().Msg("running database migration with RUN_MIGRATION env set to 1")
+		RunMigration()
+	}
+}
+
+/*
+func init() {
+	config.LoadEnv()
+	db.Init()
+}
+
+func main() {
+	RunMigration()
+}
+*/

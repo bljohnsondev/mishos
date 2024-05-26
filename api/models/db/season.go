@@ -13,5 +13,6 @@ type Season struct {
 	Network      *string    `json:"network"`
 	EpisodeOrder *uint16    `json:"episodeOrder"`
 	ShowID       uint       `json:"showId" gorm:"uniqueIndex:idx_season_uni"`
+	Show         Show       `json:"-"`
 	Episodes     []Episode  `json:"episodes"`
 }

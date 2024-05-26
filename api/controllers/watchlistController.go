@@ -26,7 +26,7 @@ func (wc WatchListController) GetUnwatched(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"unwatched": unwatched})
+	context.JSON(http.StatusOK, gin.H{"unwatched": unwatched})
 }
 
 func (wc WatchListController) GetRecent(context *gin.Context) {
@@ -42,7 +42,7 @@ func (wc WatchListController) GetRecent(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"recent": watched})
+	context.JSON(http.StatusOK, gin.H{"recent": watched})
 }
 
 func (wc WatchListController) GetUpcoming(context *gin.Context) {
@@ -58,5 +58,5 @@ func (wc WatchListController) GetUpcoming(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"upcoming": upcoming})
+	context.JSON(http.StatusOK, gin.H{"upcoming": upcoming})
 }

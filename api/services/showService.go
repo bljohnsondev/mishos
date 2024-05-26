@@ -2,7 +2,13 @@ package services
 
 import (
 	"slices"
+	"time"
 
+	"github.com/rs/zerolog/log"
+	"gorm.io/gorm"
+
+	"mishosapi/apphooks"
+	"mishosapi/config"
 	"mishosapi/db"
 	modelsdb "mishosapi/models/db"
 	modelsdto "mishosapi/models/dto"
@@ -51,14 +57,39 @@ func (showService ShowService) Follow(userId uint, showId uint) error {
 			ShowID: showId,
 		}
 		db.DB.Create(&followedShow)
+
+		// update any notifier tasks
+		payload := apphooks.FollowPayload{
+			UserID:   userId,
+			ShowID:   showId,
+			Followed: true,
+		}
+
+		apphooks.OnFollow.Dispatch(payload)
 	}
 
 	return nil
 }
 
 func (showService ShowService) Unfollow(userId uint, showId uint) error {
-	if err := db.DB.Where("user_id = ? AND show_id = ?", userId, showId).Unscoped().Delete(&modelsdb.FollowedShow{}).Error; err != nil {
+	followed, err := showService.IsFollowed(userId, showId)
+	if err != nil {
 		return err
+	}
+
+	if followed {
+		if err := db.DB.Where("user_id = ? AND show_id = ?", userId, showId).Unscoped().Delete(&modelsdb.FollowedShow{}).Error; err != nil {
+			return err
+		}
+
+		// update any notifier tasks
+		payload := apphooks.FollowPayload{
+			UserID:   userId,
+			ShowID:   showId,
+			Followed: false,
+		}
+
+		apphooks.OnUnfollow.Dispatch(payload)
 	}
 
 	return nil
@@ -180,7 +211,10 @@ func (showService ShowService) GetWatchedEpisodeIds(userId uint, showId uint64, 
 
 func (showService ShowService) GetShow(userId uint, showId uint64) (show *modelsdb.Show, err error) {
 	var shows []modelsdb.Show
-	if err := db.DB.Preload("Seasons").Preload("Seasons.Episodes").Limit(1).Find(&shows, showId).Error; err != nil {
+	if err := db.DB.Preload("Seasons").Preload("Seasons.Episodes", func(db *gorm.DB) *gorm.DB {
+		// this is to handle ordering of preloaded joins
+		return db.Order("episodes.number ASC")
+	}).Limit(1).Find(&shows, showId).Error; err != nil {
 		return nil, err
 	}
 
@@ -197,7 +231,8 @@ func (showService ShowService) GetShow(userId uint, showId uint64) (show *models
 		// loop through all the episodes to determine the users watched status
 		for _, season := range show.Seasons {
 			for episodeIndex, episode := range season.Episodes {
-				episode.SeasonNumber = &season.Number
+				seasonNumber := season.Number
+				episode.SeasonNumber = &seasonNumber
 				episode.Watched = slices.Contains(watchedIds, episode.ID)
 				season.Episodes[episodeIndex] = episode
 			}
@@ -221,8 +256,43 @@ func (showService ShowService) RefreshShow(showId uint64) error {
 		return err
 	}
 
-	if err := db.DB.Save(&show).Error; err != nil {
+	// NOTE: need to include FullSaveAssociations so property changes on joined records (like season and episode) will be saved
+	if err := db.DB.Session(&gorm.Session{FullSaveAssociations: true}).Save(&show).Error; err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (showService ShowService) RefreshAllShows() error {
+	type ShowInfo struct {
+		ID   uint64
+		Name string
+	}
+
+	var shows []ShowInfo
+
+	err := db.DB.
+		Model(&modelsdb.Show{}).
+		Select("shows.id, shows.name").
+		Joins("inner join followed_shows fs on fs.show_id = shows.id").
+		Group("shows.id").
+		Scan(&shows).
+		Error
+
+	if err != nil {
+		return err
+	}
+
+	for _, showInfo := range shows {
+		if err := showService.RefreshShow(showInfo.ID); err != nil {
+			log.Error().Err(err).Msgf("updating show failed [%d]: %s", showInfo.ID, showInfo.Name)
+		} else {
+			log.Info().Msgf("updated show [%d]: %s", showInfo.ID, showInfo.Name)
+		}
+
+		// sleep for 10 seconds to provide a rate limit for the external API calls
+		time.Sleep(config.ProviderRateLimit)
 	}
 
 	return nil

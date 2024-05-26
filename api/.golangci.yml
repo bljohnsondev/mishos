@@ -1,0 +1,68 @@
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+  goconst:
+    min-len: 2
+    min-occurrences: 3
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+  #govet:
+  #  enable:
+  #  - fieldalignment
+  nolintlint:
+    require-explanation: true
+    require-specific: true
+
+linters:
+  disable-all: true
+  enable:
+    # defaults by golangci
+    - dogsled
+    - errcheck
+    - exportloopref
+    - gofmt
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+
+    # others
+    - bodyclose
+    - dupl
+    - exhaustive
+    - goconst
+    - gocyclo
+    - goimports
+    - gomnd
+    - gosec
+    - misspell
+    - nakedret
+    - nolintlint
+    - prealloc
+    - predeclared
+    - unconvert
+    - unparam
+    - whitespace
+    - wsl
+
+    # lots of variable naming errors
+    #- revive
+    #- stylecheck
+
+    # ignoring for now
+    #- depguard
+    #- gocritic
+    #- thelper
+    #- tparallel
+
+    # dont see this in the docs
+    #- typecheck
+
+run:
+  issues-exit-code: 1

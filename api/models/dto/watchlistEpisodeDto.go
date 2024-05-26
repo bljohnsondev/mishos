@@ -14,5 +14,5 @@ type WatchlistEpisodeDto struct {
 	ImageMedium  string     `json:"imageMedium"`
 	Network      string     `json:"network"`
 	SeasonNumber uint       `json:"seasonNumber"`
-	WatchDate    *time.Time `json:"watchedDate"`
+	WatchedAt    *time.Time `json:"watchedAt"`
 }

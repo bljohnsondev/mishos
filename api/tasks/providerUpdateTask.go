@@ -1,44 +1,47 @@
 package tasks
 
 import (
-  "fmt"
-  "time"
+	"os"
 
-	"mishosapi/db"
-	modelsdb "mishosapi/models/db"
+	"github.com/go-co-op/gocron/v2"
+	"github.com/rs/zerolog/log"
+
 	"mishosapi/services"
 )
 
-var showService = services.ShowService{}
+type ProviderUpdateTask struct {
+	scheduler gocron.Scheduler
+}
 
-func RunProviderUpdate() {
-	type ShowInfo struct {
-	  ID uint64
-	  Name string
+func (put ProviderUpdateTask) InitTasks() error {
+	cron, ok := os.LookupEnv("CRON_PROVIDER_UPDATE")
+
+	if !ok || cron == "" {
+		cron = "0 0 * * * "
 	}
 
-	var shows []ShowInfo
+	log.Info().Msgf("starting nightly provider update task with cron: %s", cron)
 
-	err := db.DB.Debug().
-	  Model(&modelsdb.Show{}).
-	  Select("shows.id, shows.name").
-	  Joins("inner join followed_shows fs on fs.show_id = shows.id").
-		Group("shows.id").
-	  Scan(&shows).
-		Error
+	_, err := put.scheduler.NewJob(
+		gocron.CronJob(cron, false),
+		gocron.NewTask(put.RunProviderUpdate),
+		gocron.WithName("providerUpdate"),
+	)
 
-	if err != nil {
-	  fmt.Printf("error getting show list for provider update: %s\n", err.Error())
-	} else {
-	  for _, showInfo := range shows {
-	    fmt.Printf("updating data for followed show: %s\n", showInfo.Name)
+	return err
+}
 
-	    if err := showService.RefreshShow(showInfo.ID); err != nil {
-	      fmt.Printf("ERROR: updating show failed: %s\n", err.Error())
-	    }
-
-      // sleep for 10 seconds to provide a rate limit for the external API calls
-      time.Sleep(10 * time.Second)
-	  }
+func (put ProviderUpdateTask) RunProviderUpdate() {
+	showService := services.ShowService{}
+	if err := showService.RefreshAllShows(); err != nil {
+		log.Error().Err(err).Msg("error running provider update task")
 	}
+}
+
+func NewProviderUpdateTask(scheduler gocron.Scheduler) *ProviderUpdateTask {
+	task := &ProviderUpdateTask{
+		scheduler: scheduler,
+	}
+
+	return task
 }

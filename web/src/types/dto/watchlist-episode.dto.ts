@@ -10,5 +10,5 @@ export interface WatchlistEpisodeDto {
   imageMedium?: string;
   network?: string;
   seasonNumber: number;
-  watchedDate?: Date;
+  watchedAt?: Date;
 }

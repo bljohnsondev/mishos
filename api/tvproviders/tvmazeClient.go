@@ -8,11 +8,11 @@ import (
 	"net/url"
 	"time"
 
-	modelsdb "mishosapi/models/db"
-	modelsdto "mishosapi/models/dto"
-
 	strip "github.com/grokify/html-strip-tags-go"
 	"github.com/tidwall/gjson"
+
+	modelsdb "mishosapi/models/db"
+	modelsdto "mishosapi/models/dto"
 )
 
 var urlPrefix = "https://api.tvmaze.com"
@@ -81,7 +81,11 @@ func (pc ProviderClient) GetSeasonsAndEpisodes(show *modelsdb.Show) error {
 		// if an existing season already exists update the values
 		for _, existingSeason := range show.Seasons {
 			if existingSeason.Number == uint8(seasonNumber) {
-				season = &existingSeason
+				// i have to assign a new variable due to implicit memory aliasing of a loop var
+				// see https://husni.dev/beware-of-implicit-memory-aliasing-in-go-foor-loop/
+				es := existingSeason
+				season = &es
+
 				break
 			}
 		}
@@ -104,8 +108,10 @@ func (pc ProviderClient) GetSeasonsAndEpisodes(show *modelsdb.Show) error {
 
 			// if an existing episode already exists update the values
 			for _, existingEpisode := range season.Episodes {
-				if *existingEpisode.Number == uint16(episodeNumber) {
-					episode = &existingEpisode
+				if *existingEpisode.Number == episodeNumber {
+					ep := existingEpisode
+					episode = &ep
+
 					break
 				}
 			}
@@ -157,6 +163,7 @@ func (pc ProviderClient) SearchShows(query string, results *[]modelsdto.ShowSear
 		}
 
 		*results = append(*results, result)
+
 		return true
 	})
 
@@ -224,7 +231,7 @@ func (pc ProviderClient) get(uri string, params *url.Values) (string, error) {
 
 	defer response.Body.Close()
 
-	if response.StatusCode != 200 {
+	if response.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("received error from provider with code %d", response.StatusCode)
 	}
 

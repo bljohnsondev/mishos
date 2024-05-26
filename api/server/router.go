@@ -15,5 +15,6 @@ func CreateRouter() *gin.Engine {
 	routes.AddEpisodeRoutes(router)
 	routes.AddWatchListRoutes(router)
 	routes.AddSettingsRoutes(router)
+
 	return router
 }

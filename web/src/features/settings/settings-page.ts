@@ -19,6 +19,7 @@ import '@shoelace-style/shoelace/dist/components/option/option.js';
 import '@shoelace-style/shoelace/dist/components/select/select.js';
 
 import './settings-account';
+import './settings-data';
 import './settings-general';
 
 @customElement('settings-page')
@@ -55,11 +56,22 @@ export class SettingsPage extends BaseElement {
               Account
             </sl-button>
           </li>
+          <li>
+            <sl-button
+              variant="text"
+              size="medium"
+              class=${classMap({ 'header-selected': this.section === 'data' })}
+              @click=${() => (this.section = 'data')}
+            >
+              Data
+            </sl-button>
+          </li>
         </ul>
         <section class="content">
           ${choose(this.section, [
             ['general', () => html`<settings-general></settings-general>`],
             ['account', () => html`<settings-account></settings-account>`],
+            ['data', () => html`<settings-data></settings-data>`],
           ])}
         </section>
       </app-layout>

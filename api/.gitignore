@@ -1,5 +1,4 @@
-mishosapi
 .env
-tvproviders/episodesSample.json
-tvproviders/sample.json
-tvproviders/seasonSample.json
+mishosapi
+delete-data.sql
+builddocker.sh

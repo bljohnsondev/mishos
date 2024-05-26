@@ -3,13 +3,14 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
+
+	"mishosapi/config"
 	"mishosapi/db"
 	modelsdb "mishosapi/models/db"
 	modelsdto "mishosapi/models/dto"
 	"mishosapi/services"
-
-	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type SettingsController struct{}
@@ -50,7 +51,7 @@ func (setc SettingsController) SaveConfigGeneral(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"message": "general config saved"})
+	context.JSON(http.StatusOK, gin.H{"message": "general config saved"})
 }
 
 func (setc SettingsController) SaveConfigAccount(context *gin.Context) {
@@ -88,7 +89,7 @@ func (setc SettingsController) SaveConfigAccount(context *gin.Context) {
 		return
 	}
 
-	hash, err := bcrypt.GenerateFromPassword([]byte(body.PasswordNew1), 10)
+	hash, err := bcrypt.GenerateFromPassword([]byte(body.PasswordNew1), config.BcryptCost)
 	if err != nil {
 		services.SendError(context, err.Error())
 		return
@@ -101,5 +102,34 @@ func (setc SettingsController) SaveConfigAccount(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"message": "account config saved"})
+	context.JSON(http.StatusOK, gin.H{"message": "account config saved"})
+}
+
+func (setc SettingsController) ImportData(context *gin.Context) {
+	userDto, err := services.GetUserFromContext(context)
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusUnauthorized, modelsdto.ErrorDto{Error: err.Error()})
+		return
+	}
+
+	service := services.SettingsService{}
+
+	json, err := HandleJsonUpload(context)
+
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusBadRequest, modelsdto.ErrorDto{Error: err.Error()})
+		return
+	}
+
+	if json == nil {
+		context.AbortWithStatusJSON(http.StatusBadRequest, modelsdto.ErrorDto{Error: "no valid JSON found"})
+		return
+	}
+
+	if err := service.ImportFile(userDto.ID, *json); err != nil {
+		context.AbortWithStatusJSON(http.StatusBadRequest, modelsdto.ErrorDto{Error: err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"imported": true, "message": "successfully imported tv data"})
 }

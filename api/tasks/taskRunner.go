@@ -1,32 +1,53 @@
 package tasks
 
 import (
-  "fmt"
-
-  "github.com/go-co-op/gocron/v2"
+	"github.com/go-co-op/gocron/v2"
+	"github.com/rs/zerolog/log"
 )
 
-func InitializeTasks() {
-  fmt.Println("initializing scheduled tasks")
-
-  scheduler, err := gocron.NewScheduler()
-  if err != nil {
-		panic("error initializing task scheduler")
-  }
-
-  if err = runProviderUpdateTask(scheduler); err != nil {
-		fmt.Println(err.Error())
-		panic("error creating provider update task")
-  }
-
-  scheduler.Start()
+type TaskRunner struct {
+	notifierTask       *NotifierTask
+	providerUpdateTask *ProviderUpdateTask
+	scheduler          gocron.Scheduler
 }
 
-func runProviderUpdateTask(scheduler gocron.Scheduler) error {
-  _, err := scheduler.NewJob(
-    gocron.CronJob("0 0 * * *", false),
-    gocron.NewTask(RunProviderUpdate),
-  )
+func (tr TaskRunner) InitializeTasks() {
+	log.Info().Msg("initializing scheduled tasks")
 
-  return err
+	sch, err := gocron.NewScheduler()
+	if err != nil {
+		log.Fatal().Msg("error initializing task scheduler")
+	}
+
+	tr.scheduler = sch
+
+	// provider update task
+	tr.providerUpdateTask = NewProviderUpdateTask(sch)
+	if err := tr.providerUpdateTask.InitTasks(); err != nil {
+		log.Fatal().Err(err).Msg("error creating provider update task")
+	}
+
+	// notifier task
+	tr.notifierTask = NewNotifierTask(sch)
+	if err = tr.notifierTask.InitTasks(); err != nil {
+		log.Fatal().Err(err).Msg("error initializing notifier tasks")
+	}
+
+	tr.scheduler.Start()
 }
+
+/*
+func (tr TaskRunner) createTestSchedulerTask() error {
+	_, err := tr.scheduler.NewJob(
+		gocron.CronJob("* * * * *", false),
+		gocron.NewTask(func() {
+			for _, job := range tr.scheduler.Jobs() {
+				log.Debug().Msgf("test scheduler task running: job=%s [%s]", job.Name(), strings.Join(job.Tags(), ","))
+			}
+		}),
+		gocron.WithName("testSchedule"),
+	)
+
+	return err
+}
+*/

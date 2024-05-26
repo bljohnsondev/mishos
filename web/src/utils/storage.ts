@@ -1,7 +1,15 @@
 const storagePrefix = 'mishos_';
 
 export const getStorageValue = (key: string) => {
-  return JSON.parse(window.localStorage.getItem(`${storagePrefix}${key}`) as string);
+  const value = window.localStorage.getItem(`${storagePrefix}${key}`);
+  if (!value) return null;
+
+  try {
+    const json = JSON.parse(value);
+    return json;
+  } catch (ex) {
+    return null;
+  }
 };
 
 export const setStorageValue = (key: string, value: string) => {

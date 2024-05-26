@@ -1,6 +1,8 @@
 .env
 .env.prod
 build.sh
+builddocker-prod.sh
+buildlocal.sh
 
 # Logs
 logs

@@ -1,8 +1,6 @@
 package config
 
 import (
-	"time"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -19,7 +17,7 @@ func LoadCors(router *gin.Engine) {
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
 		AllowHeaders:     []string{"Authorization", "Origin", "Content-Length", "Content-Type"},
 		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
+		MaxAge:           CorsMaxAge,
 		AllowAllOrigins:  true,
 	}))
 }

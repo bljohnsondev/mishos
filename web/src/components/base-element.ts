@@ -1,9 +1,10 @@
+import { Router } from '@vaadin/router';
 import { HTTPError } from 'ky';
 import { LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
 import { ToastMessage } from '@/types';
-import { createEvent } from '@/utils';
+import { clearToken, createEvent } from '@/utils';
 
 export interface CallApiOptions {
   target?: HTMLElement;
@@ -56,11 +57,16 @@ export class BaseElement extends LitElement {
 
       if (toastErrors && error instanceof HTTPError && error.response?.status === 400) {
         const errorJson = await error.response.json();
-        if (errorJson?.message) {
-          this.toast({ variant: 'danger', message: errorJson.message }, target);
+        const errorMessage = errorJson?.message || errorJson?.error;
+        if (errorMessage) {
+          this.toast({ variant: 'danger', message: errorMessage }, target);
         } else {
           this.toast({ variant: 'danger', message: error.message ?? 'An unknown error occurred' }, target);
         }
+      } else if (toastErrors && error instanceof HTTPError && error.response?.status === 401) {
+        // on a 401 unauthorized remove any existing token and redirect
+        clearToken();
+        Router.go('/login');
       } else if (toastErrors && error instanceof HTTPError) {
         const json = await error.response.json();
         this.toast({ variant: 'danger', message: json.error ?? 'An unknown error occurred' }, target);

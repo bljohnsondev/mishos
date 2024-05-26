@@ -36,9 +36,9 @@ func (ec EpisodeController) WatchEpisode(context *gin.Context) {
 	}
 
 	if watched {
-		context.JSON(200, gin.H{"watched": watched, "message": "episode watched"})
+		context.JSON(http.StatusOK, gin.H{"watched": watched, "message": "episode watched"})
 	} else {
-		context.JSON(200, gin.H{"watched": watched, "message": "episode already watched"})
+		context.JSON(http.StatusOK, gin.H{"watched": watched, "message": "episode already watched"})
 	}
 }
 
@@ -65,7 +65,7 @@ func (ec EpisodeController) WatchPreviousEpisodes(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"watched": watched})
+	context.JSON(http.StatusOK, gin.H{"watched": watched})
 }
 
 func (ec EpisodeController) UnwatchEpisode(context *gin.Context) {
@@ -89,5 +89,5 @@ func (ec EpisodeController) UnwatchEpisode(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"message": "episode unwatched"})
+	context.JSON(http.StatusOK, gin.H{"message": "episode unwatched"})
 }

@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"time"
 
 	"mishosapi/db"
 	modelsdb "mishosapi/models/db"
@@ -29,9 +30,12 @@ func (es EpisodeService) Watch(userId uint, episodeId uint) (watched bool, err e
 		return false, fmt.Errorf("episode not found: %d", episodeId)
 	}
 
+	now := time.Now()
+
 	watchedEpisode := modelsdb.WatchedEpisode{
 		UserID:    userId,
 		EpisodeID: episodeId,
+		WatchedAt: &now,
 	}
 
 	if err := db.DB.Create(&watchedEpisode).Error; err != nil {
@@ -90,12 +94,15 @@ func (es EpisodeService) WatchPrevious(userId uint, episodeId uint) (episodesWat
 		return 0, err
 	}
 
+	now := time.Now()
+
 	// now insert WatchedEpisode records in a transaction
 	err = db.DB.Transaction(func(tx *gorm.DB) error {
 		for _, episode := range previousEpisodes {
 			newWatched := modelsdb.WatchedEpisode{
 				UserID:    userId,
 				EpisodeID: episode.EpisodeID,
+				WatchedAt: &now,
 			}
 
 			if err := tx.Create(&newWatched).Error; err != nil {

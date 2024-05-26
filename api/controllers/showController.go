@@ -40,7 +40,7 @@ func (sc ShowController) GetShow(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"show": show})
+	context.JSON(http.StatusOK, gin.H{"show": show})
 }
 
 func (sc ShowController) AddOrFollowShow(context *gin.Context) {
@@ -88,7 +88,7 @@ func (sc ShowController) AddOrFollowShow(context *gin.Context) {
 		message = "show followed"
 	}
 
-	context.JSON(200, gin.H{"message": message, "show": gin.H{"id": show.ID, "name": show.Name}})
+	context.JSON(http.StatusOK, gin.H{"message": message, "show": gin.H{"id": show.ID, "name": show.Name}})
 }
 
 func (sc ShowController) UpdateShow(context *gin.Context) {
@@ -115,7 +115,7 @@ func (sc ShowController) UpdateShow(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"message": "show refreshed"})
+	context.JSON(http.StatusOK, gin.H{"message": "show refreshed"})
 }
 
 func (sc ShowController) Follow(context *gin.Context) {
@@ -139,7 +139,7 @@ func (sc ShowController) Follow(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"message": "show followed"})
+	context.JSON(http.StatusOK, gin.H{"message": "show followed"})
 }
 
 func (sc ShowController) Unfollow(context *gin.Context) {
@@ -163,7 +163,7 @@ func (sc ShowController) Unfollow(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"message": "show unfollowed"})
+	context.JSON(http.StatusOK, gin.H{"message": "show unfollowed"})
 }
 
 func (sc ShowController) Followed(context *gin.Context) {
@@ -179,7 +179,7 @@ func (sc ShowController) Followed(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"followedShows": followedShows})
+	context.JSON(http.StatusOK, gin.H{"followedShows": followedShows})
 }
 
 func (sc ShowController) Search(context *gin.Context) {
@@ -204,7 +204,7 @@ func (sc ShowController) Search(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"results": results})
+	context.JSON(http.StatusOK, gin.H{"results": results})
 }
 
 func (sc ShowController) Preview(context *gin.Context) {
@@ -227,5 +227,5 @@ func (sc ShowController) Preview(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, gin.H{"show": show})
+	context.JSON(http.StatusOK, gin.H{"show": show})
 }

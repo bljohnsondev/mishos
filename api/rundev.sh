@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-CompileDaemon -command="./mishosapi"
+CompileDaemon -command="./mishosapi" -log-prefix="false"
