@@ -66,6 +66,8 @@ Here are some other important environment variables:
 
 ## First Run
 
+**IMPORTANT**: For the first run with an empty database you need to set `RUN_MIGRATION=1` environment variable in the docker compose file. This causes the backend to initialize the database.  Once this has been completed and your initial user has been created I suggest commenting out `RUN_MIGRATION=1` in the docker compose file and then doing a docker compose `down` and `up` for the change to take effect.  This flag is only needed the first time the application is started (or in the future if any database schema changes are made).
+
 Once everything is set and Mishos has been started for the first time visit `/onboarding` in your browser.
 This is a one-time only screen that creates your initial username and password.
 Once your user has been created this URL will no longer be available.
