@@ -2,9 +2,7 @@
 
 ## Docker Configuration
 
-The Mishos application consists of two containers - the frontend and the backend.  You can also include a database container if you want to use MySQL or PostgreSQL (or point it at an existing database server).
-
-**NOTE**: If you are watching any long running shows with 10+ seasons I would highly recommend using MySQL or PostgreSQL.  In my testing SQLite tends to be painfully slow when running a *Mark Previous* on 20 seasons of Family Guy.  I'm also running this on a lightweight Debian VM so YMMV.
+The Mishos application consists of two containers - the frontend and the backend.  You will also need to provide a MySQL database for the backend to connect to.
 
 First let's see an example of the `docker-compose.yml` file that I'm personally using:
 
@@ -19,19 +17,21 @@ services:
       - 8000:80
     environment:
       - DOCKER_BE_URL=http://mishos-be:3000/api
+    restart: unless-stopped
 
   mishos-be:
     image: bljohnsondev/mishos-api:latest
     container_name: mishos-be
     environment:
-      # - DB_TYPE=sqlite
-      # - DB_PATH=/db/mishos.db
-      - DB_TYPE=mysql
-      - DB_URL=mysql://MYSQL_USER:MYSQL_PASS@MYSQL_HOST:3306/mishos
-      - CORS=https://mishos.my.home
-      - API_URL=https://api.tvmaze.com
-      - TOKEN_SECRET=YOUR_SECRET_KEY
-      - TOKEN_EXPIRES=30d
+      - GIN_MODE=release
+      - TZ=America/Chicago
+      - PORT=3000
+      - DB_URL=username:password@tcp(mariadb:3306)/mishos?charset=utf8mb4&parseTime=True&loc=Local
+      - SECRET=YOUR_SECRET_KEY_HERE
+      - WATCHLIST_RECENT_LIMIT=30
+      # - CRON_PROVIDER_UPDATE=21 8 * * *
+      # - RUN_MIGRATION=1
+    restart: unless-stopped
 ```
 
 Here is a quick breakdown of the environment variables:
@@ -47,32 +47,25 @@ Not sure what to set this to or what this means?  Just change the hostname `mish
 
 **SQLite**
 
-Want to use SQLite?  You will need these environment variables:
+The current rewrite in Go does not support using SQLite yet.  I will be adding this in the near future.
+
+**MySQL**
 
 ```
-DB_TYPE=sqlite
-DB_PATH=/db/mishos.db
-```
-
-You will also need to mount a volume to your SQLite database so I would also add the following to your docker-compose file:
-
-```
-    volumes:
-      - ./db:/db
-```
-
-**MySQL / PostgreSQL**
-
-Want to use MySQL or PostgreSQL?  Don't use the SQLite variables!  Use these instead:
-
-```
-DB_TYPE=mysql
-DB_URL=mysql://MYSQL_USER:MYSQL_PASS@MYSQL_HOST:3306/YOUR_MISHOS_DB
+DB_URL=username:password@tcp(mariadb:3306)/mishos?charset=utf8mb4&parseTime=True&loc=Local
 ```
 
 Here are some other important environment variables:
 
-- `CORS` - this should match the URL you are using to access the application in your browser.
-- `API_URL` - leave it alone.  [TVmaze](https://www.tvmaze.com/) is the excellent provider that Mishos uses to get all the TV data.
-- `TOKEN_SECRET` - set this to whatever you want but definitely set it to something.  This is the signing key used for authentication.
-- `TOKEN_EXPIRES` - this is the time before the token expires and requires you to login again.  In this example it is set to 30 days.
+- `GIN_MODE` - Include this as-is.  This will be moved to the code in the near future but for now include it.
+- `TZ` - Your preferred timezone if different than the system.
+- `PORT` - The port the backend uses.  If you change this ensure you change it in the `DOCKER_BE_URL` variable.
+- `SECRET` - Set this to whatever you want but definitely set it to something.  This is the signing key used for authentication.
+- `WATCHLIST_RECENT_LIMIT` - This is how many episodes to show on the recently watched tab.
+- `CRON_PROVIDER_UPDATE` - This is a cron string that defines the interval to get show updates from the provider.  If unset it defaults to 12 AM.
+
+## First Run
+
+Once everything is set and Mishos has been started for the first time visit `/onboarding` in your browser.
+This is a one-time only screen that creates your initial username and password.
+Once your user has been created this URL will no longer be available.
