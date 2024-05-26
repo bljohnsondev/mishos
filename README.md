@@ -20,8 +20,7 @@ Ready to give it a try?  Head on over to the [Docker instructions](https://githu
 ## Technology
 
 - *Frontend* - [Lit](https://lit.dev) web components, [Shoelace](https://shoelace.style/) UI library
-- *Backend* - [NestJS](https://nestjs.com/)
-	- The default setup uses a SQLite database but can be used with MySQL or PostgreSQL
+- *Backend* - [Go](https://go.dev/), [Gin](https://github.com/gin-gonic/gin), [Gorm](https://gorm.io/)
 - *TV Provider Data* - [TVmaze.com](https://www.tvmaze.com/) - great service that provides free TV show data
 
 ## Followed Shows
