@@ -1,0 +1,18 @@
+session_name: mishos
+
+start_directory: ~/projects/mishos
+
+windows:
+  - window_name: editor
+    panes:
+      - echo "Start editing here"
+
+  - window_name: servers
+    layout: even-horizontal
+    panes:
+      - shell_command:
+        - cd web
+        - npm run dev
+      - shell_command:
+        - cd api
+        - ./rundev.sh
