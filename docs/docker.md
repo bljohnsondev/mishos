@@ -47,11 +47,17 @@ Not sure what to set this to or what this means?  Just change the hostname `mish
 
 **SQLite**
 
-The current rewrite in Go does not support using SQLite yet.  I will be adding this in the near future.
+```
+DB_TYPE=sqlite
+DB_URL=/db/mishos.db
+```
+
+When running this in a docker container don't forget to add a volume mapping for your `DB_URL` SQLite file location.
 
 **MySQL**
 
 ```
+DB_TYPE=mysql
 DB_URL=username:password@tcp(mariadb:3306)/mishos?charset=utf8mb4&parseTime=True&loc=Local
 ```
 
