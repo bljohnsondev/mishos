@@ -19,7 +19,7 @@ func (ws WatchListService) GetUnwatched(userId uint) (*[]modelsdto.WatchlistEpis
 		Name        string
 		ImageMedium string
 		Network     string
-		LastWatched *time.Time
+		LastWatched string
 	}
 
 	var followed []ShowFollowed
@@ -82,8 +82,8 @@ func (ws WatchListService) GetUnwatched(userId uint) (*[]modelsdto.WatchlistEpis
 				shows.id = ?
 				and followed_shows.user_id = ?
 				and watched_episodes.id is null
-				and episodes.aired <= now()
-			`, fshow.ID, userId).
+				and episodes.aired <= ?
+			`, fshow.ID, userId, time.Now()).
 			Order("seasons.number ASC, episodes.number ASC").
 			Limit(1).
 			Scan(&eplist).

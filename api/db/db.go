@@ -5,6 +5,7 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"gorm.io/driver/mysql"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
 	"mishosapi/config"
@@ -13,16 +14,27 @@ import (
 var DB *gorm.DB
 
 func Init() {
+	dbtype := os.Getenv("DB_TYPE")
 	dsn := os.Getenv("DB_URL")
-	// db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	db, err := gorm.Open(mysql.New(mysql.Config{
-		DSN:               dsn,
-		DefaultStringSize: config.DefaultStringSize,
-	}), &gorm.Config{})
 
-	if err != nil {
-		log.Fatal().Err(err).Msg("failed to connect to database")
+	if dbtype == "sqlite" {
+		db, err := gorm.Open(sqlite.Open(dsn), &gorm.Config{})
+
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to connect to SQLite database")
+		}
+
+		DB = db
+	} else {
+		db, err := gorm.Open(mysql.New(mysql.Config{
+			DSN:               dsn,
+			DefaultStringSize: config.DefaultStringSize,
+		}), &gorm.Config{})
+
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to connect to MySQL database")
+		}
+
+		DB = db
 	}
-
-	DB = db
 }
