@@ -1,6 +1,8 @@
 import { provide } from '@lit/context';
-import { html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { HTTPError } from 'ky';
+import { css, html } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
+import { when } from 'lit/directives/when.js';
 
 import { kyWrapper } from '@/lib/ky-wrapper';
 import { appContext } from '@/store/app-context';
@@ -18,6 +20,8 @@ export class AppRoot extends BaseElement {
     loading: false,
   };
 
+  @state() errorMessage: string | undefined;
+
   constructor() {
     super();
     this.addEventListener('toast', this.handleToastEvent);
@@ -33,6 +37,16 @@ export class AppRoot extends BaseElement {
     return html`
       <div id="toast-container"></div>
       <div class="app-root">
+        ${when(
+          this.errorMessage === undefined,
+          () => html`<slot></slot>`,
+          () => html`
+            <div class="init-error">
+              An error has occurred. Please check the server logs for more information.
+              <div class="error-message">${this.errorMessage}</div>
+            </div>
+          `
+        )}
         <slot></slot>
       </div>
     `;
@@ -95,18 +109,47 @@ export class AppRoot extends BaseElement {
     }
   }
 
-  async loadInitData() {
-    const initData: InitData | undefined = await this.callApi<InitData>(() => kyWrapper.get('auth/init').json(), {
+  loadInitData() {
+    this.callApi<InitData>(() => kyWrapper.get('auth/init').json(), {
       toastErrors: false,
-    });
-    this.appStore = {
-      ...this.appStore,
-      initData,
-    };
+    })
+      .then((initData: InitData | undefined) => {
+        this.appStore = {
+          ...this.appStore,
+          initData,
+        };
+      })
+      .catch(ex => {
+        if (ex instanceof HTTPError && ex.response.status === 401) {
+          // an error code 401 is a good thing
+          this.errorMessage = undefined;
+        } else {
+          this.errorMessage = ex.message ?? 'Unknown error';
+        }
+      });
   }
 
   async connectedCallback() {
     super.connectedCallback();
     this.loadInitData();
   }
+
+  static styles = css`
+    .init-error {
+      width: 65%;
+      margin: 2rem auto;
+      font-size: var(--sl-font-size-small);
+      color: var(--sl-color-neutral-800);
+      padding: var(--sl-spacing-large);
+      border: 1px solid var(--sl-color-neutral-300);
+      border-radius: var(--sl-border-radius-medium);
+      text-align: center;
+    }
+
+    .error-message {
+      margin-top: 0.875rem;
+      color: var(--sl-color-neutral-600);
+      font-style: italic;
+    }
+  `;
 }

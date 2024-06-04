@@ -55,7 +55,12 @@ export class BaseElement extends LitElement {
     } catch (error) {
       if (loadingSpinner) this.dispatchCustomEvent('app-loading', false, target);
 
-      if (toastErrors && error instanceof HTTPError && error.response?.status === 400) {
+      if (!toastErrors) {
+        // if we're not toasting then throw the error for the caller to handle
+        throw error;
+      }
+
+      if (error instanceof HTTPError && error.response?.status === 400) {
         const errorJson = await error.response.json();
         const errorMessage = errorJson?.message || errorJson?.error;
         if (errorMessage) {
@@ -63,14 +68,14 @@ export class BaseElement extends LitElement {
         } else {
           this.toast({ variant: 'danger', message: error.message ?? 'An unknown error occurred' }, target);
         }
-      } else if (toastErrors && error instanceof HTTPError && error.response?.status === 401) {
+      } else if (error instanceof HTTPError && error.response?.status === 401) {
         // on a 401 unauthorized remove any existing token and redirect
         clearToken();
         Router.go('/login');
-      } else if (toastErrors && error instanceof HTTPError) {
+      } else if (error instanceof HTTPError) {
         const json = await error.response.json();
         this.toast({ variant: 'danger', message: json.error ?? 'An unknown error occurred' }, target);
-      } else if (toastErrors && error instanceof Error) {
+      } else if (error instanceof Error) {
         this.toast({ variant: 'danger', message: error.message ?? 'An unknown error occurred' }, target);
       }
     }
