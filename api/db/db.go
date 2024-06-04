@@ -3,9 +3,9 @@ package db
 import (
 	"os"
 
+	"github.com/glebarez/sqlite"
 	"github.com/rs/zerolog/log"
 	"gorm.io/driver/mysql"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
 	"mishosapi/config"
