@@ -17,7 +17,10 @@ services:
       - GIN_MODE=release
       - TZ=America/Chicago
       - PORT=3000
+      - DB_TYPE=mysql
       - DB_URL=username:password@tcp(mariadb:3306)/mishos?charset=utf8mb4&parseTime=True&loc=Local
+      #- DB_TYPE=sqlite
+      #- DB_URL=/home/username/mishos/mishos.db
       - SECRET=YOUR_SECRET_KEY_HERE
       - WATCHLIST_RECENT_LIMIT=30
       # - CRON_PROVIDER_UPDATE=21 8 * * *
