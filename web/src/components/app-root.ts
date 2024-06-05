@@ -47,7 +47,6 @@ export class AppRoot extends BaseElement {
             </div>
           `
         )}
-        <slot></slot>
       </div>
     `;
   }
