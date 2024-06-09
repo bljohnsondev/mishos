@@ -11,4 +11,5 @@ const (
 	ProviderRateLimit       time.Duration = 10 * time.Second
 	JwtTokenDuration        time.Duration = time.Hour * 24 * 30
 	NotificationCallTimeout time.Duration = 10 * time.Second
+	DayDuration             time.Duration = 24 * time.Hour
 )

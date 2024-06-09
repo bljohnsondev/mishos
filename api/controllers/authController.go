@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"mishosapi/config"
@@ -42,9 +44,19 @@ func (ac AuthController) Login(context *gin.Context) {
 		return
 	}
 
+	tokenDuration := config.JwtTokenDuration
+
+	tdString := strings.TrimSpace(os.Getenv("TOKEN_DURATION"))
+
+	if tdString != "" {
+		if durationDays, err := strconv.Atoi(tdString); err == nil {
+			tokenDuration = config.DayDuration * time.Duration(durationDays)
+		}
+	}
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"userID": fmt.Sprintf("%d", user.ID),
-		"exp":    time.Now().Add(config.JwtTokenDuration).Unix(),
+		"exp":    time.Now().Add(tokenDuration).Unix(),
 	})
 
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
