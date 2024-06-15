@@ -5,4 +5,5 @@ export interface FollowedShowDto {
   name: string;
   network?: string;
   imageMedium?: string;
+  status?: string;
 }

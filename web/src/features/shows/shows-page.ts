@@ -5,7 +5,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
-import { FollowedShowDto } from '@/types';
+import { FollowedShowDto, ShowCardBadge } from '@/types';
 
 import { getFollowedShows } from './shows-api';
 
@@ -18,6 +18,8 @@ import './shows-search-form';
 export class ShowsPage extends BaseElement {
   @state() loading: boolean = false;
   @state() shows?: FollowedShowDto[];
+
+  private endedBadge: ShowCardBadge = { variant: 'primary', label: 'Ended' };
 
   render() {
     return html`
@@ -32,6 +34,7 @@ export class ShowsPage extends BaseElement {
                       image=${ifDefined(show.imageMedium)}
                       name=${ifDefined(show.name)}
                       network=${ifDefined(show.network)}
+                      .badge=${show.status === 'Ended' ? this.endedBadge : undefined}
                     ></show-card>
                   </a>
                 `

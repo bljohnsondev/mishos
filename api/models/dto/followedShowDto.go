@@ -7,4 +7,5 @@ type FollowedShowDto struct {
 	ShowName       string `json:"name"`
 	Network        string `json:"network"`
 	ImageMedium    string `json:"imageMedium"`
+	Status         string `json:"status"`
 }

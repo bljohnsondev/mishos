@@ -35,7 +35,15 @@ func (showService ShowService) IsFollowed(userId uint, showId uint) (bool, error
 func (showService ShowService) FindFollowed(userId uint, followedShows *[]modelsdto.FollowedShowDto) error {
 	err := db.DB.
 		Model(&modelsdb.FollowedShow{}).
-		Select("followed_shows.id as FollowedShowID, followed_shows.user_id as UserID, followed_shows.show_id as ShowID, shows.name as ShowName, shows.network as Network, shows.image_medium as ImageMedium").
+		Select(`
+			followed_shows.id as FollowedShowID,
+		  followed_shows.user_id as UserID,
+		  followed_shows.show_id as ShowID,
+		  shows.name as ShowName,
+		  shows.network as Network,
+		  shows.image_medium as ImageMedium,
+			shows.status as Status
+		`).
 		Joins("left join shows on shows.id = followed_shows.show_id").
 		Where("followed_shows.user_id = ?", userId).
 		Order("shows.name asc").
