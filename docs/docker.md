@@ -29,6 +29,8 @@ services:
       - DB_URL=username:password@tcp(mariadb:3306)/mishos?charset=utf8mb4&parseTime=True&loc=Local
       - SECRET=YOUR_SECRET_KEY_HERE
       - WATCHLIST_RECENT_LIMIT=30
+      - CORS=http://192.168.0.101
+      - TOKEN_DURATION=90
       # - CRON_PROVIDER_UPDATE=21 8 * * *
       # - RUN_MIGRATION=1
     restart: unless-stopped
@@ -70,6 +72,8 @@ Here are some other important environment variables:
 - `WATCHLIST_RECENT_LIMIT` - This is how many episodes to show on the recently watched tab.
 - `CRON_PROVIDER_UPDATE` - This is a cron string that defines the interval to get show updates from the provider.  If unset it defaults to 12 AM.
 - `RUN_MIGRATION` - This should be set to `1` for the **first run of the app** only.  This instructs the backend to initialize the empty database.
+- `CORS` - This is your Mishos URL.  You can also set this to `*` to allow all but this isn't recommended.
+- `TOKEN_DURATION` - This is the number of days the authentication token is valid.
 
 ## First Run
 
