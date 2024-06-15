@@ -15,7 +15,7 @@ type Episode struct {
 	Summary      *string          `json:"summary" gorm:"type:text"`
 	SeasonID     uint             `json:"-" gorm:"uniqueIndex:idx_episode_uni"`
 	Season       Season           `json:"-"`
-	Watches      []WatchedEpisode `json:"-"`
+	Watches      []WatchedEpisode `json:"watches"`
 	Watched      bool             `gorm:"-" json:"watched"`
 	SeasonNumber *uint8           `gorm:"-" json:"seasonNumber"`
 }

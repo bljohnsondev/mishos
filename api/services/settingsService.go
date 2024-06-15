@@ -48,6 +48,52 @@ func (sets SettingsService) ImportFile(userId uint, json gjson.Result) error {
 	return nil
 }
 
+func (sets SettingsService) ExportData(userId uint) (*[]modelsdb.Show, error) {
+	shows := []modelsdb.Show{}
+
+	err := db.DB.
+		Preload("Seasons").
+		Preload("Seasons.Episodes").
+		Preload("Seasons.Episodes.Watches").
+		Joins("left join followed_shows on followed_shows.show_id = shows.id").
+		Where("followed_shows.user_id = ?", userId).
+		Find(&shows).
+		Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	// loop through all the episodes and determine the watch status
+	for _, show := range shows {
+		for _, season := range show.Seasons {
+			for episodeIndex, episode := range season.Episodes {
+				for _, watch := range episode.Watches {
+					// this is required to "fix" a variable into the local var - see https://github.com/kyoh86/exportloopref
+					watch := watch
+
+					if watch.UserID == userId {
+						episode.Watched = true
+
+						watches := []modelsdb.WatchedEpisode{
+							{WatchedAt: &watch.CreatedAt},
+						}
+
+						episode.Watches = watches
+
+						break
+					}
+				}
+
+				// due to how go handles loops/ranges the changed item has to be set in the array
+				season.Episodes[episodeIndex] = episode
+			}
+		}
+	}
+
+	return &shows, nil
+}
+
 func (sets SettingsService) convertJsonToShow(showResult gjson.Result, userId uint) *modelsdb.Show {
 	show := modelsdb.Show{
 		ProviderID:    utils.StrPtr(showResult.Get("providerId").String()),
@@ -93,7 +139,12 @@ func (sets SettingsService) convertJsonToShow(showResult gjson.Result, userId ui
 				Summary:    utils.StrPtr(episodeResult.Get("summary").String()),
 			}
 
-			watchedAtResult := episodeResult.Get("watches.0.createdAt")
+			// the date an episode was watched is stored as watchedAt but in previous versions was createdAt
+			watchedAtResult := episodeResult.Get("watches.0.watchedAt")
+
+			if !watchedAtResult.Exists() {
+				watchedAtResult = episodeResult.Get("watches.0.createdAt")
+			}
 
 			if watchedAtResult.Exists() {
 				if watchedAt, err := time.Parse(time.RFC3339Nano, watchedAtResult.String()); err != nil {

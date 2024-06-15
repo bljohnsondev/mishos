@@ -12,7 +12,7 @@ export const saveConfigAccount = async (settings: SettingsAccountDto): Promise<b
 };
 
 export const getExportData = async (): Promise<any> => {
-  return await kyWrapper.get('init/exportdata').blob();
+  return await kyWrapper.get('settings/exportdata').blob();
 };
 
 export const importData = async (data: FormData): Promise<boolean> => {

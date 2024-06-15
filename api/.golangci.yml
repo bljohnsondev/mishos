@@ -39,7 +39,7 @@ linters:
     - goconst
     - gocyclo
     - goimports
-    - gomnd
+    - mnd
     - gosec
     - misspell
     - nakedret

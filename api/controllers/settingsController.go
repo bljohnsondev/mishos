@@ -15,6 +15,8 @@ import (
 
 type SettingsController struct{}
 
+var settingsService = services.SettingsService{}
+
 func (setc SettingsController) SaveConfigGeneral(context *gin.Context) {
 	userDto, err := services.GetUserFromContext(context)
 	if err != nil {
@@ -112,8 +114,6 @@ func (setc SettingsController) ImportData(context *gin.Context) {
 		return
 	}
 
-	service := services.SettingsService{}
-
 	json, err := HandleJsonUpload(context)
 
 	if err != nil {
@@ -126,10 +126,27 @@ func (setc SettingsController) ImportData(context *gin.Context) {
 		return
 	}
 
-	if err := service.ImportFile(userDto.ID, *json); err != nil {
+	if err := settingsService.ImportFile(userDto.ID, *json); err != nil {
 		context.AbortWithStatusJSON(http.StatusBadRequest, modelsdto.ErrorDto{Error: err.Error()})
 		return
 	}
 
 	context.JSON(http.StatusOK, gin.H{"imported": true, "message": "successfully imported tv data"})
+}
+
+func (setc *SettingsController) ExportData(context *gin.Context) {
+	userDto, err := services.GetUserFromContext(context)
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusUnauthorized, modelsdto.ErrorDto{Error: err.Error()})
+		return
+	}
+
+	shows, err := settingsService.ExportData(userDto.ID)
+
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusBadRequest, modelsdto.ErrorDto{Error: err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"shows": shows})
 }
