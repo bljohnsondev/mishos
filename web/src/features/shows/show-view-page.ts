@@ -19,6 +19,7 @@ export class ShowViewPage extends BaseElement {
   @property({ type: Object }) location?: RouterLocation;
 
   @state() show?: ShowDto | null;
+  @state() seasonNumber: number = 1;
   @state() togglePrevious: boolean = false;
 
   render() {
@@ -29,6 +30,7 @@ export class ShowViewPage extends BaseElement {
           ${this.show
             ? html`<show-details
                 .show=${this.show}
+                .season=${this.seasonNumber}
                 @watch-episode=${this.handleWatch}
                 @unwatch-episode=${this.handleUnwatch}
                 @toggle-previous=${this.handleTogglePrevious}
@@ -102,9 +104,15 @@ export class ShowViewPage extends BaseElement {
 
   async connectedCallback() {
     super.connectedCallback();
-    if (this.location?.params && this.location.params.id) {
-      const showId = this.location.params.id.toString();
-      await this.loadShow(showId);
+
+    if (this.location) {
+      if (this.location.params && this.location.params.id) {
+        const showId = this.location.params.id.toString();
+        const season = new URLSearchParams(this.location.search).get('season') ?? '1';
+        this.seasonNumber = parseInt(season);
+
+        await this.loadShow(showId);
+      }
     }
   }
 

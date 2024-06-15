@@ -20,9 +20,10 @@ export class ShowDetails extends LitElement {
   @query('form') form!: HTMLFormElement;
 
   @property({ attribute: false }) show?: ShowDto;
+  @property({ type: Number }) seasonNumber?: number;
   @property({ type: Boolean }) preview: boolean = false;
 
-  @state() season: number = 1;
+  @state() season: number = this.seasonNumber ?? 1;
 
   render() {
     return this.show ? this.renderShow() : null;
