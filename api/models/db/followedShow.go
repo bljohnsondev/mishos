@@ -6,5 +6,4 @@ type FollowedShow struct {
 	User   User
 	ShowID uint
 	Show   Show
-	Status string
 }
