@@ -2,50 +2,30 @@
 
 ## Docker Configuration
 
-The Mishos application consists of two containers - the frontend and the backend.  You will also need to provide a MySQL database for the backend to connect to.
-
-First let's see an example of the `docker-compose.yml` file that I'm personally using:
+Here is an example of the `docker-compose.yml` file that I'm personally using:
 
 ```yaml
-version: "3"
-
 services:
-  mishos-fe:
-    image: bljohnsondev/mishos-web:latest
-    container_name: mishos-fe
+  mishos:
+    image: bljohnsondev/mishos:latest
+    container_name: mishos
     ports:
-      - 8000:80
+      - 8080:80
     environment:
-      - DOCKER_BE_URL=http://mishos-be:3000/api
-    restart: unless-stopped
-
-  mishos-be:
-    image: bljohnsondev/mishos-api:latest
-    container_name: mishos-be
-    environment:
-      - GIN_MODE=release
       - TZ=America/Chicago
-      - PORT=3000
-      - DB_URL=username:password@tcp(mariadb:3306)/mishos?charset=utf8mb4&parseTime=True&loc=Local
+      - DB_TYPE=sqlite
+      - DB_URL=/db/mishos.db
       - SECRET=YOUR_SECRET_KEY_HERE
       - WATCHLIST_RECENT_LIMIT=30
-      - CORS=http://192.168.0.101
       - TOKEN_DURATION=90
       # - CRON_PROVIDER_UPDATE=21 8 * * *
       # - RUN_MIGRATION=1
+    volumes:
+      - /home/brent/temp/mishos:/db
     restart: unless-stopped
 ```
 
 Here is a quick breakdown of the environment variables:
-#### Frontend
-
-`DOCKER_BE_URL`
-
-This is the *internal* URL that the frontend container uses to connect to the backend.  The frontend container runs an [nginx](https://nginx.org/en/) server that serves the frontend code.  It redirects requests to `/api` to the backend container via this `DOCKER_BE_URL`.
-
-Not sure what to set this to or what this means?  Just change the hostname `mishos-be` to whatever you use for the `container_name` of the backend container.
-
-#### Backend
 
 **SQLite**
 
@@ -65,14 +45,11 @@ DB_URL=username:password@tcp(mariadb:3306)/mishos?charset=utf8mb4&parseTime=True
 
 Here are some other important environment variables:
 
-- `GIN_MODE` - Include this as-is.  This will be moved to the code in the near future but for now include it.
 - `TZ` - Your preferred timezone if different than the system.
-- `PORT` - The port the backend uses.  If you change this ensure you change it in the `DOCKER_BE_URL` variable.
 - `SECRET` - Set this to whatever you want but definitely set it to something.  This is the signing key used for authentication.
 - `WATCHLIST_RECENT_LIMIT` - This is how many episodes to show on the recently watched tab.
 - `CRON_PROVIDER_UPDATE` - This is a cron string that defines the interval to get show updates from the provider.  If unset it defaults to 12 AM.
 - `RUN_MIGRATION` - This should be set to `1` for the **first run of the app** only.  This instructs the backend to initialize the empty database.
-- `CORS` - This is your Mishos URL.  You can also set this to `*` to allow all but this isn't recommended.
 - `TOKEN_DURATION` - This is the number of days the authentication token is valid.
 
 ## First Run
