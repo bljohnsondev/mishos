@@ -1,4 +1,4 @@
-import { InitData } from './init-data';
+import type { InitData } from './init-data';
 
 export interface AppStore {
   loading?: boolean;

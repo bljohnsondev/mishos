@@ -6,7 +6,7 @@ import { when } from 'lit/directives/when.js';
 
 import { kyWrapper } from '@/lib/ky-wrapper';
 import { appContext } from '@/store/app-context';
-import { AppStore, InitData, ToastMessage } from '@/types';
+import type { AppStore, InitData, ToastMessage } from '@/types';
 
 import { BaseElement } from './base-element';
 

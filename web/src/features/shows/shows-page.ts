@@ -5,7 +5,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
-import { FollowedShowDto, ShowCardBadge } from '@/types';
+import type { FollowedShowDto, ShowCardBadge } from '@/types';
 
 import { getFollowedShows } from './shows-api';
 
@@ -16,7 +16,7 @@ import './shows-search-form';
 
 @customElement('shows-page')
 export class ShowsPage extends BaseElement {
-  @state() loading: boolean = false;
+  @state() loading = false;
   @state() shows?: FollowedShowDto[];
 
   private endedBadge: ShowCardBadge = { variant: 'primary', label: 'Ended' };
@@ -26,9 +26,10 @@ export class ShowsPage extends BaseElement {
       <app-layout icon="tv" headerTitle="Shows" selected="shows">
         <shows-search-form slot="header"></shows-search-form>
         <section class="content">
-          ${this.shows && this.shows.length > 0
-            ? this.shows.map(
-                show => html`
+          ${
+            this.shows && this.shows.length > 0
+              ? this.shows.map(
+                  show => html`
                   <a href="#" class="card-link" @click=${(event: Event) => this.handleSelectShow(event, show)}>
                     <show-card
                       image=${ifDefined(show.imageMedium)}
@@ -38,8 +39,9 @@ export class ShowsPage extends BaseElement {
                     ></show-card>
                   </a>
                 `
-              )
-            : this.renderEmptyShows()}
+                )
+              : this.renderEmptyShows()
+          }
         </section>
       </app-layout>
     `;

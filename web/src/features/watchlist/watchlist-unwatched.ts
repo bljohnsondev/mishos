@@ -1,12 +1,13 @@
 import { Router } from '@vaadin/router';
-import { css, html, TemplateResult } from 'lit';
+import { css, html } from 'lit';
+import type { TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { BaseElement } from '@/components/base-element';
 import { watchEpisode } from '@/features/shows/shows-api';
 import { sharedStyles } from '@/styles/shared-styles';
-import { WatchlistEpisodeDto } from '@/types';
+import type { WatchlistEpisodeDto } from '@/types';
 import { createToastEvent, formatAirTime } from '@/utils';
 
 import { getWatchList } from './wachlist-api';
@@ -24,17 +25,19 @@ export class WatchListUnwatched extends BaseElement {
 
   render() {
     return html`
-      ${this.episodes
-        ? this.episodes.length > 0
-          ? html`
+      ${
+        this.episodes
+          ? this.episodes.length > 0
+            ? html`
               <ul class="episode-list">
                 ${this.episodes.map(episode => {
                   return html`<li>${this.renderEpisode(episode)}</li>`;
                 })}
               </ul>
             `
-          : html`<div class="caughtup">You are all caught up!</div>`
-        : null}
+            : html`<div class="caughtup">You are all caught up!</div>`
+          : null
+      }
     `;
   }
 

@@ -2,7 +2,7 @@ import '@fontsource/inter';
 import '@fontsource/inter/500.css';
 import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities/icon-library.js';
 import { Router } from '@vaadin/router';
-import { html, LitElement } from 'lit';
+import { LitElement, html } from 'lit';
 import { customElement, query } from 'lit/decorators.js';
 
 import { routes } from './routes';

@@ -1,10 +1,10 @@
-import { css, html, LitElement } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { choose } from 'lit/directives/choose.js';
 import { classMap } from 'lit/directives/class-map.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
-import { EpisodeDto } from '@/types';
+import type { EpisodeDto } from '@/types';
 
 import '@/components/episode-name-tooltip';
 import '@/features/shows/shows-search-form';
@@ -19,7 +19,7 @@ import './watchlist-recent';
 @customElement('watchlist-page')
 export class WatchListPage extends LitElement {
   @state() episodes?: EpisodeDto[];
-  @state() section: string = 'unwatched';
+  @state() section = 'unwatched';
 
   render() {
     return html`
@@ -31,7 +31,9 @@ export class WatchListPage extends LitElement {
               variant="text"
               size="medium"
               class=${classMap({ 'header-selected': this.section === 'unwatched' })}
-              @click=${() => (this.section = 'unwatched')}
+              @click=${() => {
+                this.section = 'unwatched';
+              }}
             >
               Unwatched
             </sl-button>
@@ -41,7 +43,9 @@ export class WatchListPage extends LitElement {
               variant="text"
               size="medium"
               class=${classMap({ 'header-selected': this.section === 'recent' })}
-              @click=${() => (this.section = 'recent')}
+              @click=${() => {
+                this.section = 'recent';
+              }}
             >
               Recently Watched
             </sl-button>

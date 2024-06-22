@@ -1,11 +1,11 @@
 import { Router } from '@vaadin/router';
-import { css, html, LitElement } from 'lit';
-import { customElement, state, query } from 'lit/decorators.js';
+import { LitElement, css, html } from 'lit';
+import { customElement, query, state } from 'lit/decorators.js';
 import * as yup from 'yup';
 
 import { sharedStyles } from '@/styles/shared-styles';
-import { ErrorMessage, ToastMessage } from '@/types';
-import { initializeForm, setToken, createEvent } from '@/utils';
+import type { ErrorMessage, ToastMessage } from '@/types';
+import { createEvent, initializeForm, setToken } from '@/utils';
 
 import { login } from './auth-api';
 
@@ -74,7 +74,9 @@ export class LoginPage extends LitElement {
     initializeForm<LoginFormValues>(this.loginForm, {
       schema: loginSchema,
       onSubmit: values => this.handleSubmit(values),
-      onError: errors => (this.errorMessages = errors),
+      onError: errors => {
+        this.errorMessages = errors;
+      },
     });
   }
 

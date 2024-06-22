@@ -1,13 +1,13 @@
 import { consume } from '@lit/context';
 import { css, html } from 'lit';
-import { customElement, property, state, query } from 'lit/decorators.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import { choose } from 'lit/directives/choose.js';
 import { classMap } from 'lit/directives/class-map.js';
 
 import { BaseElement } from '@/components/base-element';
 import { appContext } from '@/store/app-context';
 import { sharedStyles } from '@/styles/shared-styles';
-import { AppStore } from '@/types';
+import type { AppStore } from '@/types';
 
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
@@ -28,7 +28,7 @@ export class SettingsPage extends BaseElement {
   @property({ attribute: false })
   public appStore?: AppStore;
 
-  @state() section: string = 'general';
+  @state() section = 'general';
 
   @query('form') settingsForm!: HTMLFormElement;
 
@@ -41,7 +41,9 @@ export class SettingsPage extends BaseElement {
               variant="text"
               size="medium"
               class=${classMap({ 'header-selected': this.section === 'general' })}
-              @click=${() => (this.section = 'general')}
+              @click=${() => {
+                this.section = 'general';
+              }}
             >
               General
             </sl-button>
@@ -51,7 +53,9 @@ export class SettingsPage extends BaseElement {
               variant="text"
               size="medium"
               class=${classMap({ 'header-selected': this.section === 'account' })}
-              @click=${() => (this.section = 'account')}
+              @click=${() => {
+                this.section = 'account';
+              }}
             >
               Account
             </sl-button>
@@ -61,7 +65,9 @@ export class SettingsPage extends BaseElement {
               variant="text"
               size="medium"
               class=${classMap({ 'header-selected': this.section === 'data' })}
-              @click=${() => (this.section = 'data')}
+              @click=${() => {
+                this.section = 'data';
+              }}
             >
               Data
             </sl-button>

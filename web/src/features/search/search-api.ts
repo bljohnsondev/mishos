@@ -1,5 +1,5 @@
 import { kyWrapper } from '@/lib/ky-wrapper';
-import { SearchResultDto } from '@/types';
+import type { SearchResultDto } from '@/types';
 
 export const searchShowsFromProvider = async (query: string): Promise<SearchResultDto[]> => {
   const response: any = await kyWrapper

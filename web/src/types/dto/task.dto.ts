@@ -1,4 +1,4 @@
-import { EpisodeDto, ShowDto, UserDto } from '@/types';
+import type { EpisodeDto, ShowDto, UserDto } from '@/types';
 
 export class TaskDto {
   type?: 'notification' | 'showupdate';

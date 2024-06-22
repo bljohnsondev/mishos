@@ -1,10 +1,10 @@
 import { Router } from '@vaadin/router';
-import { css, html, LitElement } from 'lit';
-import { customElement, state, query } from 'lit/decorators.js';
+import { LitElement, css, html } from 'lit';
+import { customElement, query, state } from 'lit/decorators.js';
 import * as yup from 'yup';
 
 import { sharedStyles } from '@/styles/shared-styles';
-import { ErrorMessage, ToastMessage } from '@/types';
+import type { ErrorMessage, ToastMessage } from '@/types';
 import { createEvent, initializeForm } from '@/utils';
 
 import '@shoelace-style/shoelace/dist/components/alert/alert.js';
@@ -81,7 +81,9 @@ export class OnboardingPage extends LitElement {
     initializeForm<CreateFormValues>(this.createForm, {
       schema: createSchema,
       onSubmit: values => this.handleSubmit(values),
-      onError: errors => (this.errorMessages = errors),
+      onError: errors => {
+        this.errorMessages = errors;
+      },
     });
   }
 

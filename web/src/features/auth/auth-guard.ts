@@ -1,4 +1,4 @@
-import { Commands, Context } from '@vaadin/router';
+import type { Commands, Context } from '@vaadin/router';
 
 import { AuthService } from './auth-service';
 

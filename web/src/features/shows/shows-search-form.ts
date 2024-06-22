@@ -1,6 +1,6 @@
 import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 import { Router } from '@vaadin/router';
-import { css, html, LitElement } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 
 import { sharedStyles } from '@/styles/shared-styles';

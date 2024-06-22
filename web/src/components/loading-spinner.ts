@@ -1,4 +1,5 @@
-import { css, html, LitElement, PropertyValues } from 'lit';
+import { LitElement, css, html } from 'lit';
+import type { PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
@@ -9,7 +10,7 @@ import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 export class LoadingSpinner extends LitElement {
   @query('#spinner-button') spinnerButton?: HTMLButtonElement;
 
-  @property({ type: Boolean }) loading: boolean = false;
+  @property({ type: Boolean }) loading = false;
 
   @state() focusedElement?: HTMLElement | null;
 
@@ -37,9 +38,9 @@ export class LoadingSpinner extends LitElement {
 
     if (activeEl.shadowRoot) {
       return this.getActiveElement(activeEl.shadowRoot);
-    } else {
-      return activeEl;
     }
+
+    return activeEl;
   }
 
   willUpdate(changedProperties: PropertyValues<this>) {

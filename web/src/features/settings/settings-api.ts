@@ -1,5 +1,5 @@
 import { kyWrapper } from '@/lib/ky-wrapper';
-import { SettingsAccountDto, SettingsGeneralDto } from '@/types';
+import type { SettingsAccountDto, SettingsGeneralDto } from '@/types';
 
 export const saveConfigGeneral = async (settings: SettingsGeneralDto): Promise<boolean> => {
   await kyWrapper.post('settings/savegeneral', { json: settings });

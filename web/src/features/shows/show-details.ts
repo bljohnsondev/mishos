@@ -1,10 +1,11 @@
 import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
-import { css, html, LitElement, PropertyValues } from 'lit';
+import { LitElement, css, html } from 'lit';
+import type { PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
-import { ShowDto } from '@/types';
+import type { ShowDto } from '@/types';
 import { createEvent, formatDate } from '@/utils';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';
@@ -21,7 +22,7 @@ export class ShowDetails extends LitElement {
 
   @property({ attribute: false }) show?: ShowDto;
   @property({ type: Number }) seasonNumber?: number;
-  @property({ type: Boolean }) preview: boolean = false;
+  @property({ type: Boolean }) preview = false;
 
   @state() season: number = this.seasonNumber ?? 1;
 
@@ -38,8 +39,9 @@ export class ShowDetails extends LitElement {
       <section>
         <div class="show-header">
           <h1>${this.show.name}</h1>
-          ${this.show.id
-            ? html`
+          ${
+            this.show.id
+              ? html`
                 <div class="show-header-buttons">
                   <sl-button variant="warning" size="small" @click=${this.handleClickRemove}>
                     <sl-icon slot="prefix" library="hi-outline" name="bookmark-slash"></sl-icon>
@@ -48,18 +50,21 @@ export class ShowDetails extends LitElement {
                   <sl-button size="small" class="refresh-button" @click=${this.handleClickRefresh}>Refresh</sl-button>
                 </div>
               `
-            : html`
+              : html`
                 <sl-button variant="default" size="small" @click=${this.handleClickAdd}>
                   <sl-icon slot="prefix" library="hi-outline" name="bookmark"></sl-icon>
                   Add
                 </sl-button>
-              `}
+              `
+          }
         </div>
         <div class="detail-content">
           <div>
-            ${this.show.imageMedium
-              ? html` <img src=${this.show.imageMedium} alt=${ifDefined(this.show.name)} class="show-image" /> `
-              : html` <div class="no-image-placeholder"></div> `}
+            ${
+              this.show.imageMedium
+                ? html` <img src=${this.show.imageMedium} alt=${ifDefined(this.show.name)} class="show-image" /> `
+                : html` <div class="no-image-placeholder"></div> `
+            }
             <a href=${ifDefined(this.show.providerUrl)} class="provider-link" target="_blank">view at tvmaze.com</a>
           </div>
           <div class="right-content">
@@ -68,9 +73,11 @@ export class ShowDetails extends LitElement {
               ${this.show.network ? html`<li>${this.show.network}</li>` : null}
               ${this.show.premiered ? html`<li>${formatDate(this.show.premiered)}</li>` : null}
               ${this.show.status ? html`<li>${this.show.status}</li>` : null}
-              ${this.show.imdbId
-                ? html`<li><button class="imdb-button" @click=${this.handleImdbButton}>IMDb</button></li>`
-                : null}
+              ${
+                this.show.imdbId
+                  ? html`<li><button class="imdb-button" @click=${this.handleImdbButton}>IMDb</button></li>`
+                  : null
+              }
             </ul>
             <form>
               <sl-select
@@ -83,8 +90,9 @@ export class ShowDetails extends LitElement {
                   season => html` <sl-option value=${ifDefined(season.number)}>Season ${season.number}</sl-option> `
                 )}
               </sl-select>
-              ${!this.preview
-                ? html`
+              ${
+                !this.preview
+                  ? html`
                     <sl-switch
                       name="previous"
                       value="1"
@@ -95,17 +103,20 @@ export class ShowDetails extends LitElement {
                       Mark Previous
                     </sl-switch>
                   `
-                : null}
+                  : null
+              }
             </form>
-            ${currentSeason && currentSeason.episodes && currentSeason.episodes.length > 0
-              ? html`
+            ${
+              currentSeason && currentSeason.episodes && currentSeason.episodes.length > 0
+                ? html`
                   <div class="episode-list">
                     ${currentSeason.episodes.map(
                       episode => html`<episode-card .episode=${episode} ?preview=${this.preview}></episode-card>`
                     )}
                   </div>
                 `
-              : html`<div class="no-episodes">No episodes available for this show or season</div>`}
+                : html`<div class="no-episodes">No episodes available for this show or season</div>`
+            }
           </div>
         </div>
       </section>
@@ -136,7 +147,7 @@ export class ShowDetails extends LitElement {
     event.preventDefault();
     const data = serialize(this.form);
     if (data.season) {
-      this.season = parseInt(data.season.toString());
+      this.season = Number.parseInt(data.season.toString());
     }
   }
 

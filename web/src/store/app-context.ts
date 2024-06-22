@@ -1,5 +1,5 @@
 import { createContext } from '@lit/context';
 
-import { AppStore } from '@/types';
+import type { AppStore } from '@/types';
 
 export const appContext = createContext<AppStore>('appStore');

@@ -1,11 +1,11 @@
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import { css, html, LitElement } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
-import { EpisodeDto } from '@/types';
+import type { EpisodeDto } from '@/types';
 import { createEvent, formatDate } from '@/utils';
 
 import '@/components/episode-name-tooltip';
@@ -18,7 +18,7 @@ dayjs.extend(isSameOrBefore);
 @customElement('episode-card')
 export class EpisodeCard extends LitElement {
   @property({ attribute: false }) episode!: EpisodeDto;
-  @property({ type: Boolean }) preview: boolean = false;
+  @property({ type: Boolean }) preview = false;
 
   render() {
     return html`
@@ -33,9 +33,10 @@ export class EpisodeCard extends LitElement {
             description=${ifDefined(this.episode.summary)}
           ></episode-name-tooltip>
         </div>
-        ${this.hasAired()
-          ? !this.preview
-            ? html`
+        ${
+          this.hasAired()
+            ? !this.preview
+              ? html`
                 <sl-button
                   size="small"
                   variant=${this.episode.watched ? 'default' : 'neutral'}
@@ -50,8 +51,9 @@ export class EpisodeCard extends LitElement {
                   ${this.episode.watched ? 'Watched' : 'Unwatched'}
                 </sl-button>
               `
-            : null
-          : html` <div class="upcoming">Upcoming episode</div> `}
+              : null
+            : html` <div class="upcoming">Upcoming episode</div> `
+        }
       </div>
     `;
   }

@@ -1,10 +1,11 @@
-import { Router, RouterLocation } from '@vaadin/router';
+import { Router } from '@vaadin/router';
+import type { RouterLocation } from '@vaadin/router';
 import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
-import { FollowShowResponseDto, ShowDto } from '@/types';
+import type { FollowShowResponseDto, ShowDto } from '@/types';
 import { createToastEvent } from '@/utils';
 
 import { followShow, getProviderPreview } from './shows-api';
@@ -19,16 +20,18 @@ export class ShowPreviewPage extends BaseElement {
   @property({ type: Object }) location?: RouterLocation;
 
   @state() show?: ShowDto;
-  @state() togglePrevious: boolean = false;
+  @state() togglePrevious = false;
 
   render() {
     return html`
       <app-layout icon="tv" headerTitle="Shows" selected="shows">
         <shows-search-form slot="header"></shows-search-form>
         <section class="content">
-          ${this.show
-            ? html`<show-details .show=${this.show} preview @add-show=${this.handleAddShow}></show-details>`
-            : null}
+          ${
+            this.show
+              ? html`<show-details .show=${this.show} preview @add-show=${this.handleAddShow}></show-details>`
+              : null
+          }
         </section>
       </app-layout>
     `;

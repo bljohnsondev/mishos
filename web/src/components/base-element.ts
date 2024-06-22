@@ -3,7 +3,7 @@ import { HTTPError } from 'ky';
 import { LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
-import { ToastMessage } from '@/types';
+import type { ToastMessage } from '@/types';
 import { clearToken, createEvent } from '@/utils';
 
 export interface CallApiOptions {
@@ -13,7 +13,7 @@ export interface CallApiOptions {
 }
 
 export class BaseElement extends LitElement {
-  @state() protected loading: boolean = false;
+  @state() protected loading = false;
 
   protected startLoading(target?: HTMLElement) {
     this.loading = true;

@@ -1,9 +1,9 @@
-import { css, html, LitElement } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
-import { ErrorMessage } from '@/types';
+import type { ErrorMessage } from '@/types';
 
 @customElement('form-error-message')
 export class FormErrorMessage extends LitElement {

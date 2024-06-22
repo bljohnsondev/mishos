@@ -1,6 +1,6 @@
 import ky from 'ky';
 
-import { UserDto } from '@/types';
+import type { UserDto } from '@/types';
 
 export interface LoginResponse {
   user?: UserDto;

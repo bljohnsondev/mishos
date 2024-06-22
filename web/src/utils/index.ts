@@ -1,4 +1,4 @@
-import { ToastMessage } from '@/types';
+import type { ToastMessage } from '@/types';
 
 import { getStorageValue, setStorageValue } from './storage';
 
@@ -29,14 +29,15 @@ export const getTheme = () => {
 
   if (!theme) {
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
     if (!prefersDark) {
       return 'light';
-    } else {
-      return 'dark';
     }
-  } else {
-    return theme;
+
+    return 'dark';
   }
+
+  return theme;
 };
 
 export * from './date-utils';

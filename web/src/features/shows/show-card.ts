@@ -1,8 +1,8 @@
-import { css, html, LitElement } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { sharedStyles } from '@/styles/shared-styles';
-import { ShowCardBadge } from '@/types';
+import type { ShowCardBadge } from '@/types';
 
 import '@shoelace-style/shoelace/dist/components/badge/badge.js';
 import '@shoelace-style/shoelace/dist/components/card/card.js';
@@ -17,15 +17,19 @@ export class ShowCard extends LitElement {
   render() {
     return html`
       <sl-card class="show-card">
-        ${this.image
-          ? html`<img slot="image" src=${this.image} alt=${this.name ?? 'Unknown Show'} />`
-          : html`<div slot="image" class="no-image-placeholder"></div>`}
+        ${
+          this.image
+            ? html`<img slot="image" src=${this.image} alt=${this.name ?? 'Unknown Show'} />`
+            : html`<div slot="image" class="no-image-placeholder"></div>`
+        }
         <div>
           <strong>${this.name}</strong>
           <small>${this.network}</small>
-          ${this.badge
-            ? html`<sl-badge variant=${this.badge.variant ?? 'success'}>${this.badge.label}</sl-badge>`
-            : null}
+          ${
+            this.badge
+              ? html`<sl-badge variant=${this.badge.variant ?? 'success'}>${this.badge.label}</sl-badge>`
+              : null
+          }
         </div>
       </sl-card>
     `;

@@ -1,4 +1,4 @@
-import { ShowDto } from './show.dto';
+import type { ShowDto } from './show.dto';
 
 export class UpcomingEpisodeDto {
   id?: string;

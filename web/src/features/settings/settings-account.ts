@@ -1,10 +1,10 @@
 import { css, html } from 'lit';
-import { customElement, state, query } from 'lit/decorators.js';
+import { customElement, query, state } from 'lit/decorators.js';
 import * as yup from 'yup';
 
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
-import { ErrorMessage } from '@/types';
+import type { ErrorMessage } from '@/types';
 import { initializeForm } from '@/utils';
 
 import { saveConfigAccount } from './settings-api';
@@ -74,7 +74,9 @@ export class SettingsAccount extends BaseElement {
     initializeForm<AccountFormValues>(this.settingsForm, {
       schema: settingsSchema,
       onSubmit: values => this.handleSubmit(values),
-      onError: errors => (this.errorMessages = errors),
+      onError: errors => {
+        this.errorMessages = errors;
+      },
     });
   }
 

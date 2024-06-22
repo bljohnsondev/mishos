@@ -1,4 +1,4 @@
-import { EpisodeDto } from './episode.dto';
+import type { EpisodeDto } from './episode.dto';
 
 export interface SeasonDto {
   id?: string;

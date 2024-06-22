@@ -1,10 +1,10 @@
-import { css, html, LitElement } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { createEvent } from '../utils';
 
-import { SideMenuItem } from './side-menu-item';
+import type { SideMenuItem } from './side-menu-item';
 
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
@@ -29,10 +29,11 @@ export class SideMenu extends LitElement {
         </div>
         <sl-divider style="--color: var(--sm-divider-color);"></sl-divider>
         <ul class="main-menu">
-          ${this.items
-            ? this.items.map(item =>
-                item.name !== 'divider'
-                  ? html`
+          ${
+            this.items
+              ? this.items.map(item =>
+                  item.name !== 'divider'
+                    ? html`
                       <li class=${this.selected === item.name ? 'selected' : ''}>
                         <sl-tooltip content=${ifDefined(item.tooltip)} placement="right">
                           <sl-icon-button
@@ -43,9 +44,10 @@ export class SideMenu extends LitElement {
                         </sl-tooltip>
                       </li>
                     `
-                  : html` <sl-divider style="--color: var(--sm-divider-color);"></sl-divider> `
-              )
-            : null}
+                    : html` <sl-divider style="--color: var(--sm-divider-color);"></sl-divider> `
+                )
+              : null
+          }
         </ul>
       </section>
     `;

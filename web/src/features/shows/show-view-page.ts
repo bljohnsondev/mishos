@@ -1,10 +1,11 @@
-import { Router, RouterLocation } from '@vaadin/router';
+import { Router } from '@vaadin/router';
+import type { RouterLocation } from '@vaadin/router';
 import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
-import { ShowDto } from '@/types';
+import type { ShowDto } from '@/types';
 import { createToastEvent } from '@/utils';
 
 import { getShowDetails, refreshShow, unfollowShow, watchEpisode } from './shows-api';
@@ -19,16 +20,17 @@ export class ShowViewPage extends BaseElement {
   @property({ type: Object }) location?: RouterLocation;
 
   @state() show?: ShowDto | null;
-  @state() seasonNumber: number = 1;
-  @state() togglePrevious: boolean = false;
+  @state() seasonNumber = 1;
+  @state() togglePrevious = false;
 
   render() {
     return html`
       <app-layout icon="tv" headerTitle="Shows" selected="shows">
         <shows-search-form slot="header"></shows-search-form>
         <section class="content">
-          ${this.show
-            ? html`<show-details
+          ${
+            this.show
+              ? html`<show-details
                 .show=${this.show}
                 .season=${this.seasonNumber}
                 @watch-episode=${this.handleWatch}
@@ -37,9 +39,10 @@ export class ShowViewPage extends BaseElement {
                 @remove-show=${this.handleRemoveShow}
                 @refresh-show=${this.handleRefreshShow}
               ></show-details>`
-            : this.show === null
-              ? html`<div>Show could not be found</div>`
-              : null}
+              : this.show === null
+                ? html`<div>Show could not be found</div>`
+                : null
+          }
         </section>
       </app-layout>
     `;
@@ -109,7 +112,7 @@ export class ShowViewPage extends BaseElement {
       if (this.location.params && this.location.params.id) {
         const showId = this.location.params.id.toString();
         const season = new URLSearchParams(this.location.search).get('season') ?? '1';
-        this.seasonNumber = parseInt(season);
+        this.seasonNumber = Number.parseInt(season);
 
         await this.loadShow(showId);
       }

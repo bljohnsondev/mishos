@@ -1,11 +1,12 @@
-import { Router, RouterLocation } from '@vaadin/router';
+import { Router } from '@vaadin/router';
+import type { RouterLocation } from '@vaadin/router';
 import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
-import { ShowCardBadge, SearchResultDto } from '@/types';
+import type { SearchResultDto, ShowCardBadge } from '@/types';
 
 import { searchShowsFromProvider } from './search-api';
 
@@ -31,9 +32,10 @@ export class SearchResultsPage extends BaseElement {
             <shows-search-form slot="header" query=${this.query}></shows-search-form>
             <section class="content" @select-show=${this.handleSelectShow}>
               <div class="results">
-                ${this.results && this.results.length > 0
-                  ? this.results.map(
-                      show => html`
+                ${
+                  this.results && this.results.length > 0
+                    ? this.results.map(
+                        show => html`
                         <a href="#" class="card-link" @click=${(event: Event) => this.handleSelectShow(event, show)}>
                           <show-card
                             image=${ifDefined(show.imageMedium)}
@@ -43,8 +45,9 @@ export class SearchResultsPage extends BaseElement {
                           ></show-card>
                         </a>
                       `
-                    )
-                  : null}
+                      )
+                    : null
+                }
               </div>
             </section>
           </app-layout>

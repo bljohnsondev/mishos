@@ -1,11 +1,12 @@
 import { Router } from '@vaadin/router';
-import { css, html, TemplateResult } from 'lit';
+import { css, html } from 'lit';
+import type { TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
-import { WatchlistEpisodeDto } from '@/types';
+import type { WatchlistEpisodeDto } from '@/types';
 import { formatDate } from '@/utils';
 
 import { getUpcomingList } from './upcoming-api';
@@ -25,17 +26,19 @@ export class UpcomingPage extends BaseElement {
       <app-layout icon="calendar-days" headerTitle="Upcoming" selected="upcoming">
         <shows-search-form slot="header"></shows-search-form>
         <section class="content">
-          ${this.episodes
-            ? this.episodes.length > 0
-              ? html`
+          ${
+            this.episodes
+              ? this.episodes.length > 0
+                ? html`
                   <ul class="episode-list">
                     ${this.episodes.map(episode => {
                       return html`<li>${this.renderEpisode(episode)}</li>`;
                     })}
                   </ul>
                 `
-              : html`<div class="noupcoming">No upcoming episodes</div>`
-            : null}
+                : html`<div class="noupcoming">No upcoming episodes</div>`
+              : null
+          }
         </section>
       </app-layout>
     `;

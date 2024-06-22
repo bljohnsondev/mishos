@@ -1,5 +1,5 @@
 import { kyWrapper } from '@/lib/ky-wrapper';
-import { WatchlistEpisodeDto } from '@/types';
+import type { WatchlistEpisodeDto } from '@/types';
 
 export const getWatchList = async (): Promise<WatchlistEpisodeDto[]> => {
   //const episodes: EpisodeDto[] = await kyWrapper.get('watchlist').json();

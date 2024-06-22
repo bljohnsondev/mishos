@@ -1,7 +1,8 @@
 import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
-import { AnyObject, ValidationError } from 'yup';
+import { ValidationError } from 'yup';
+import type { AnyObject } from 'yup';
 
-import { ErrorMessage } from '@/types';
+import type { ErrorMessage } from '@/types';
 
 export interface InitFormOptions<T> {
   onSubmit: (values: T) => void;

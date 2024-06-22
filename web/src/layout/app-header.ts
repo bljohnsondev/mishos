@@ -1,10 +1,10 @@
 import { consume } from '@lit/context';
-import { css, html, LitElement } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { appContext } from '@/store/app-context';
 import { sharedStyles } from '@/styles/shared-styles';
-import { AppStore } from '@/types';
+import type { AppStore } from '@/types';
 
 import '@shoelace-style/shoelace/dist/components/avatar/avatar.js';
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
@@ -29,9 +29,9 @@ export class AppHeader extends LitElement {
     return html`
       <header>
         <div class="icon">
-          ${this.icon
-            ? html`<sl-icon library=${this.iconlibrary ?? 'hi-outline'} name="${this.icon}"></sl-icon>`
-            : null}
+          ${
+            this.icon ? html`<sl-icon library=${this.iconlibrary ?? 'hi-outline'} name="${this.icon}"></sl-icon>` : null
+          }
           <span>${this.title}</span>
         </div>
         <slot></slot>

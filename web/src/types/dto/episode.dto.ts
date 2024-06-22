@@ -1,4 +1,4 @@
-import { ShowDto } from '@/types/dto/show.dto';
+import type { ShowDto } from '@/types/dto/show.dto';
 
 export interface EpisodeDto {
   id?: string;

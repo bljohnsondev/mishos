@@ -1,5 +1,5 @@
 import { kyWrapper } from '@/lib/ky-wrapper';
-import { FollowShowResponseDto, ShowDto } from '@/types';
+import type { FollowShowResponseDto, ShowDto } from '@/types';
 
 export const getFollowedShows = async (): Promise<ShowDto[]> => {
   const response: any = await kyWrapper.get('show/followed').json();
@@ -12,7 +12,7 @@ export const getShowDetails = async (showId: string): Promise<ShowDto | undefine
   return response.show as ShowDto;
 };
 
-export const watchEpisode = async (episodeId: number, watch: boolean, previous: boolean = false) => {
+export const watchEpisode = async (episodeId: number, watch: boolean, previous = false) => {
   // toggle previous should only apply when marking watched
   if (watch && previous) {
     const response: any = await kyWrapper.post('episode/watchprevious', {
@@ -21,14 +21,14 @@ export const watchEpisode = async (episodeId: number, watch: boolean, previous: 
       },
     });
     return response?.watched === true;
-  } else {
-    const response: any = await kyWrapper.post(watch ? 'episode/watch' : 'episode/unwatch', {
-      json: {
-        episodeId,
-      },
-    });
-    return response?.watched === true;
   }
+
+  const response: any = await kyWrapper.post(watch ? 'episode/watch' : 'episode/unwatch', {
+    json: {
+      episodeId,
+    },
+  });
+  return response?.watched === true;
 };
 
 export const getProviderPreview = async (providerId: string): Promise<ShowDto> => {

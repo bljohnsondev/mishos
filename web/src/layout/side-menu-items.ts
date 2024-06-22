@@ -1,6 +1,6 @@
 import { logout } from '@/lib/auth';
 
-import { SideMenuItem } from './side-menu-item';
+import type { SideMenuItem } from './side-menu-item';
 
 export const sideMenuItems: SideMenuItem[] = [
   {
