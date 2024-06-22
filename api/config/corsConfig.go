@@ -13,10 +13,12 @@ func LoadCors(router *gin.Engine) {
 	corsString := os.Getenv("CORS")
 
 	if strings.TrimSpace(corsString) == "" {
-		log.Fatal().Msg("could not find valid CORS env variable")
+		log.Info().Msg("setting default CORS to http://127.0.0.1")
+
+		corsString = "http://127.0.0.1"
 	}
 
-	origins := strings.Split(os.Getenv("CORS"), ",")
+	origins := strings.Split(corsString, ",")
 
 	router.Use(cors.New(cors.Config{
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},

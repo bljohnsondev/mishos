@@ -1,0 +1,63 @@
+version: '3'
+
+tasks:
+  check-version:
+    preconditions:
+      - sh: '[ "$VERSION" != "" ]'
+        msg: "Cannot determine version number"
+
+  clean-api:
+    desc: Clean the api project
+    dir: ./api
+    cmds:
+      - task clean
+
+  clean-web:
+    desc: Clean the web project
+    dir: ./web
+    cmds:
+      - npm run clean
+
+  clean:
+    desc: Clean both the web and api projects
+    deps:
+      - clean-api
+      - clean-web
+
+  build-api:
+    desc: Build the api project
+    dir: ./api
+    deps:
+      - clean-api
+    cmds:
+      - task build
+
+  build-web:
+    desc: Build the web project
+    dir: ./web
+    cmds:
+      - npm run build
+
+  build:
+    desc: Build both the web and api projects
+    deps:
+      - build-api
+      - build-web
+
+  docker-build:
+    desc: Build the Docker image
+    cmds:
+      - docker build . -f docker/Dockerfile -t bljohnsondev/mishos
+
+  docker-deploy:
+    desc: Deploy a new container
+    deps:
+      - clean
+      - docker-build
+    cmds:
+      - docker compose down
+      - docker compose up -d
+
+  default:
+    cmds:
+      - task: build

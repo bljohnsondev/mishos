@@ -1,30 +1,18 @@
-version: "3"
-
 services:
-  mishos-fe:
-    image: bljohnsondev/mishos-web:latest
-    container_name: mishos-fe
+  mishos:
+    image: bljohnsondev/mishos:latest
+    container_name: mishos
     ports:
-      - 8000:80
+      - 8080:80
     environment:
-      - DOCKER_BE_URL=http://mishos-be:3000/api
-    restart: unless-stopped
-
-  mishos-be:
-    image: bljohnsondev/mishos-api:latest
-    container_name: mishos-be
-    environment:
-      - GIN_MODE=release
       - TZ=America/Chicago
-      - PORT=3000
-      - DB_TYPE=mysql
-      - DB_URL=username:password@tcp(mariadb:3306)/mishos?charset=utf8mb4&parseTime=True&loc=Local
-      #- DB_TYPE=sqlite
-      #- DB_URL=/home/username/mishos/mishos.db
+      - DB_TYPE=sqlite
+      - DB_URL=/db/mishos.db
       - SECRET=YOUR_SECRET_KEY_HERE
       - WATCHLIST_RECENT_LIMIT=30
-      - CORS=http://192.168.0.101
       - TOKEN_DURATION=90
       # - CRON_PROVIDER_UPDATE=21 8 * * *
       # - RUN_MIGRATION=1
+    volumes:
+      - /home/brent/temp/mishos:/db
     restart: unless-stopped

@@ -25,7 +25,7 @@ func Init() {
 		}
 
 		DB = db
-	} else {
+	} else if dbtype == "mysql" {
 		db, err := gorm.Open(mysql.New(mysql.Config{
 			DSN:               dsn,
 			DefaultStringSize: config.DefaultStringSize,
@@ -36,5 +36,7 @@ func Init() {
 		}
 
 		DB = db
+	} else {
+		log.Fatal().Msg("could not find valid DB_TYPE")
 	}
 }

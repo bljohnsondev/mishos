@@ -1,0 +1,15 @@
+:80 {
+  handle_path /api/* {
+    rewrite * /api{uri}
+    reverse_proxy localhost:3000
+  }
+
+  handle {
+    root * /app/web
+    encode gzip
+
+    try_files {path} index.html
+
+    file_server
+  }
+}

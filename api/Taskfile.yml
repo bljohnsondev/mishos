@@ -1,0 +1,36 @@
+version: '3'
+
+tasks:
+  check-version:
+    preconditions:
+      - sh: '[ "$VERSION" != "" ]'
+        msg: "Cannot determine version number"
+
+  clean:
+    desc: Clean the build files
+    cmds:
+      - rm -rf ./dist
+      - rm -rf ./tmp
+
+  build:
+    desc: Build the API application
+    deps:
+      # - check-version
+      - clean
+    cmds:
+      - mkdir -p ./dist
+      - go build -o ./dist/mishosapi
+
+  lint:
+    desc: Lint the API code
+    cmds:
+      - golangci-lint run
+
+  dev:
+    desc: Run dev server
+    cmds:
+      - air
+
+  default:
+    cmds:
+      - task: build

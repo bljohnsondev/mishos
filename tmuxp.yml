@@ -5,14 +5,14 @@ start_directory: ~/projects/mishos
 windows:
   - window_name: editor
     panes:
-      - echo "Start editing here"
+      - echo "Open editor here"
 
   - window_name: servers
     layout: even-horizontal
     panes:
       - shell_command:
-        - cd web
         - npm run dev
+        start_directory: ~/projects/mishos/web
       - shell_command:
-        - cd api
-        - ./rundev.sh
+        - task dev
+        start_directory: ~/projects/mishos/api
