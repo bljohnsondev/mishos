@@ -32,7 +32,8 @@ func (setc SettingsController) SaveConfigGeneral(context *gin.Context) {
 	}
 
 	var body struct {
-		NotifierURL string `json:"notifierUrl" binding:"required"`
+		NotifierURL string `json:"notifierUrl"`
+		Theme       string `json:"theme"`
 	}
 
 	if context.BindJSON(&body) != nil {
@@ -47,6 +48,7 @@ func (setc SettingsController) SaveConfigGeneral(context *gin.Context) {
 	}
 
 	user.UserConfig.NotifierUrl = body.NotifierURL
+	user.UserConfig.Theme = body.Theme
 
 	if err := db.DB.Save(user.UserConfig).Error; err != nil {
 		services.SendError(context, err.Error())

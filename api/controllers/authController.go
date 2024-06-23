@@ -88,6 +88,7 @@ func (ac AuthController) InitData(context *gin.Context) {
 		UserConfig: modelsdto.UserConfigDto{
 			NotifierTimezone: config.NotifierTimezone,
 			NotifierUrl:      config.NotifierUrl,
+			Theme:            config.Theme,
 		},
 	}
 

@@ -6,7 +6,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { BaseElement } from '@/components/base-element';
 import { appContext } from '@/store/app-context';
 import { sharedStyles } from '@/styles/shared-styles';
-import type { AppStore } from '@/types';
+import type { AppStore, SettingsGeneralDto } from '@/types';
 import { getTheme, initializeForm, setTheme } from '@/utils';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';
@@ -56,14 +56,13 @@ export class SettingsGeneral extends BaseElement {
     }
 
     if (this.appStore?.initData?.userConfig) {
-      if (values.notifierUrl !== this.appStore?.initData?.userConfig?.notifierUrl) {
-        await this.callApi(() =>
-          saveConfigGeneral({
-            notifierUrl: values.notifierUrl,
-          })
-        );
-        this.dispatchCustomEvent('load-initdata');
-      }
+      await this.callApi(() => {
+        saveConfigGeneral({
+          notifierUrl: values.notifierUrl,
+          theme: values.theme,
+        });
+      });
+      this.dispatchCustomEvent('load-initdata');
     }
 
     this.toast({ variant: 'success', message: 'Settings saved' });

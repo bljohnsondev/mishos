@@ -7,6 +7,7 @@ import { when } from 'lit/directives/when.js';
 import { kyWrapper } from '@/lib/ky-wrapper';
 import { appContext } from '@/store/app-context';
 import type { AppStore, InitData, ToastMessage } from '@/types';
+import { setTheme } from '@/utils';
 
 import { BaseElement } from './base-element';
 
@@ -117,6 +118,10 @@ export class AppRoot extends BaseElement {
           ...this.appStore,
           initData,
         };
+
+        if (initData?.userConfig?.theme) {
+          setTheme(initData.userConfig?.theme);
+        }
       })
       .catch(ex => {
         if (ex instanceof HTTPError && ex.response.status === 401) {
