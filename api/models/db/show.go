@@ -21,4 +21,5 @@ type Show struct {
 	ImageOriginal *string    `json:"imageOriginal"`
 	ImdbId        *string    `json:"imdbId"`
 	Seasons       []Season   `json:"seasons"`
+	Completed     *int       `gorm:"-" json:"completed"`
 }

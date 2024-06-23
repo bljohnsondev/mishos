@@ -15,6 +15,7 @@ import '@shoelace-style/shoelace/dist/components/select/select.js';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
 import './episode-card';
+import './perc-complete';
 
 @customElement('show-details')
 export class ShowDetails extends LitElement {
@@ -65,7 +66,10 @@ export class ShowDetails extends LitElement {
                 ? html` <img src=${this.show.imageMedium} alt=${ifDefined(this.show.name)} class="show-image" /> `
                 : html` <div class="no-image-placeholder"></div> `
             }
-            <a href=${ifDefined(this.show.providerUrl)} class="provider-link" target="_blank">view at tvmaze.com</a>
+            <perc-complete percent="${ifDefined(this.show.completed)}"></perc-complete>
+            <a href=${ifDefined(this.show.providerUrl)} class="provider-link" target="_blank">
+              view at tvmaze.com
+            </a>
           </div>
           <div class="right-content">
             <p class="summary">${this.show.summary}</p>

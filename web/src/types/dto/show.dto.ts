@@ -21,4 +21,5 @@ export interface ShowDto {
   seasons?: SeasonDto[];
   // added for client side only
   following?: boolean;
+  completed?: number;
 }
