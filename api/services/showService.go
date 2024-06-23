@@ -231,7 +231,7 @@ func (showService ShowService) GetShow(userId uint, showId uint64) (show *models
 
 		var watchedIds []uint
 
-		episodeCount := 0
+		airedCount := 0
 
 		err := showService.GetWatchedEpisodeIds(userId, showId, &watchedIds)
 		if err != nil {
@@ -241,15 +241,18 @@ func (showService ShowService) GetShow(userId uint, showId uint64) (show *models
 		// loop through all the episodes to determine the users watched status
 		for _, season := range show.Seasons {
 			for episodeIndex, episode := range season.Episodes {
-				episodeCount += 1
 				seasonNumber := season.Number
 				episode.SeasonNumber = &seasonNumber
 				episode.Watched = slices.Contains(watchedIds, episode.ID)
 				season.Episodes[episodeIndex] = episode
+
+				if episode.Aired.Before(time.Now()) {
+					airedCount += 1
+				}
 			}
 		}
 
-		completed := int(float32(len(watchedIds)) / float32(episodeCount) * 100)
+		completed := int(float32(len(watchedIds)) / float32(airedCount) * 100)
 		show.Completed = &completed
 
 		return &show, nil
