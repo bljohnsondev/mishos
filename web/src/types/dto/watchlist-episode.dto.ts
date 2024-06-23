@@ -11,4 +11,5 @@ export interface WatchlistEpisodeDto {
   network?: string;
   seasonNumber: number;
   watchedAt?: Date;
+  unwatchedCount?: number;
 }

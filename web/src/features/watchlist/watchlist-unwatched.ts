@@ -65,6 +65,7 @@ export class WatchListUnwatched extends BaseElement {
                 ${episode.network ? html`<li>${episode.network}</li>` : null}
                 ${episode.aired ? html`<li>${formatAirTime(episode.aired)}</li>` : null}
                 ${episode.runtime ? html`<li>${episode.runtime}m</li>` : null}
+                ${episode.unwatchedCount ? html`<li class="unwatched-count">+${episode.unwatchedCount}</li>` : null}
               </ul>
               <sl-button
                 class="watched-button"

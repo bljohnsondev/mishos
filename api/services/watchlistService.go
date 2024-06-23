@@ -85,7 +85,6 @@ func (ws WatchListService) GetUnwatched(userId uint) (*[]modelsdto.WatchlistEpis
 				and episodes.aired <= ?
 			`, fshow.ID, userId, time.Now()).
 			Order("seasons.number ASC, episodes.number ASC").
-			Limit(1).
 			Scan(&eplist).
 			Error
 
@@ -94,7 +93,10 @@ func (ws WatchListService) GetUnwatched(userId uint) (*[]modelsdto.WatchlistEpis
 		}
 
 		if len(eplist) > 0 {
-			unwatched = append(unwatched, eplist[0])
+			episode := eplist[0]
+			episode.UnwatchedCount = uint(len(eplist))
+
+			unwatched = append(unwatched, episode)
 		}
 	}
 
