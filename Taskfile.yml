@@ -46,8 +46,10 @@ tasks:
 
   docker-build:
     desc: Build the Docker image
+    deps:
+      - check-version
     cmds:
-      - docker build . -f docker/Dockerfile -t bljohnsondev/mishos
+      - docker build . -f docker/Dockerfile -t bljohnsondev/mishos:latest -t bljohnsondev/mishos:v{{ .VERSION }}
 
   docker-deploy:
     desc: Deploy a new container
