@@ -1,8 +1,9 @@
 import { Router } from '@vaadin/router';
-import { css, html } from 'lit';
+import { css, html, nothing } from 'lit';
 import type { TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { when } from 'lit/directives/when.js';
 
 import { BaseElement } from '@/components/base-element';
 import { watchEpisode } from '@/features/shows/shows-api';
@@ -12,7 +13,6 @@ import { createToastEvent, formatAirTime } from '@/utils';
 
 import { getWatchList } from './wachlist-api';
 
-import '@/components/episode-name-tooltip';
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
 
@@ -55,11 +55,16 @@ export class WatchListUnwatched extends BaseElement {
             <div class="episode-info">
               <h1>${episode.showName}</h1>
               <div class="episode-name">
-                <episode-name-tooltip
-                  name=${ifDefined(episode.name)}
-                  description=${ifDefined(episode.summary)}
-                ></episode-name-tooltip>
+                ${episode.name}
               </div>
+              ${when(
+                episode.summary,
+                () => html`
+                  <sl-button id="showdesc-${episode.id}" size="small" @click=${() => this.showDescription(episode.id)}>Show Description</sl-button>
+                  <div class="summary hidden" id="desc-${episode.id}">${episode.summary}</div>
+                `,
+                () => nothing
+              )}
               <ul class="detail-list">
                 <li>S${episode.seasonNumber} E${episode.number}</li>
                 ${episode.network ? html`<li>${episode.network}</li>` : null}
@@ -80,6 +85,20 @@ export class WatchListUnwatched extends BaseElement {
           </div>
         `
       : null;
+  }
+
+  private showDescription(episodeId: number) {
+    const button = this.renderRoot.querySelector(`#showdesc-${episodeId}`);
+
+    if (button) {
+      button.classList.add('hidden');
+
+      const desc = this.renderRoot.querySelector(`#desc-${episodeId}`);
+
+      if (desc) {
+        desc.classList.remove('hidden');
+      }
+    }
   }
 
   private handleClickShow(event: Event, episode: WatchlistEpisodeDto) {
@@ -139,6 +158,7 @@ export class WatchListUnwatched extends BaseElement {
 
       .show-image-container {
         width: 6rem;
+        min-width: 6rem;
       }
 
       .show-image {
@@ -149,7 +169,10 @@ export class WatchListUnwatched extends BaseElement {
       }
 
       .episode-name {
-        padding-top: var(--sl-spacing-2x-small);
+        color: var(--sl-color-neutral-800);
+        padding-top: var(--sl-spacing-x-small);
+        padding-bottom: var(--sl-spacing-x-small);
+        font-size: var(--sl-font-size-small);
       }
 
       .detail-list {
@@ -163,8 +186,14 @@ export class WatchListUnwatched extends BaseElement {
         padding: var(--sl-spacing-3x-small) 0;
       }
 
-      episode-name-tooltip {
-        padding-bottom: 0;
+      .hidden {
+        display: none;
+      }
+
+      .summary {
+        color: var(--sl-color-neutral-600);
+        font-size: var(--sl-font-size-small);
+        margin-bottom: var(--sl-spacing-2x-small);
       }
 
       .watched-button {
