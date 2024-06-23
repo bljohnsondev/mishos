@@ -22,10 +22,14 @@ export class PercentComplete extends LitElement {
 
     .complete {
       background-color: var(--sl-color-green-500);
+      border-top-left-radius: var(--sl-border-radius-small);
+      border-bottom-left-radius: var(--sl-border-radius-small);
     }
 
     .rest {
       background-color: var(--sl-color-neutral-500);
+      border-top-right-radius: var(--sl-border-radius-small);
+      border-bottom-right-radius: var(--sl-border-radius-small);
     }
   `;
 }
