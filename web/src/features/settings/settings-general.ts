@@ -6,7 +6,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { BaseElement } from '@/components/base-element';
 import { appContext } from '@/store/app-context';
 import { sharedStyles } from '@/styles/shared-styles';
-import type { AppStore, SettingsGeneralDto } from '@/types';
+import type { AppStore } from '@/types';
 import { getTheme, initializeForm, setTheme } from '@/utils';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';

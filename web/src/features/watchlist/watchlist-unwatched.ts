@@ -2,7 +2,6 @@ import { Router } from '@vaadin/router';
 import { css, html, nothing } from 'lit';
 import type { TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
 import { when } from 'lit/directives/when.js';
 
 import { BaseElement } from '@/components/base-element';
