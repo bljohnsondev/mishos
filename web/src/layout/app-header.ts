@@ -54,35 +54,29 @@ export class AppHeader extends LitElement {
         gap: var(--sl-spacing-medium);
         background-color: var(--content-header-bg-color);
         min-height: 2.5rem;
-        @media screen and (min-width: 1024px) {
-          flex-direction: row;
-          padding-left: var(--sl-spacing-large);
-          padding-right: var(--sl-spacing-large);
-        }
       }
 
       .icon {
         display: flex;
         align-items: center;
         gap: var(--sl-spacing-small);
-        :is(span) {
-          font-size: var(--sl-font-size-small);
-          color: var(--header-title-color);
-          font-weight: var(--sl-font-weight-semibold);
-        }
-        :is(sl-icon) {
-          color: var(--sl-color-blue-700);
-          font-size: var(--sl-font-size-large);
-        }
+      }
+
+      .icon span {
+        font-size: var(--sl-font-size-small);
+        color: var(--header-title-color);
+        font-weight: var(--sl-font-weight-semibold);
+      }
+
+      .icon sl-icon {
+        color: var(--sl-color-blue-700);
+        font-size: var(--sl-font-size-large);
       }
 
       .right-menu {
         display: flex;
         align-items: center;
         gap: var(--sl-spacing-medium);
-        @media screen and (min-width: 1024px) {
-          margin-left: auto;
-        }
       }
 
       sl-dropdown {
@@ -95,6 +89,18 @@ export class AppHeader extends LitElement {
 
       sl-divider {
         margin: 0;
+      }
+
+      @media screen and (min-width: 1024px) {
+        header {
+          flex-direction: row;
+          padding-left: var(--sl-spacing-large);
+          padding-right: var(--sl-spacing-large);
+        }
+
+        .right-menu {
+          margin-left: auto;
+        }
       }
     `,
   ];

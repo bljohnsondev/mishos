@@ -14,10 +14,11 @@ export const sharedStyles = css`
     color: var(--sl-color-neutral-800);
     text-decoration: none;
     transition: all 200ms ease;
-    &:hover {
-      /* transform: scale(1.01); */
-      filter: brightness(110%);
-    }
+  }
+
+  .card-link:hover {
+    /* transform: scale(1.01); */
+    filter: brightness(110%);
   }
 
   .reset-button {
@@ -39,26 +40,33 @@ export const sharedStyles = css`
     display: flex;
     align-items: center;
     gap: var(--sl-spacing-large);
-    @media screen and (min-width: 1024px) {
-      margin-left: 1rem;
-    }
-    :is(li) {
-      font-size: var(--sl-font-size-small);
-    }
-    :is(sl-button)::part(label) {
-      color: var(--sl-color-neutral-800);
-    }
-    :is(sl-button)::part(label):hover {
-      color: var(--sl-color-neutral-950);
-    }
-    :is(sl-button).header-selected::part(label) {
-      color: var(--sl-color-sky-500);
-    }
+  }
+
+  .header-tabs li {
+    font-size: var(--sl-font-size-small);
+  }
+
+  .header-tabs sl-button::part(label) {
+    color: var(--sl-color-neutral-800);
+  }
+
+  .header-tabs sl-button::part(label):hover {
+    color: var(--sl-color-neutral-950);
+  }
+
+  .header-tabs sl-button.header-selected::part(label) {
+    color: var(--sl-color-sky-500);
   }
 
   .action-buttons {
     display: flex;
     align-items: center;
     gap: var(--sl-spacing-medium);
+  }
+
+  @media screen and (min-width: 1024px) {
+    .header-tabs {
+      margin-left: 1rem;
+    }
   }
 `;

@@ -45,18 +45,21 @@ export class ShowCard extends LitElement {
       .show-card {
         position: relative;
         max-width: 200px;
-        :is(div) {
-          display: flex;
-          flex-direction: column;
-          gap: var(--sl-spacing-small);
-          :is(strong) {
-            font-size: var(--sl-font-size-medium);
-            font-weight: var(--sl-font-weight-semibold);
-          }
-          :is(small) {
-            color: var(--sl-color-neutral-600);
-          }
-        }
+      }
+
+      .show-card > div {
+        display: flex;
+        flex-direction: column;
+        gap: var(--sl-spacing-2x-small);
+      }
+
+      .show-card > div strong {
+        font-size: var(--sl-font-size-medium);
+        font-weight: var(--sl-font-weight-semibold);
+      }
+
+      .show-card > div small {
+        color: var(--sl-color-neutral-600);
       }
     `,
   ];

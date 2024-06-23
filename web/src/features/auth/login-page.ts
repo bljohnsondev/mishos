@@ -99,9 +99,6 @@ export class LoginPage extends LitElement {
         border: 1px solid var(--sl-color-neutral-200);
         border-radius: var(--sl-border-radius-large);
         padding: var(--sl-spacing-medium);
-        @media screen and (min-width: 1024px) {
-          width: 380px;
-        }
       }
 
       h1 {
@@ -115,6 +112,12 @@ export class LoginPage extends LitElement {
         display: flex;
         flex-direction: column;
         gap: var(--sl-spacing-medium);
+      }
+
+      @media screen and (min-width: 1024px) {
+        .login-window {
+          width: 380px;
+        }
       }
     `,
   ];

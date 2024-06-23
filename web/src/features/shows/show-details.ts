@@ -173,15 +173,12 @@ export class ShowDetails extends LitElement {
         align-items: center;
         gap: var(--sl-spacing-medium);
         margin-bottom: var(--sl-spacing-medium);
-        @media screen and (min-width: 768px) {
-          flex-direction: row;
-          gap: var(--sl-spacing-x-large);
-        }
-        :is(h1) {
-          display: block;
-          font-size: var(--sl-font-size-large);
-          margin: 0;
-        }
+      }
+
+      .show-header h1 {
+        display: block;
+        font-size: var(--sl-font-size-large);
+        margin: 0;
       }
 
       .show-header-buttons {
@@ -239,16 +236,10 @@ export class ShowDetails extends LitElement {
         align-items: flex-start;
         flex-direction: column;
         gap: var(--sl-spacing-medium);
-        .previous::part(label) {
-          font-size: var(--sl-font-size-small);
-        }
-        @media screen and (min-width: 768px) {
-          align-items: center;
-          flex-direction: row;
-          .previous {
-            margin-left: auto;
-          }
-        }
+      }
+
+      form .previous::part(label) {
+        font-size: var(--sl-font-size-small);
       }
 
       .detail-content {
@@ -256,9 +247,6 @@ export class ShowDetails extends LitElement {
         align-items: flex-start;
         flex-direction: column;
         gap: var(--sl-spacing-medium);
-        @media screen and (min-width: 1024px) {
-          flex-direction: row;
-        }
       }
 
       .seasons-select {
@@ -285,9 +273,32 @@ export class ShowDetails extends LitElement {
         border: 1px solid var(--sl-color-yellow-700);
         border-radius: var(--sl-border-radius-medium);
         color: black;
-        &:hover {
-          background-color: var(--sl-color-yellow-500);
-          border: 1px solid var(--sl-color-yellow-600);
+      }
+
+      .imdb-button:hover {
+        background-color: var(--sl-color-yellow-500);
+        border: 1px solid var(--sl-color-yellow-600);
+      }
+
+      @media screen and (min-width: 1024px) {
+        .detail-content {
+          flex-direction: row;
+        }
+      }
+
+      @media screen and (min-width: 768px) {
+        .show-header {
+          flex-direction: row;
+          gap: var(--sl-spacing-x-large);
+        }
+
+        form {
+          align-items: center;
+          flex-direction: row;
+        }
+
+        form .previous {
+          margin-left: auto;
         }
       }
     `,

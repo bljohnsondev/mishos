@@ -123,12 +123,13 @@ export class WatchListUnwatched extends BaseElement {
         gap: var(--sl-spacing-small);
         border-bottom: 1px solid var(--sl-color-neutral-100);
         padding-bottom: var(--sl-spacing-medium);
-        :is(h1) {
-          margin: 0;
-          padding: 0;
-          font-weight: var(--sl-font-weight-semibold);
-          font-size: var(--sl-font-size-small);
-        }
+      }
+
+      .episode h1 {
+        margin: 0;
+        padding: 0;
+        font-weight: var(--sl-font-weight-semibold);
+        font-size: var(--sl-font-size-small);
       }
 
       .episode-info {
@@ -155,23 +156,10 @@ export class WatchListUnwatched extends BaseElement {
         padding: 0;
         font-size: var(--sl-font-size-small);
         color: var(--sl-color-neutral-600);
+      }
 
-        :is(li) {
-          padding: var(--sl-spacing-3x-small) 0;
-        }
-
-        @media screen and (min-width: 640px) {
-          display: flex;
-          align-items: center;
-          padding-top: var(--sl-spacing-2x-small);
-
-          :is(li) {
-            &:not(:last-child):after {
-              content: ' · ';
-              padding-right: var(--sl-spacing-2x-small);
-            }
-          }
-        }
+      .detail-list li {
+        padding: var(--sl-spacing-3x-small) 0;
       }
 
       episode-name-tooltip {
@@ -180,6 +168,19 @@ export class WatchListUnwatched extends BaseElement {
 
       .watched-button {
         margin-top: var(--sl-spacing-x-small);
+      }
+
+      @media screen and (min-width: 640px) {
+        .detail-list {
+          display: flex;
+          align-items: center;
+          padding-top: var(--sl-spacing-2x-small);
+        }
+
+        .detail-list li:not(:last-child):after {
+          content: ' · ';
+          padding-right: var(--sl-spacing-2x-small);
+        }
       }
     `,
   ];

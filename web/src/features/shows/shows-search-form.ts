@@ -43,10 +43,8 @@ export class ShowsSearchForm extends LitElement {
   static styles = [
     sharedStyles,
     css`
-      form {
-        :is(sl-input)::part(base) {
-          background-color: transparent;
-        }
+      form sl-input::part(base) {
+        background-color: transparent;
       }
 
       @media screen and (min-width: 1024px) {

@@ -82,14 +82,17 @@ export class SettingsGeneral extends BaseElement {
         display: flex;
         flex-direction: column;
         gap: var(--sl-spacing-medium);
-        @media screen and (min-width: 640px) {
-          width: 400px;
-        }
       }
 
       sl-input::part(form-control-label),
       sl-select::part(form-control-label) {
         padding-bottom: var(--sl-spacing-2x-small);
+      }
+
+      @media screen and (min-width: 640px) {
+        #settings-form {
+          width: 400px;
+        }
       }
     `,
   ];
