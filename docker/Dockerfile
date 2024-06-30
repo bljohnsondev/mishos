@@ -4,6 +4,7 @@ WORKDIR /app/web
 COPY ./web/package.json /app/web/package.json
 RUN npm install
 COPY ./web .
+COPY ./web/.env.prod ./.env
 RUN npm run build
 
 FROM golang:1.22-alpine as buildapi
