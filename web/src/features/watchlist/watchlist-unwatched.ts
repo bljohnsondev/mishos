@@ -1,13 +1,15 @@
+import { consume } from '@lit/context';
 import { Router } from '@vaadin/router';
 import { css, html, nothing } from 'lit';
 import type { TemplateResult } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
 
 import { BaseElement } from '@/components/base-element';
 import { watchEpisode } from '@/features/shows/shows-api';
+import { appContext } from '@/store/app-context';
 import { sharedStyles } from '@/styles/shared-styles';
-import type { WatchlistEpisodeDto } from '@/types';
+import type { AppStore, WatchlistEpisodeDto } from '@/types';
 import { createToastEvent, formatAirTime } from '@/utils';
 
 import { getWatchList } from './wachlist-api';
@@ -21,9 +23,15 @@ import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 @customElement('watchlist-unwatched')
 export class WatchListUnwatched extends BaseElement {
+  @consume({ context: appContext, subscribe: true })
+  @property({ attribute: false })
+  public appStore?: AppStore;
+
   @state() episodes?: WatchlistEpisodeDto[];
 
   render() {
+    const hideSpoilers = this.appStore?.initData?.userConfig?.hideSpoilers;
+
     return html`
       ${
         this.episodes
@@ -31,7 +39,7 @@ export class WatchListUnwatched extends BaseElement {
             ? html`
               <ul class="episode-list">
                 ${this.episodes.map(episode => {
-                  return html`<li>${this.renderEpisode(episode)}</li>`;
+                  return html`<li>${this.renderEpisode(episode, hideSpoilers)}</li>`;
                 })}
               </ul>
             `
@@ -41,7 +49,7 @@ export class WatchListUnwatched extends BaseElement {
     `;
   }
 
-  private renderEpisode(episode: WatchlistEpisodeDto): TemplateResult | null {
+  private renderEpisode(episode: WatchlistEpisodeDto, hideSpoilers = false): TemplateResult | null {
     return episode
       ? html`
           <div class="episode">
@@ -59,7 +67,7 @@ export class WatchListUnwatched extends BaseElement {
               </div>
               ${when(
                 episode.summary,
-                () => html`<spoiler-message>${episode.summary}</spoiler-message>`,
+                () => html`<spoiler-message ?hide=${hideSpoilers}>${episode.summary}</spoiler-message>`,
                 () => nothing
               )}
               <ul class="detail-list">

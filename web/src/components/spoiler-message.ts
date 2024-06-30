@@ -10,18 +10,18 @@ export class SpoilerMessage extends LitElement {
   @property({ type: Boolean }) hide = false;
   @property() label = 'Show Description';
 
-  @state() hidden = this.hide;
+  @state() isHidden = false;
 
   render() {
     return when(
-      this.hidden,
+      this.isHidden,
       () => html`
-        <sl-button class=${classMap({ hidden: !this.hidden })} size="small" @click=${() => this.showDescription()}>
+        <sl-button class=${classMap({ hidden: !this.isHidden })} size="small" @click=${() => this.showDescription()}>
           ${this.label}
         </sl-button>
       `,
       () => html`
-        <div class=${classMap({ summary: true, hidden: this.hidden })}>
+        <div class=${classMap({ summary: true, hidden: this.isHidden })}>
           <slot></slot>
         </div>
       `
@@ -29,7 +29,13 @@ export class SpoilerMessage extends LitElement {
   }
 
   private showDescription() {
-    this.hidden = false;
+    this.isHidden = false;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    // initialize the hidden state to the passed in prop value
+    this.isHidden = this.hide;
   }
 
   static styles = css`
