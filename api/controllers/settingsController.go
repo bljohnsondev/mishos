@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 	"golang.org/x/crypto/bcrypt"
 
 	"mishosapi/config"
@@ -32,11 +33,13 @@ func (setc SettingsController) SaveConfigGeneral(context *gin.Context) {
 	}
 
 	var body struct {
-		NotifierURL string `json:"notifierUrl"`
-		Theme       string `json:"theme"`
+		NotifierURL  string `json:"notifierUrl"`
+		Theme        string `json:"theme"`
+		HideSpoilers bool   `json:"hideSpoilers"`
 	}
 
 	if context.BindJSON(&body) != nil {
+		log.Info().Msgf("BIND ERROR SAVING!!!! %+v\n", context.Request.URL.Query())
 		services.SendError(context, "bad request")
 		return
 	}
@@ -49,6 +52,7 @@ func (setc SettingsController) SaveConfigGeneral(context *gin.Context) {
 
 	user.UserConfig.NotifierUrl = body.NotifierURL
 	user.UserConfig.Theme = body.Theme
+	user.UserConfig.HideSpoilers = body.HideSpoilers
 
 	if err := db.DB.Save(user.UserConfig).Error; err != nil {
 		services.SendError(context, err.Error())

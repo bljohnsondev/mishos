@@ -7,9 +7,10 @@ import '@shoelace-style/shoelace/dist/components/button/button.js';
 
 @customElement('spoiler-message')
 export class SpoilerMessage extends LitElement {
+  @property({ type: Boolean }) hide = false;
   @property() label = 'Show Description';
 
-  @state() hidden = true;
+  @state() hidden = this.hide;
 
   render() {
     return when(

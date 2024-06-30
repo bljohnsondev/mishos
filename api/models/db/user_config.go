@@ -5,5 +5,6 @@ type UserConfig struct {
 	NotifierTimezone string
 	NotifierUrl      string
 	Theme            string
+	HideSpoilers     bool
 	UserID           uint
 }

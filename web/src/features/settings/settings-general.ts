@@ -14,12 +14,14 @@ import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
 import '@shoelace-style/shoelace/dist/components/input/input.js';
 import '@shoelace-style/shoelace/dist/components/option/option.js';
 import '@shoelace-style/shoelace/dist/components/select/select.js';
+import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
 import { saveConfigGeneral } from './settings-api';
 
 interface SettingsFormValues {
   theme?: string;
   notifierUrl?: string;
+  hideSpoilers?: string;
 }
 
 @customElement('settings-general')
@@ -31,6 +33,7 @@ export class SettingsGeneral extends BaseElement {
   @query('#settings-form') settingsForm!: HTMLFormElement;
   render() {
     const notifierUrl = this.appStore?.initData?.userConfig?.notifierUrl;
+    const hideSpoilers = this.appStore?.initData?.userConfig?.hideSpoilers;
 
     return html`
       <form id="settings-form">
@@ -42,6 +45,9 @@ export class SettingsGeneral extends BaseElement {
         </div>
         <div>
           <sl-input name="notifierUrl" label="Notifier URL" value=${ifDefined(notifierUrl)}></sl-input>
+        </div>
+        <div>
+          <sl-switch name="hideSpoilers" ?checked=${hideSpoilers}>Hide Spoilers</sl-switch>
         </div>
         <div class="action-buttons">
           <sl-button variant="primary" type="submit">Save</sl-button>
@@ -60,6 +66,7 @@ export class SettingsGeneral extends BaseElement {
         saveConfigGeneral({
           notifierUrl: values.notifierUrl,
           theme: values.theme,
+          hideSpoilers: values.hideSpoilers === 'on',
         });
       });
       this.dispatchCustomEvent('load-initdata');
