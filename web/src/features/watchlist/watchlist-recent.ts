@@ -13,7 +13,6 @@ import { createToastEvent, formatAirTime } from '@/utils';
 
 import { getWatchListRecent } from './wachlist-api';
 
-import '@/components/episode-name-tooltip';
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
 
@@ -133,13 +132,6 @@ export class WatchListRecent extends BaseElement {
         border-radius: var(--sl-border-radius-medium);
       }
 
-      .episode-name {
-        padding-top: var(--sl-spacing-x-small);
-        padding-bottom: var(--sl-spacing-3x-small);
-        font-size: var(--sl-font-size-small);
-        color: var(--sl-color-neutral-700);
-      }
-
       .episode-summary {
         font-size: var(--sl-font-size-x-small);
         margin-block: var(--sl-spacing-2x-small);
@@ -155,10 +147,6 @@ export class WatchListRecent extends BaseElement {
 
       .detail-list li {
         padding: var(--sl-spacing-3x-small) 0;
-      }
-
-      episode-name-tooltip {
-        padding-bottom: 0;
       }
 
       .watched-date {

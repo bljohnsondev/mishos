@@ -64,6 +64,13 @@ export const sharedStyles = css`
     gap: var(--sl-spacing-medium);
   }
 
+  .episode-name {
+    color: var(--sl-color-neutral-800);
+    padding-top: var(--sl-spacing-x-small);
+    padding-bottom: var(--sl-spacing-x-small);
+    font-size: var(--sl-font-size-small);
+  }
+
   @media screen and (min-width: 1024px) {
     .header-tabs {
       margin-left: 1rem;

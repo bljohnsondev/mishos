@@ -6,7 +6,6 @@ import { classMap } from 'lit/directives/class-map.js';
 import { sharedStyles } from '@/styles/shared-styles';
 import type { EpisodeDto } from '@/types';
 
-import '@/components/episode-name-tooltip';
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
 

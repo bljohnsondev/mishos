@@ -1,8 +1,8 @@
 import { Router } from '@vaadin/router';
-import { css, html } from 'lit';
+import { css, html, nothing } from 'lit';
 import type { TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
+import { when } from 'lit/directives/when.js';
 
 import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
@@ -11,7 +11,7 @@ import { formatDate } from '@/utils';
 
 import { getUpcomingList } from './upcoming-api';
 
-import '@/components/episode-name-tooltip';
+import '@/components/spoiler-message';
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
 
@@ -64,11 +64,13 @@ export class UpcomingPage extends BaseElement {
             <div>
               <h1>${episode.showName}</h1>
               <div class="episode-name">
-                <episode-name-tooltip
-                  name=${ifDefined(episode.name)}
-                  description=${ifDefined(episode.summary)}
-                ></episode-name-tooltip>
+                ${episode.name}
               </div>
+              ${when(
+                episode.summary,
+                () => html`<spoiler-message>${episode.summary}</spoiler-message>`,
+                () => nothing
+              )}
               <ul class="detail-list">
                 <li>S${episode.seasonNumber} E${episode.number}</li>
                 ${episode.network ? html`<li>${episode.network}</li>` : null}
@@ -128,10 +130,6 @@ export class UpcomingPage extends BaseElement {
         padding-top: var(--sl-spacing-2x-small);
       }
 
-      .episode-name {
-        padding-top: var(--sl-spacing-2x-small);
-      }
-
       .image-link {
         display: block;
         object-fit: contain;
@@ -151,10 +149,6 @@ export class UpcomingPage extends BaseElement {
 
       .detail-list li {
         padding: var(--sl-spacing-3x-small) 0;
-      }
-
-      episode-name-tooltip {
-        padding-bottom: 0;
       }
 
       @media screen and (min-width: 640px) {
