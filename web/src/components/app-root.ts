@@ -1,26 +1,31 @@
-import { provide } from '@lit/context';
-import { HTTPError } from 'ky';
+import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities/icon-library.js';
 import { css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { when } from 'lit/directives/when.js';
 
-import { kyWrapper } from '@/lib/ky-wrapper';
-import { appContext } from '@/store/app-context';
-import type { AppStore, InitData, ToastMessage } from '@/types';
-import { setTheme } from '@/utils';
+import type { ToastMessage } from '@/types';
 
-import { BaseElement } from './base-element';
+import { BaseElement } from '@/components/base-element';
+
+import '@/app-router';
 
 import '@shoelace-style/shoelace/dist/components/alert/alert.js';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 
+registerIconLibrary('local', {
+  resolver: name => `/icons/${name}.svg`,
+  mutator: svg => svg.setAttribute('fill', 'currentColor'),
+});
+
+registerIconLibrary('hi-outline', {
+  resolver: name => `https://cdn.jsdelivr.net/npm/heroicons@2.1.1/24/outline/${name}.svg`,
+});
+
+registerIconLibrary('hi-solid', {
+  resolver: name => `https://cdn.jsdelivr.net/npm/heroicons@2.1.1/24/solid/${name}.svg`,
+});
+
 @customElement('app-root')
 export class AppRoot extends BaseElement {
-  @provide({ context: appContext })
-  appStore: AppStore = {
-    loading: false,
-  };
-
   @state() errorMessage: string | undefined;
 
   constructor() {
@@ -28,7 +33,6 @@ export class AppRoot extends BaseElement {
     this.addEventListener('toast', this.handleToastEvent);
     this.addEventListener('error-message', event => this.handleErrorMessage(event));
     this.addEventListener('app-loading', event => this.handleApiLoading(event));
-    this.addEventListener('load-initdata', () => this.loadInitData());
 
     // add a window event listener to catch any top-level events
     // https://lit.dev/docs/components/events/#adding-event-listeners-to-other-elements
@@ -38,16 +42,7 @@ export class AppRoot extends BaseElement {
     return html`
       <div id="toast-container"></div>
       <div class="app-root">
-        ${when(
-          this.errorMessage === undefined,
-          () => html`<slot></slot>`,
-          () => html`
-            <div class="init-error">
-              An error has occurred. Please check the server logs for more information.
-              <div class="error-message">${this.errorMessage}</div>
-            </div>
-          `
-        )}
+        <app-router></app-router>
       </div>
     `;
   }
@@ -102,40 +97,11 @@ export class AppRoot extends BaseElement {
   private handleApiLoading(event: Event) {
     if (event && event instanceof CustomEvent) {
       const loading = event.detail;
-      this.appStore = {
+      this.dispatchCustomEvent('update-appstore', {
         ...this.appStore,
         loading,
-      };
-    }
-  }
-
-  loadInitData() {
-    this.callApi<InitData>(() => kyWrapper.get('auth/init').json(), {
-      toastErrors: false,
-    })
-      .then((initData: InitData | undefined) => {
-        this.appStore = {
-          ...this.appStore,
-          initData,
-        };
-
-        if (initData?.userConfig?.theme) {
-          setTheme(initData.userConfig?.theme);
-        }
-      })
-      .catch(ex => {
-        if (ex instanceof HTTPError && ex.response.status === 401) {
-          // an error code 401 is a good thing
-          this.errorMessage = undefined;
-        } else {
-          this.errorMessage = ex.message ?? 'Unknown error';
-        }
       });
-  }
-
-  async connectedCallback() {
-    super.connectedCallback();
-    this.loadInitData();
+    }
   }
 
   static styles = css`

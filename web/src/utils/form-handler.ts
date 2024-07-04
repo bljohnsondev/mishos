@@ -1,6 +1,5 @@
 import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
-import { ValidationError } from 'yup';
-import type { AnyObject } from 'yup';
+import { type AnyObject, ValidationError } from 'yup';
 
 import type { ErrorMessage } from '@/types';
 

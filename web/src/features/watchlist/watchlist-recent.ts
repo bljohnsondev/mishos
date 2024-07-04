@@ -1,8 +1,7 @@
 import { Router } from '@vaadin/router';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { css, html } from 'lit';
-import type { TemplateResult } from 'lit';
+import { type TemplateResult, css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 import { BaseElement } from '@/components/base-element';

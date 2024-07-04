@@ -1,5 +1,4 @@
-import { Router } from '@vaadin/router';
-import type { RouterLocation } from '@vaadin/router';
+import { Router, type RouterLocation } from '@vaadin/router';
 import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';

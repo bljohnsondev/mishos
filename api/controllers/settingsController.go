@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/rs/zerolog/log"
 	"golang.org/x/crypto/bcrypt"
 
 	"mishosapi/config"
@@ -39,14 +38,15 @@ func (setc SettingsController) SaveConfigGeneral(context *gin.Context) {
 	}
 
 	if context.BindJSON(&body) != nil {
-		log.Info().Msgf("BIND ERROR SAVING!!!! %+v\n", context.Request.URL.Query())
 		services.SendError(context, "bad request")
+
 		return
 	}
 
 	if user.UserConfig.ID == 0 {
 		// this shouldn't happen but throw an error if it does
 		services.SendError(context, "config data could not be found")
+
 		return
 	}
 
@@ -56,6 +56,7 @@ func (setc SettingsController) SaveConfigGeneral(context *gin.Context) {
 
 	if err := db.DB.Save(user.UserConfig).Error; err != nil {
 		services.SendError(context, err.Error())
+
 		return
 	}
 

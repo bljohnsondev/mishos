@@ -1,10 +1,8 @@
-import { consume } from '@lit/context';
-import { LitElement, css, html } from 'lit';
+import { css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { appContext } from '@/store/app-context';
+import { BaseElement } from '@/components/base-element';
 import { sharedStyles } from '@/styles/shared-styles';
-import type { AppStore } from '@/types';
 
 import '@shoelace-style/shoelace/dist/components/avatar/avatar.js';
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
@@ -16,11 +14,7 @@ import '@shoelace-style/shoelace/dist/components/menu-item/menu-item.js';
 import '@/components/loading-spinner';
 
 @customElement('app-header')
-export class AppHeader extends LitElement {
-  @consume({ context: appContext, subscribe: true })
-  @property({ attribute: false })
-  public appStore?: AppStore;
-
+export class AppHeader extends BaseElement {
   @property() iconlibrary?: string;
   @property() icon?: string;
   @property() title!: string;

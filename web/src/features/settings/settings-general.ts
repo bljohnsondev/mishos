@@ -7,7 +7,7 @@ import { BaseElement } from '@/components/base-element';
 import { appContext } from '@/store/app-context';
 import { sharedStyles } from '@/styles/shared-styles';
 import type { AppStore } from '@/types';
-import { getTheme, initializeForm, setTheme } from '@/utils';
+import { initializeForm, setTheme } from '@/utils';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
@@ -34,11 +34,12 @@ export class SettingsGeneral extends BaseElement {
   render() {
     const notifierUrl = this.appStore?.initData?.userConfig?.notifierUrl;
     const hideSpoilers = this.appStore?.initData?.userConfig?.hideSpoilers;
+    const theme = this.appStore?.initData?.userConfig?.theme;
 
     return html`
       <form id="settings-form">
         <div>
-          <sl-select name="theme" label="Theme" value=${getTheme()}>
+          <sl-select name="theme" label="Theme" value=${ifDefined(theme)}>
             <sl-option value="dark">Dark</sl-option>
             <sl-option value="light">Light</sl-option>
           </sl-select>
@@ -57,10 +58,6 @@ export class SettingsGeneral extends BaseElement {
   }
 
   private async handleSubmit(values: SettingsFormValues) {
-    if (values.theme) {
-      setTheme(values.theme);
-    }
-
     if (this.appStore?.initData?.userConfig) {
       await this.callApi(() => {
         saveConfigGeneral({
@@ -69,7 +66,16 @@ export class SettingsGeneral extends BaseElement {
           hideSpoilers: values.hideSpoilers === 'on',
         });
       });
-      this.dispatchCustomEvent('load-initdata');
+
+      if (this.appStore?.initData?.userConfig) {
+        this.appStore.initData.userConfig.notifierUrl = values.notifierUrl;
+        this.appStore.initData.userConfig.theme = values.theme;
+        this.appStore.initData.userConfig.hideSpoilers = values.hideSpoilers === 'on';
+
+        this.dispatchCustomEvent('update-appstore', this.appStore);
+
+        setTheme(values.theme ?? 'light');
+      }
     }
 
     this.toast({ variant: 'success', message: 'Settings saved' });

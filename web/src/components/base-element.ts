@@ -1,9 +1,11 @@
+import { consume } from '@lit/context';
 import { Router } from '@vaadin/router';
 import { HTTPError } from 'ky';
 import { LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
-import type { ToastMessage } from '@/types';
+import { appContext } from '@/store/app-context';
+import type { AppStore, ToastMessage } from '@/types';
 import { clearToken, createEvent } from '@/utils';
 
 export interface CallApiOptions {
@@ -13,6 +15,9 @@ export interface CallApiOptions {
 }
 
 export class BaseElement extends LitElement {
+  @consume({ context: appContext, subscribe: true })
+  appStore?: AppStore;
+
   @state() protected loading = false;
 
   protected startLoading(target?: HTMLElement) {

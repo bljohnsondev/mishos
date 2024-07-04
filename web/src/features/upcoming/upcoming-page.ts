@@ -1,7 +1,6 @@
 import { consume } from '@lit/context';
 import { Router } from '@vaadin/router';
-import { css, html, nothing } from 'lit';
-import type { TemplateResult } from 'lit';
+import { type TemplateResult, css, html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
 

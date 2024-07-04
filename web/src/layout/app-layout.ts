@@ -1,22 +1,20 @@
 import { Router } from '@vaadin/router';
-import { LitElement, css, html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { css, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
+import { BaseElement } from '@/components/base-element';
 import { sideMenuItems } from '@/layout/side-menu-items';
-import { getTheme, setTheme } from '@/utils';
 
 import './app-header';
 import './side-menu';
 
 @customElement('app-layout')
-export class AppLayout extends LitElement {
+export class AppLayout extends BaseElement {
   @property() iconLibrary?: string;
   @property() icon?: string;
   @property() headerTitle?: string;
   @property() selected?: string;
-
-  @state() theme?: string = getTheme();
 
   constructor() {
     super();
@@ -32,7 +30,6 @@ export class AppLayout extends LitElement {
             iconLibrary=${ifDefined(this.iconLibrary)}
             icon=${this.icon ?? 'tv'}
             title=${this.headerTitle ?? 'Shows'}
-            theme=${ifDefined(this.theme)}
           >
             <slot name="header"></slot>
           </app-header>
@@ -47,15 +44,6 @@ export class AppLayout extends LitElement {
     if (event && event instanceof CustomEvent && event.detail?.item && event.detail.item.route) {
       Router.go(event.detail.item.route);
     }
-  }
-
-  private initializeTheme() {
-    const theme = getTheme();
-    setTheme(theme);
-  }
-
-  firstUpdated() {
-    this.initializeTheme();
   }
 
   static styles = css`
