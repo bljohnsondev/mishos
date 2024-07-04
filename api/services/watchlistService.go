@@ -57,7 +57,7 @@ func (ws WatchListService) GetUnwatched(userId uint) (*[]modelsdto.WatchlistEpis
 	for _, fshow := range followed {
 		var eplist []modelsdto.WatchlistEpisodeDto
 
-		err := db.DB.
+		err := db.DB.Debug().
 			Model(&modelsdb.Episode{}).
 			Select(`
 		  	episodes.id as ID,
@@ -76,8 +76,8 @@ func (ws WatchListService) GetUnwatched(userId uint) (*[]modelsdto.WatchlistEpis
         inner join seasons on seasons.id = episodes.season_id
         inner join shows on shows.id = seasons.show_id
         inner join followed_shows on followed_shows.show_id = shows.id
-        left join watched_episodes on watched_episodes.episode_id = episodes.id
-			`).
+        left join watched_episodes on watched_episodes.episode_id = episodes.id and watched_episodes.user_id = ?
+			`, userId).
 			Where(`
 				shows.id = ?
 				and followed_shows.user_id = ?
