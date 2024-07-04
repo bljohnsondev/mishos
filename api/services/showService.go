@@ -219,8 +219,10 @@ func (showService ShowService) GetWatchedEpisodeIds(userId uint, showId uint64, 
 
 func (showService ShowService) GetShow(userId uint, showId uint64) (show *modelsdb.Show, err error) {
 	var shows []modelsdb.Show
-	if err := db.DB.Preload("Seasons").Preload("Seasons.Episodes", func(db *gorm.DB) *gorm.DB {
+	if err := db.DB.Preload("Seasons", func(db *gorm.DB) *gorm.DB {
 		// this is to handle ordering of preloaded joins
+		return db.Order("seasons.number ASC")
+	}).Preload("Seasons.Episodes", func(db *gorm.DB) *gorm.DB {
 		return db.Order("episodes.number ASC")
 	}).Limit(1).Find(&shows, showId).Error; err != nil {
 		return nil, err
