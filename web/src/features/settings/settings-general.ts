@@ -1,12 +1,9 @@
-import { consume } from '@lit/context';
 import { css, html } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, query } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { BaseElement } from '@/components/base-element';
-import { appContext } from '@/store/app-context';
 import { sharedStyles } from '@/styles/shared-styles';
-import type { AppStore } from '@/types';
 import { initializeForm, setTheme } from '@/utils';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';
@@ -26,10 +23,6 @@ interface SettingsFormValues {
 
 @customElement('settings-general')
 export class SettingsGeneral extends BaseElement {
-  @consume({ context: appContext, subscribe: true })
-  @property({ attribute: false })
-  public appStore?: AppStore;
-
   @query('#settings-form') settingsForm!: HTMLFormElement;
   render() {
     const notifierUrl = this.appStore?.initData?.userConfig?.notifierUrl;

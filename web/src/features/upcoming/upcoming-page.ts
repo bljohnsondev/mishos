@@ -1,13 +1,11 @@
-import { consume } from '@lit/context';
 import { Router } from '@vaadin/router';
 import { type TemplateResult, css, html, nothing } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
 
 import { BaseElement } from '@/components/base-element';
-import { appContext } from '@/store/app-context';
 import { sharedStyles } from '@/styles/shared-styles';
-import type { AppStore, WatchlistEpisodeDto } from '@/types';
+import type { WatchlistEpisodeDto } from '@/types';
 import { formatDate } from '@/utils';
 
 import { getUpcomingList } from './upcoming-api';
@@ -20,10 +18,6 @@ import './calendar-card';
 
 @customElement('upcoming-page')
 export class UpcomingPage extends BaseElement {
-  @consume({ context: appContext, subscribe: true })
-  @property({ attribute: false })
-  public appStore?: AppStore;
-
   @state() episodes?: WatchlistEpisodeDto[];
 
   render() {

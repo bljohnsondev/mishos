@@ -1,13 +1,10 @@
-import { consume } from '@lit/context';
 import { css, html } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { customElement, query, state } from 'lit/decorators.js';
 import { choose } from 'lit/directives/choose.js';
 import { classMap } from 'lit/directives/class-map.js';
 
 import { BaseElement } from '@/components/base-element';
-import { appContext } from '@/store/app-context';
 import { sharedStyles } from '@/styles/shared-styles';
-import type { AppStore } from '@/types';
 
 import '@/features/shows/shows-search-form';
 import '@/layout/app-layout';
@@ -24,10 +21,6 @@ import './settings-general';
 
 @customElement('settings-page')
 export class SettingsPage extends BaseElement {
-  @consume({ context: appContext, subscribe: true })
-  @property({ attribute: false })
-  public appStore?: AppStore;
-
   @state() section = 'general';
 
   @query('form') settingsForm!: HTMLFormElement;
