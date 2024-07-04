@@ -2,6 +2,7 @@ package db
 
 import (
 	"os"
+	"time"
 
 	"github.com/glebarez/sqlite"
 	"github.com/rs/zerolog/log"
@@ -34,6 +35,15 @@ func Init() {
 		if err != nil {
 			log.Fatal().Err(err).Msg("failed to connect to MySQL database")
 		}
+
+		// set the maximum amount of time a connection may be reused
+		// without this the connections aren't closed in a safe way and the mysql driver may close them unexpectedly
+		sqlDB, err := db.DB()
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to get a SQL DB connection to MySQL")
+		}
+
+		sqlDB.SetConnMaxLifetime(time.Hour)
 
 		DB = db
 	} else {
