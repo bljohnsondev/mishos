@@ -57,7 +57,7 @@ func (ws WatchListService) GetUnwatched(userId uint) (*[]modelsdto.WatchlistEpis
 	for _, fshow := range followed {
 		var eplist []modelsdto.WatchlistEpisodeDto
 
-		err := db.DB.Debug().
+		err := db.DB.
 			Model(&modelsdb.Episode{}).
 			Select(`
 		  	episodes.id as ID,
