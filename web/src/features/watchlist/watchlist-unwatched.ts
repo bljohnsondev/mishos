@@ -1,6 +1,7 @@
 import { Router } from '@vaadin/router';
 import { type TemplateResult, css, html, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { keyed } from 'lit/directives/keyed.js';
 import { when } from 'lit/directives/when.js';
 
 import { BaseElement } from '@/components/base-element';
@@ -60,7 +61,8 @@ export class WatchListUnwatched extends BaseElement {
               </div>
               ${when(
                 episode.summary,
-                () => html`<spoiler-message ?hide=${hideSpoilers}>${episode.summary}</spoiler-message>`,
+                () =>
+                  keyed(episode.id, html`<spoiler-message ?hide=${hideSpoilers}>${episode.summary}</spoiler-message>`),
                 () => nothing
               )}
               <ul class="detail-list">
