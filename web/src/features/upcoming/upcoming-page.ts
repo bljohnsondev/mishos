@@ -89,7 +89,8 @@ export class UpcomingPage extends BaseElement {
     Router.go(`/show/view/${episode.showId}?season=${episode.seasonNumber}`);
   }
 
-  async firstUpdated() {
+  async connectedCallback() {
+    super.connectedCallback();
     this.episodes = await this.callApi(() => getUpcomingList());
   }
 
