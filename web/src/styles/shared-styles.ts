@@ -46,18 +46,6 @@ export const sharedStyles = css`
     font-size: var(--sl-font-size-small);
   }
 
-  .header-tabs sl-button::part(label) {
-    color: var(--sl-color-neutral-800);
-  }
-
-  .header-tabs sl-button::part(label):hover {
-    color: var(--sl-color-neutral-950);
-  }
-
-  .header-tabs sl-button.header-selected::part(label) {
-    color: var(--sl-color-sky-500);
-  }
-
   .action-buttons {
     display: flex;
     align-items: center;
