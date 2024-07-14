@@ -7,4 +7,6 @@ type User struct {
 	FollowedShows   []FollowedShow
 	WatchedEpisodes []WatchedEpisode
 	UserConfig      UserConfig
+	UserRoleID      int
+	UserRole        UserRole
 }

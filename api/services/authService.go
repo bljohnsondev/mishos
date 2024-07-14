@@ -14,6 +14,7 @@ func SanitizeUser(user modelsdb.User) modelsdto.UserDto {
 
 	sanitizedUser.ID = user.ID
 	sanitizedUser.Username = user.Username
+	sanitizedUser.Role = user.UserRole.Name
 
 	return sanitizedUser
 }
