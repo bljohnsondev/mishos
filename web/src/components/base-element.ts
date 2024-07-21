@@ -5,7 +5,7 @@ import { LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
 import { appContext } from '@/store/app-context';
-import type { AppStore, ToastMessage } from '@/types';
+import type { AppStore, ToastMessage, UserDto } from '@/types';
 import { clearToken, createEvent } from '@/utils';
 
 export interface CallApiOptions {
@@ -37,6 +37,14 @@ export class BaseElement extends LitElement {
   protected dispatchCustomEvent<T>(eventName: string, payload?: T, target?: HTMLElement): void {
     if (target) target.dispatchEvent(createEvent(eventName, payload));
     else this.dispatchEvent(createEvent(eventName, payload));
+  }
+
+  protected getUser(): UserDto | undefined {
+    return this.appStore?.initData?.user;
+  }
+
+  protected isAdmin(): boolean {
+    return this.appStore?.initData?.user?.role === 'admin';
   }
 
   protected async callApi<T>(

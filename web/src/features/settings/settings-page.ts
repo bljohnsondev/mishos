@@ -19,6 +19,7 @@ import '@shoelace-style/shoelace/dist/components/select/select.js';
 import './settings-account';
 import './settings-data';
 import './settings-general';
+import './settings-users';
 
 @customElement('settings-page')
 export class SettingsPage extends BaseElement {
@@ -82,6 +83,7 @@ export class SettingsPage extends BaseElement {
             ['general', () => html`<settings-general></settings-general>`],
             ['account', () => html`<settings-account></settings-account>`],
             ['data', () => html`<settings-data></settings-data>`],
+            ['users', () => (this.isAdmin() ? html`<settings-users></settings-users>` : nothing)],
           ])}
         </section>
       </app-layout>
