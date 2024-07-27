@@ -64,9 +64,8 @@ export class SettingsUsers extends BaseElement {
   private async handleSaveUser(event: Event) {
     if (event && event instanceof CustomEvent && event.detail) {
       const user = event.detail as UserDto;
-      this.selectedUser = undefined;
 
-      const newUser = await saveUser(user);
+      const newUser = await this.callApi<UserDto | undefined>(() => saveUser(user));
 
       if (newUser && this.users) {
         if (this.users.some(u => u.id === newUser.id)) {
@@ -79,6 +78,7 @@ export class SettingsUsers extends BaseElement {
           this.users = [...this.users, newUser];
         }
 
+        this.selectedUser = undefined;
         this.toast({ variant: 'success', message: `User ${newUser.username} saved` });
       }
     }
@@ -88,12 +88,13 @@ export class SettingsUsers extends BaseElement {
     if (event && event instanceof CustomEvent && event.detail) {
       const user = event.detail as UserDto;
 
-      if (user && user.id) {
+      if (user && user.id && user.id !== 1) {
         this.selectedUser = undefined;
 
-        await deleteUser(user.id);
+        const userId = user.id;
+        await this.callApi(() => deleteUser(userId));
 
-        this.users = this.users?.filter(current => current.id !== user.id);
+        this.users = this.users?.filter(current => current.id !== userId);
         this.toast({ variant: 'success', message: `User ${user.username} deleted` });
       }
     }

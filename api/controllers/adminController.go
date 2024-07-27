@@ -5,8 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/rs/zerolog/log"
+	"golang.org/x/crypto/bcrypt"
 
+	"mishosapi/config"
 	"mishosapi/db"
 	modelsdb "mishosapi/models/db"
 	modelsdto "mishosapi/models/dto"
@@ -61,11 +62,19 @@ func (ac AdminController) SaveUser(context *gin.Context) {
 	var body struct {
 		UserID   uint   `json:"id"`
 		Username string `json:"username" binding:"required"`
+		Password string `json:"password"`
 		Role     string `json:"role" binding:"required"`
 	}
 
 	if err := context.ShouldBindJSON(&body); err != nil {
 		services.SendError(context, "bad request")
+
+		return
+	}
+
+	// the initial user is always an admin and cant be changed
+	if body.UserID == 1 && body.Role != "admin" {
+		services.SendError(context, "initial admin user must be admin")
 
 		return
 	}
@@ -100,6 +109,16 @@ func (ac AdminController) SaveUser(context *gin.Context) {
 	user.Username = body.Username
 	user.UserRole = role
 
+	if body.Password != "" {
+		hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), config.BcryptCost)
+		if err != nil {
+			services.SendError(context, err.Error())
+			return
+		}
+
+		user.Password = string(hash)
+	}
+
 	if err := db.DB.Save(&user).Error; err != nil {
 		services.SendError(context, err.Error())
 		return
@@ -128,6 +147,12 @@ func (ac AdminController) DeleteUser(context *gin.Context) {
 
 	if context.BindJSON(&body) != nil {
 		services.SendError(context, "bad request")
+
+		return
+	}
+
+	if body.UserID == 1 {
+		services.SendError(context, "initial user cannot be deleted")
 
 		return
 	}

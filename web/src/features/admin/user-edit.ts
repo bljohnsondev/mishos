@@ -19,6 +19,7 @@ import '@/components/confirm-dialog';
 
 const userSchema = yup.object({
   username: yup.string().trim().required('Username is required'),
+  password: yup.string().trim(),
   role: yup.string().required('Role is required'),
 });
 
@@ -38,19 +39,25 @@ export class UserEdit extends BaseElement {
 
     return html`
       <form id="user-form">
-        <div class="top-container">
+        <div>
           <sl-icon-button
             class="back-button"
             library="hi-solid"
             name="chevron-left"
             @click=${() => this.dispatchCustomEvent('close')}
           ></sl-icon-button>
+        </div>
+        <div class="top-container">
           <div>
-            <sl-input name="username" value=${ifDefined(this.user.username)}></sl-input>
+            <sl-input label="Username" name="username" value=${ifDefined(this.user.username)}></sl-input>
             <form-error-message for="username" .errors=${this.errorMessages}></form-error-message>
+            <div class="password">
+              <sl-input label="Password" name="password" type="password"></sl-input>
+              <form-error-message for="password" .errors=${this.errorMessages}></form-error-message>
+            </div>
           </div>
           <div>
-            <sl-select name="role" placeholder="Select role" value=${ifDefined(this.user.role)} class="role-select">
+            <sl-select label="Role" name="role" placeholder="Select role" value=${ifDefined(this.user.role)} class="role-select">
               <sl-option value="admin">Admin</sl-option>
               <sl-option value="user">User</sl-option>
             </sl-select>
@@ -61,7 +68,16 @@ export class UserEdit extends BaseElement {
           <sl-button type="submit" variant="primary">Save</sl-button>
           ${
             this.user?.id
-              ? html`<sl-button class="delete-button" variant="danger" @click=${this.handleShowConfirm}>Delete</sl-button>`
+              ? html`
+                <sl-button
+                  class="delete-button"
+                  variant="danger"
+                  ?disabled=${this.user?.id === 1}
+                  @click=${this.handleShowConfirm}
+                >
+                  Delete
+                </sl-button>
+              `
               : null
           }
         </div>
@@ -87,9 +103,16 @@ export class UserEdit extends BaseElement {
     this.errorMessages = [];
 
     if (this.user) {
+      if (!this.user.id && !values.password) {
+        // for new users password is required
+        this.errorMessages = [{ name: 'password', message: 'Password is required for new users' }];
+        return;
+      }
+
       const editedUser: UserDto = {
         ...this.user,
         username: values.username,
+        password: values.password,
         role: values.role,
       };
 
@@ -126,19 +149,24 @@ export class UserEdit extends BaseElement {
       .top-container {
         font-size: var(--sl-font-size-large);
         color: var(--sl-color-neutral-800);
+        margin-top: var(--sl-spacing-medium);
         margin-bottom: var(--sl-spacing-medium);
         display: flex;
         align-items: flex-start;
         gap: var(--sl-spacing-small);
       }
 
+      sl-icon-button.back-button {
+        border: 1px solid var(--sl-color-neutral-500);
+        border-radius: var(--sl-border-radius-medium);
+      }
+
       .username {
         font-weight: bold;
       }
 
-      sl-icon-button.back-button {
-        border: 1px solid var(--sl-color-neutral-500);
-        border-radius: var(--sl-border-radius-medium);
+      .password {
+        margin-top: var(--sl-spacing-x-small);
       }
 
       .role-select {

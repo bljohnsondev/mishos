@@ -5,6 +5,10 @@ export const sharedStyles = css`
     margin-bottom: var(--sl-spacing-x-small);
   }
 
+  sl-select::part(form-control-label) {
+    margin-bottom: var(--sl-spacing-x-small);
+  }
+
   .error-message {
     color: var(--sl-color-red-600);
     font-size: var(--sl-font-size-x-small);
