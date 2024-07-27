@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 
 	"mishosapi/db"
 	modelsdb "mishosapi/models/db"
@@ -59,11 +60,11 @@ func (ac AdminController) SaveUser(context *gin.Context) {
 
 	var body struct {
 		UserID   uint   `json:"id"`
-		Username string `json:"username"`
-		Role     string `json:"role"`
+		Username string `json:"username" binding:"required"`
+		Role     string `json:"role" binding:"required"`
 	}
 
-	if context.BindJSON(&body) != nil {
+	if err := context.ShouldBindJSON(&body); err != nil {
 		services.SendError(context, "bad request")
 
 		return
@@ -78,9 +79,22 @@ func (ac AdminController) SaveUser(context *gin.Context) {
 
 	var user modelsdb.User
 
-	if err := db.DB.First(&user, body.UserID).Error; err != nil {
-		services.SendError(context, "user not found")
-		return
+	if body.UserID > 0 {
+		// saving an existing user
+		if err := db.DB.First(&user, body.UserID).Error; err != nil {
+			services.SendError(context, "user not found")
+			return
+		}
+	} else {
+		db.DB.Where("username = ?", body.Username).Limit(1).Find(&user)
+
+		if user.ID > 0 {
+			services.SendError(context, "username exists")
+			return
+		}
+
+		// creating a new user
+		user = modelsdb.User{}
 	}
 
 	user.Username = body.Username

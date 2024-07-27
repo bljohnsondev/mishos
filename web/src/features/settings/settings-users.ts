@@ -32,7 +32,7 @@ export class SettingsUsers extends BaseElement {
       `
       : html`
         <div class="actions">
-          <sl-button>
+          <sl-button @click=${this.handleClickAdd}>
             Add
           </sl-button>
         </div>
@@ -51,6 +51,10 @@ export class SettingsUsers extends BaseElement {
       `;
   }
 
+  private handleClickAdd() {
+    this.selectedUser = {};
+  }
+
   private handleChangeUser(event: Event) {
     if (event && event instanceof CustomEvent) {
       this.selectedUser = event.detail;
@@ -64,11 +68,16 @@ export class SettingsUsers extends BaseElement {
 
       const newUser = await saveUser(user);
 
-      if (newUser) {
-        // replace with the saved user
-        this.users = this.users?.map(current => {
-          return current.id === newUser?.id ? newUser : current;
-        });
+      if (newUser && this.users) {
+        if (this.users.some(u => u.id === newUser.id)) {
+          // replace with the saved user
+          this.users = this.users?.map(current => {
+            return current.id === newUser?.id ? newUser : current;
+          });
+        } else {
+          // this must me a new user so add it
+          this.users = [...this.users, newUser];
+        }
 
         this.toast({ variant: 'success', message: `User ${newUser.username} saved` });
       }
@@ -78,12 +87,15 @@ export class SettingsUsers extends BaseElement {
   private async handleDeleteUser(event: Event) {
     if (event && event instanceof CustomEvent && event.detail) {
       const user = event.detail as UserDto;
-      this.selectedUser = undefined;
 
-      await deleteUser(user.id);
+      if (user && user.id) {
+        this.selectedUser = undefined;
 
-      this.users = this.users?.filter(current => current.id !== user.id);
-      this.toast({ variant: 'success', message: `User ${user.username} deleted` });
+        await deleteUser(user.id);
+
+        this.users = this.users?.filter(current => current.id !== user.id);
+        this.toast({ variant: 'success', message: `User ${user.username} deleted` });
+      }
     }
   }
 

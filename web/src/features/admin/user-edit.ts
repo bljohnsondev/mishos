@@ -1,5 +1,6 @@
 import { css, html } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import * as yup from 'yup';
 
 import { BaseElement } from '@/components/base-element';
@@ -45,11 +46,11 @@ export class UserEdit extends BaseElement {
             @click=${() => this.dispatchCustomEvent('close')}
           ></sl-icon-button>
           <div>
-            <sl-input name="username" value=${this.user.username}></sl-input>
+            <sl-input name="username" value=${ifDefined(this.user.username)}></sl-input>
             <form-error-message for="username" .errors=${this.errorMessages}></form-error-message>
           </div>
           <div>
-            <sl-select name="role" placeholder="Select role" value=${this.user.role} class="role-select">
+            <sl-select name="role" placeholder="Select role" value=${ifDefined(this.user.role)} class="role-select">
               <sl-option value="admin">Admin</sl-option>
               <sl-option value="user">User</sl-option>
             </sl-select>
@@ -58,7 +59,11 @@ export class UserEdit extends BaseElement {
         </div>
         <div class="actions">
           <sl-button type="submit" variant="primary">Save</sl-button>
-          <sl-button class="delete-button" variant="danger" @click=${this.handleShowConfirm}>Delete</sl-button>
+          ${
+            this.user?.id
+              ? html`<sl-button class="delete-button" variant="danger" @click=${this.handleShowConfirm}>Delete</sl-button>`
+              : null
+          }
         </div>
       </form>
       <confirm-dialog
