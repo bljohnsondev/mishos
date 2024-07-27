@@ -74,7 +74,7 @@ export class BaseElement extends LitElement {
       }
 
       if (error instanceof HTTPError && error.response?.status === 400) {
-        const errorJson = await error.response.json();
+        const errorJson: any = await error.response.json();
         const errorMessage = errorJson?.message || errorJson?.error;
         if (errorMessage) {
           this.toast({ variant: 'danger', message: errorMessage }, target);
@@ -86,7 +86,7 @@ export class BaseElement extends LitElement {
         clearToken();
         Router.go('/login');
       } else if (error instanceof HTTPError) {
-        const json = await error.response.json();
+        const json: any = await error.response.json();
         this.toast({ variant: 'danger', message: json.error ?? 'An unknown error occurred' }, target);
       } else if (error instanceof Error) {
         this.toast({ variant: 'danger', message: error.message ?? 'An unknown error occurred' }, target);
