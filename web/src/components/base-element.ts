@@ -5,7 +5,7 @@ import { LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
 import { appContext } from '@/store/app-context';
-import type { AppStore, ToastMessage } from '@/types';
+import type { AppStore, ToastMessage, UserDto } from '@/types';
 import { clearToken, createEvent } from '@/utils';
 
 export interface CallApiOptions {
@@ -39,6 +39,14 @@ export class BaseElement extends LitElement {
     else this.dispatchEvent(createEvent(eventName, payload));
   }
 
+  protected getUser(): UserDto | undefined {
+    return this.appStore?.initData?.user;
+  }
+
+  protected isAdmin(): boolean {
+    return this.appStore?.initData?.user?.role === 'admin';
+  }
+
   protected async callApi<T>(
     func: () => any,
     options: CallApiOptions = { target: this, toastErrors: true, loadingSpinner: true }
@@ -66,7 +74,7 @@ export class BaseElement extends LitElement {
       }
 
       if (error instanceof HTTPError && error.response?.status === 400) {
-        const errorJson = await error.response.json();
+        const errorJson: any = await error.response.json();
         const errorMessage = errorJson?.message || errorJson?.error;
         if (errorMessage) {
           this.toast({ variant: 'danger', message: errorMessage }, target);
@@ -78,7 +86,7 @@ export class BaseElement extends LitElement {
         clearToken();
         Router.go('/login');
       } else if (error instanceof HTTPError) {
-        const json = await error.response.json();
+        const json: any = await error.response.json();
         this.toast({ variant: 'danger', message: json.error ?? 'An unknown error occurred' }, target);
       } else if (error instanceof Error) {
         this.toast({ variant: 'danger', message: error.message ?? 'An unknown error occurred' }, target);

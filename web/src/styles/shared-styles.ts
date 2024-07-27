@@ -5,6 +5,10 @@ export const sharedStyles = css`
     margin-bottom: var(--sl-spacing-x-small);
   }
 
+  sl-select::part(form-control-label) {
+    margin-bottom: var(--sl-spacing-x-small);
+  }
+
   .error-message {
     color: var(--sl-color-red-600);
     font-size: var(--sl-font-size-x-small);
@@ -44,18 +48,6 @@ export const sharedStyles = css`
 
   .header-tabs li {
     font-size: var(--sl-font-size-small);
-  }
-
-  .header-tabs sl-button::part(label) {
-    color: var(--sl-color-neutral-800);
-  }
-
-  .header-tabs sl-button::part(label):hover {
-    color: var(--sl-color-neutral-950);
-  }
-
-  .header-tabs sl-button.header-selected::part(label) {
-    color: var(--sl-color-sky-500);
   }
 
   .action-buttons {

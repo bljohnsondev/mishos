@@ -34,7 +34,7 @@ func (ac AuthController) Login(context *gin.Context) {
 
 	var user modelsdb.User
 
-	if result := db.DB.Where("username = ?", body.Username).First(&user); result.Error != nil {
+	if result := db.DB.Preload("UserRole").Where("username = ?", body.Username).First(&user); result.Error != nil {
 		context.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 		return
 	}
@@ -66,6 +66,7 @@ func (ac AuthController) Login(context *gin.Context) {
 	}
 
 	sanitizedUser := services.SanitizeUser(user)
+
 	context.JSON(http.StatusOK, gin.H{"user": sanitizedUser, "token": tokenString})
 }
 
@@ -85,6 +86,11 @@ func (ac AuthController) InitData(context *gin.Context) {
 	}
 
 	initData := modelsdto.InitDataDto{
+		User: modelsdto.UserDto{
+			ID:       user.ID,
+			Username: user.Username,
+			Role:     user.Role,
+		},
 		UserConfig: modelsdto.UserConfigDto{
 			NotifierTimezone: config.NotifierTimezone,
 			NotifierUrl:      config.NotifierUrl,
@@ -136,8 +142,9 @@ func (ac AuthController) OnboardingCreate(context *gin.Context) {
 	}
 
 	user := modelsdb.User{
-		Username: body.Username,
-		Password: string(hash),
+		Username:   body.Username,
+		Password:   string(hash),
+		UserRoleID: 1, // initial user will have the admin role
 	}
 
 	if result := db.DB.Create(&user); result.Error != nil {

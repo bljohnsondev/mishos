@@ -65,7 +65,7 @@ func AuthRequired() gin.HandlerFunc {
 		// now that a user ID has been identified look up the user in the database and add to context
 		var users []modelsdb.User
 
-		db.DB.Where("id = ?", userid).Find(&users).Limit(1)
+		db.DB.Preload("UserRole").Where("id = ?", userid).Find(&users).Limit(1)
 
 		if len(users) == 0 {
 			context.AbortWithStatusJSON(http.StatusUnauthorized, modelsdto.ErrorDto{Error: "unauthorized: user not found"})
@@ -75,6 +75,7 @@ func AuthRequired() gin.HandlerFunc {
 		sanitizedUser := modelsdto.UserDto{
 			ID:       users[0].ID,
 			Username: users[0].Username,
+			Role:     users[0].UserRole.Name,
 		}
 
 		context.Set("user", sanitizedUser)
