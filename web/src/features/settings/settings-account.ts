@@ -1,11 +1,10 @@
 import { css, html } from 'lit';
-import { customElement, query, state } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 import * as yup from 'yup';
 
 import { BaseElement } from '@/components/base-element';
+import { FormController } from '@/components/form-controller';
 import { sharedStyles } from '@/styles/shared-styles';
-import type { ErrorMessage } from '@/types';
-import { initializeForm } from '@/utils';
 
 import { saveConfigAccount } from './settings-api';
 
@@ -21,25 +20,26 @@ type AccountFormValues = yup.InferType<typeof settingsSchema>;
 
 @customElement('settings-account')
 export class SettingsAccount extends BaseElement {
-  @query('form') settingsForm!: HTMLFormElement;
-
-  @state() errorMessages?: ErrorMessage[];
+  private formController: FormController<AccountFormValues> = new FormController<AccountFormValues>(this, {
+    onSubmit: values => this.handleSubmit(values),
+    schema: settingsSchema,
+  });
 
   render() {
     return html`
       <form>
         <div>
           <sl-input type="password" name="passwordCurrent" label="Current Password"></sl-input>
-          <form-error-message for="passwordCurrent" .errors=${this.errorMessages}></form-error-message>
+          <form-error-message for="passwordCurrent" .errors=${this.formController.errors}></form-error-message>
         </div>
         <div>
           <sl-input type="password" name="passwordNew1" label="New Password"></sl-input>
-          <form-error-message for="passwordNew1" .errors=${this.errorMessages}></form-error-message>
+          <form-error-message for="passwordNew1" .errors=${this.formController.errors}></form-error-message>
         </div>
         <div>
           <sl-input type="password" name="passwordNew2" label="Confirm Password"></sl-input>
-          <form-error-message for="passwordNew2" .errors=${this.errorMessages}></form-error-message>
-          <form-error-message for="matching" .errors=${this.errorMessages}></form-error-message>
+          <form-error-message for="passwordNew2" .errors=${this.formController.errors}></form-error-message>
+          <form-error-message for="matching" .errors=${this.formController.errors}></form-error-message>
         </div>
         <div>
           <sl-button variant="primary" type="submit">Save</sl-button>
@@ -50,10 +50,10 @@ export class SettingsAccount extends BaseElement {
 
   private async handleSubmit(values: AccountFormValues) {
     this.requestUpdate();
-    this.errorMessages = [];
+    this.formController.resetErrors();
 
     if (values.passwordNew1 !== values.passwordNew2) {
-      this.errorMessages = [{ name: 'matching', message: 'Passwords do not match' }];
+      this.formController.addError('passwordNew2', 'Passwords do not match');
     } else {
       const result = await this.callApi<boolean>(() =>
         saveConfigAccount({
@@ -65,19 +65,9 @@ export class SettingsAccount extends BaseElement {
 
       if (result) {
         this.toast({ variant: 'success', message: 'Your password has been changed' });
-        this.settingsForm.reset();
+        this.formController.resetForm();
       }
     }
-  }
-
-  firstUpdated() {
-    initializeForm<AccountFormValues>(this.settingsForm, {
-      schema: settingsSchema,
-      onSubmit: values => this.handleSubmit(values),
-      onError: errors => {
-        this.errorMessages = errors;
-      },
-    });
   }
 
   static styles = [

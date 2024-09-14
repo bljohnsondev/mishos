@@ -1,12 +1,12 @@
 import { css, html } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import * as yup from 'yup';
 
 import { BaseElement } from '@/components/base-element';
+import { FormController } from '@/components/form-controller';
 import { sharedStyles } from '@/styles/shared-styles';
-import type { ErrorMessage, UserDto } from '@/types';
-import { initializeForm } from '@/utils';
+import type { UserDto } from '@/types';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
@@ -27,11 +27,13 @@ type UserFormValues = yup.InferType<typeof userSchema>;
 
 @customElement('user-edit')
 export class UserEdit extends BaseElement {
-  @query('#user-form') userForm!: HTMLFormElement;
+  private formController: FormController<UserFormValues> = new FormController<UserFormValues>(this, {
+    onSubmit: values => this.handleSubmit(values),
+    schema: userSchema,
+  });
 
   @property({ attribute: false }) user?: UserDto;
 
-  @state() errorMessages?: ErrorMessage[];
   @state() showConfirm = false;
 
   render() {
@@ -50,10 +52,10 @@ export class UserEdit extends BaseElement {
         <div class="top-container">
           <div>
             <sl-input label="Username" name="username" value=${ifDefined(this.user.username)}></sl-input>
-            <form-error-message for="username" .errors=${this.errorMessages}></form-error-message>
+            <form-error-message for="username" .errors=${this.formController.errors}></form-error-message>
             <div class="password">
               <sl-input label="Password" name="password" type="password"></sl-input>
-              <form-error-message for="password" .errors=${this.errorMessages}></form-error-message>
+              <form-error-message for="password" .errors=${this.formController.errors}></form-error-message>
             </div>
           </div>
           <div>
@@ -61,7 +63,7 @@ export class UserEdit extends BaseElement {
               <sl-option value="admin">Admin</sl-option>
               <sl-option value="user">User</sl-option>
             </sl-select>
-            <form-error-message for="role" .errors=${this.errorMessages}></form-error-message>
+            <form-error-message for="role" .errors=${this.formController.errors}></form-error-message>
           </div>
         </div>
         <div class="actions">
@@ -100,12 +102,12 @@ export class UserEdit extends BaseElement {
   }
 
   private async handleSubmit(values: UserFormValues) {
-    this.errorMessages = [];
+    this.formController.resetErrors();
 
     if (this.user) {
       if (!this.user.id && !values.password) {
         // for new users password is required
-        this.errorMessages = [{ name: 'password', message: 'Password is required for new users' }];
+        this.formController.addError('password', 'Password is required for new users');
         return;
       }
 
@@ -131,16 +133,6 @@ export class UserEdit extends BaseElement {
   private handleDeleteUser() {
     this.showConfirm = false;
     this.dispatchCustomEvent('delete-user', this.user);
-  }
-
-  firstUpdated() {
-    initializeForm<UserFormValues>(this.userForm, {
-      schema: userSchema,
-      onSubmit: values => this.handleSubmit(values),
-      onError: errors => {
-        this.errorMessages = errors;
-      },
-    });
   }
 
   static styles = [
