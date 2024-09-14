@@ -1,10 +1,11 @@
 import { css, html } from 'lit';
-import { customElement, query } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { BaseElement } from '@/components/base-element';
+import { FormController } from '@/components/form-controller';
 import { sharedStyles } from '@/styles/shared-styles';
-import { initializeForm, setTheme } from '@/utils';
+import { setTheme } from '@/utils';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
@@ -23,7 +24,11 @@ interface SettingsFormValues {
 
 @customElement('settings-general')
 export class SettingsGeneral extends BaseElement {
-  @query('#settings-form') settingsForm!: HTMLFormElement;
+  // @ts-ignore - the form controller is attached automatically so ignore unused error
+  private formController: FormController<SettingsFormValues> = new FormController<SettingsFormValues>(this, {
+    onSubmit: values => this.handleSubmit(values),
+  });
+
   render() {
     const notifierUrl = this.appStore?.initData?.userConfig?.notifierUrl;
     const hideSpoilers = this.appStore?.initData?.userConfig?.hideSpoilers;
@@ -72,12 +77,6 @@ export class SettingsGeneral extends BaseElement {
     }
 
     this.toast({ variant: 'success', message: 'Settings saved' });
-  }
-
-  firstUpdated() {
-    initializeForm<SettingsFormValues>(this.settingsForm, {
-      onSubmit: values => this.handleSubmit(values),
-    });
   }
 
   static styles = [

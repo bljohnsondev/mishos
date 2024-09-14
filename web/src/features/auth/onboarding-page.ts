@@ -1,11 +1,12 @@
 import { Router } from '@vaadin/router';
 import { LitElement, css, html } from 'lit';
-import { customElement, query, state } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import * as yup from 'yup';
 
+import { FormController } from '@/components/form-controller';
 import { sharedStyles } from '@/styles/shared-styles';
-import type { ErrorMessage, ToastMessage } from '@/types';
-import { createEvent, initializeForm } from '@/utils';
+import type { ToastMessage } from '@/types';
+import { createEvent } from '@/utils';
 
 import '@shoelace-style/shoelace/dist/components/alert/alert.js';
 import '@shoelace-style/shoelace/dist/components/input/input.js';
@@ -24,10 +25,12 @@ type CreateFormValues = yup.InferType<typeof createSchema>;
 
 @customElement('onboarding-page')
 export class OnboardingPage extends LitElement {
-  @query('form') createForm!: HTMLFormElement;
+  private formController: FormController<CreateFormValues> = new FormController<CreateFormValues>(this, {
+    onSubmit: values => this.handleSubmit(values),
+    schema: createSchema,
+  });
 
   @state() toast?: ToastMessage;
-  @state() errorMessages: ErrorMessage[] = [];
 
   render() {
     return html`
@@ -41,7 +44,7 @@ export class OnboardingPage extends LitElement {
             <form>
               <div>
                 <sl-input name="username" label="Username" placeholder="Username"></sl-input>
-                <form-error-message for="username" .errors=${this.errorMessages}></form-error-message>
+                <form-error-message for="username" .errors=${this.formController.errors}></form-error-message>
               </div>
               <div>
                 <sl-input
@@ -51,7 +54,7 @@ export class OnboardingPage extends LitElement {
                   type="password"
                   password-toggle
                 ></sl-input>
-                <form-error-message for="password" .errors=${this.errorMessages}></form-error-message>
+                <form-error-message for="password" .errors=${this.formController.errors}></form-error-message>
               </div>
               <sl-button type="submit" variant="primary">Create</sl-button>
             </form>
@@ -63,7 +66,6 @@ export class OnboardingPage extends LitElement {
 
   private handleSubmit(values: CreateFormValues) {
     this.requestUpdate();
-    this.errorMessages = [];
 
     createInitialUser(values.username, values.password)
       .then(() => {
@@ -75,16 +77,6 @@ export class OnboardingPage extends LitElement {
         const toast = { variant: 'danger', message: 'Create user failed' };
         this.dispatchEvent(createEvent('toast', toast));
       });
-  }
-
-  firstUpdated() {
-    initializeForm<CreateFormValues>(this.createForm, {
-      schema: createSchema,
-      onSubmit: values => this.handleSubmit(values),
-      onError: errors => {
-        this.errorMessages = errors;
-      },
-    });
   }
 
   static styles = [

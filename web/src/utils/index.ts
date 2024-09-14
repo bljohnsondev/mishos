@@ -41,5 +41,4 @@ export const getTheme = () => {
 };
 
 export * from './date-utils';
-export * from './form-handler';
 export * from './storage';

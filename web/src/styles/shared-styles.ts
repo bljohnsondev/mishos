@@ -10,8 +10,8 @@ export const sharedStyles = css`
   }
 
   .error-message {
-    color: var(--sl-color-red-600);
-    font-size: var(--sl-font-size-x-small);
+    color: var(--sl-color-danger-700);
+    font-size: var(--sl-font-size-small);
   }
 
   .card-link {

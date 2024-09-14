@@ -1,11 +1,12 @@
 import { Router } from '@vaadin/router';
 import { LitElement, css, html } from 'lit';
-import { customElement, query, state } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import * as yup from 'yup';
 
+import { FormController } from '@/components/form-controller';
 import { sharedStyles } from '@/styles/shared-styles';
-import type { ErrorMessage, ToastMessage } from '@/types';
-import { createEvent, initializeForm, setToken } from '@/utils';
+import type { ToastMessage } from '@/types';
+import { createEvent, setToken } from '@/utils';
 
 import { login } from './auth-api';
 
@@ -24,10 +25,12 @@ type LoginFormValues = yup.InferType<typeof loginSchema>;
 
 @customElement('login-page')
 export class LoginPage extends LitElement {
-  @query('form') loginForm!: HTMLFormElement;
+  private formController: FormController<LoginFormValues> = new FormController<LoginFormValues>(this, {
+    onSubmit: values => this.handleSubmit(values),
+    schema: loginSchema,
+  });
 
   @state() toast?: ToastMessage;
-  @state() errorMessages: ErrorMessage[] = [];
 
   render() {
     return html`
@@ -38,11 +41,11 @@ export class LoginPage extends LitElement {
             <form>
               <div>
                 <sl-input name="username" label="Username" placeholder="Username"></sl-input>
-                <form-error-message for="username" .errors=${this.errorMessages}></form-error-message>
+                <form-error-message for="username" .errors=${this.formController.errors}></form-error-message>
               </div>
               <div>
                 <sl-input name="password" label="Password" placeholder="Password" type="password"></sl-input>
-                <form-error-message for="password" .errors=${this.errorMessages}></form-error-message>
+                <form-error-message for="password" .errors=${this.formController.errors}></form-error-message>
               </div>
               <sl-button type="submit" variant="primary">Login</sl-button>
             </form>
@@ -54,7 +57,6 @@ export class LoginPage extends LitElement {
 
   private handleSubmit(values: LoginFormValues) {
     this.requestUpdate();
-    this.errorMessages = [];
 
     login(values.username, values.password)
       .then(response => {
@@ -68,16 +70,6 @@ export class LoginPage extends LitElement {
         const toast = { variant: 'danger', message: 'Login failed' };
         this.dispatchEvent(createEvent('toast', toast));
       });
-  }
-
-  firstUpdated() {
-    initializeForm<LoginFormValues>(this.loginForm, {
-      schema: loginSchema,
-      onSubmit: values => this.handleSubmit(values),
-      onError: errors => {
-        this.errorMessages = errors;
-      },
-    });
   }
 
   static styles = [
