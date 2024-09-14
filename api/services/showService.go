@@ -271,12 +271,98 @@ func (showService ShowService) RefreshShow(showId uint64) error {
 
 	providerClient := tvproviders.ProviderClient{}
 
-	if err := providerClient.GetShow(*show.ProviderID, &show); err != nil {
+	var providerShow modelsdb.Show
+
+	if err := providerClient.GetShow(*show.ProviderID, &providerShow); err != nil {
 		return err
 	}
 
-	// NOTE: need to include FullSaveAssociations so property changes on joined records (like season and episode) will be saved
-	if err := db.DB.Session(&gorm.Session{FullSaveAssociations: true}).Save(&show).Error; err != nil {
+	providerClient.CopyShowData(providerShow, &show)
+
+	deletedEpisodes := []modelsdb.Episode{}
+
+	// compare seasons/episodes of the existing show to the current provider show
+	for seasonIndex, season := range show.Seasons {
+		_, providerSeason := findSeasonByNumber(providerShow, season.Number)
+
+		if providerSeason != nil {
+			// update existing season data
+			providerClient.CopySeasonData(*providerSeason, &season)
+			show.Seasons[seasonIndex] = season
+		}
+
+		for epIndex, episode := range season.Episodes {
+			if episode.Number != nil {
+				if providerSeason != nil {
+					_, providerEpisode := findEpisodeByNumber(*providerSeason, *episode.Number)
+
+					if providerEpisode != nil {
+						// update existing episode data
+						providerClient.CopyEpisodeData(*providerEpisode, &episode)
+						season.Episodes[epIndex] = episode
+					}
+				}
+
+				// check for any episodes that have been removed from the provider list
+				if !episodeExists(providerShow, season.Number, *episode.Number) {
+					deletedEpisodes = append(deletedEpisodes, episode)
+				}
+			}
+		}
+	}
+
+	// now loop through data in the provider show to compare to existing
+	for _, providerSeason := range providerShow.Seasons {
+		seasonIndex, season := findSeasonByNumber(show, providerSeason.Number)
+
+		if season == nil {
+			// if an entire season is missing add it and all episodes as new
+			show.Seasons = append(show.Seasons, providerSeason)
+		} else {
+			added := false
+
+			for _, providerEpisode := range providerSeason.Episodes {
+				if providerEpisode.Number != nil {
+					_, episode := findEpisodeByNumber(*season, *providerEpisode.Number)
+
+					if episode == nil {
+						// add the new episode
+						season.Episodes = append(season.Episodes, providerEpisode)
+						added = true
+					}
+				}
+			}
+
+			if added {
+				show.Seasons[seasonIndex] = *season
+			}
+		}
+	}
+
+	err := db.DB.Transaction(func(tx *gorm.DB) error {
+		// NOTE: need to include FullSaveAssociations so property changes on joined records (like season and episode) will be saved
+		if err := tx.Session(&gorm.Session{FullSaveAssociations: true}).Save(&show).Error; err != nil {
+			return err
+		}
+
+		// remove any deleted episode records and any watched ep records
+		if len(deletedEpisodes) > 0 {
+			// first delete any watched episode records
+			var delepid []uint
+			for _, delep := range deletedEpisodes {
+				delepid = append(delepid, delep.ID)
+			}
+
+			tx.Unscoped().Where("episode_id in ?", delepid).Delete(&modelsdb.WatchedEpisode{})
+
+			// now delete the episodes
+			tx.Unscoped().Delete(deletedEpisodes)
+		}
+
+		return nil
+	})
+
+	if err != nil {
 		return err
 	}
 
@@ -315,4 +401,38 @@ func (showService ShowService) RefreshAllShows() error {
 	}
 
 	return nil
+}
+
+func episodeExists(show modelsdb.Show, seasonNumber uint8, episodeNumber uint16) bool {
+	for _, season := range show.Seasons {
+		if season.Number == seasonNumber {
+			for _, episode := range season.Episodes {
+				if episode.Number != nil && *episode.Number == episodeNumber {
+					return true
+				}
+			}
+		}
+	}
+
+	return false
+}
+
+func findSeasonByNumber(show modelsdb.Show, seasonNumber uint8) (int, *modelsdb.Season) {
+	for index, season := range show.Seasons {
+		if season.Number == seasonNumber {
+			return index, &season
+		}
+	}
+
+	return 0, nil
+}
+
+func findEpisodeByNumber(season modelsdb.Season, epNumber uint16) (int, *modelsdb.Episode) {
+	for index, episode := range season.Episodes {
+		if episode.Number != nil && *episode.Number == epNumber {
+			return index, &episode
+		}
+	}
+
+	return 0, nil
 }

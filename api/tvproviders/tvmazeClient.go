@@ -170,6 +170,43 @@ func (pc ProviderClient) SearchShows(query string, results *[]modelsdto.ShowSear
 	return nil
 }
 
+func (pc ProviderClient) CopyShowData(sourceShow modelsdb.Show, destinationShow *modelsdb.Show) {
+	destinationShow.ProviderID = sourceShow.ProviderID
+	destinationShow.ProviderUrl = sourceShow.ProviderUrl
+	destinationShow.Name = sourceShow.Name
+	destinationShow.Summary = sourceShow.Summary
+	destinationShow.Language = sourceShow.Language
+	destinationShow.Status = sourceShow.Status
+	destinationShow.Runtime = sourceShow.Runtime
+	destinationShow.Premiered = sourceShow.Premiered
+	destinationShow.Ended = sourceShow.Ended
+	destinationShow.OfficialSite = sourceShow.OfficialSite
+	destinationShow.Network = sourceShow.Network
+	destinationShow.ImageMedium = sourceShow.ImageMedium
+	destinationShow.ImageOriginal = sourceShow.ImageOriginal
+	destinationShow.ImdbId = sourceShow.ImdbId
+}
+
+func (pc ProviderClient) CopySeasonData(sourceSeason modelsdb.Season, destinationSeason *modelsdb.Season) {
+	destinationSeason.ProviderID = sourceSeason.ProviderID
+	destinationSeason.Number = sourceSeason.Number
+	destinationSeason.Premiered = sourceSeason.Premiered
+	destinationSeason.Ended = sourceSeason.Ended
+	destinationSeason.Network = sourceSeason.Network
+	destinationSeason.EpisodeOrder = sourceSeason.EpisodeOrder
+}
+
+func (pc ProviderClient) CopyEpisodeData(sourceEp modelsdb.Episode, destinationEp *modelsdb.Episode) {
+	destinationEp.ProviderID = sourceEp.ProviderID
+	destinationEp.Name = sourceEp.Name
+	destinationEp.Number = sourceEp.Number
+	destinationEp.Type = sourceEp.Type
+	destinationEp.Aired = sourceEp.Aired
+	destinationEp.Runtime = sourceEp.Runtime
+	destinationEp.Summary = sourceEp.Summary
+	destinationEp.SeasonNumber = sourceEp.SeasonNumber
+}
+
 func StrPtr(str string) *string {
 	return &str
 }
