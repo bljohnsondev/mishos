@@ -11,6 +11,7 @@ import (
 	modelsdb "mishosapi/models/db"
 	modelsdto "mishosapi/models/dto"
 	"mishosapi/services"
+	"mishosapi/tasks"
 )
 
 type SettingsController struct{}
@@ -156,4 +157,43 @@ func (setc *SettingsController) ExportData(context *gin.Context) {
 	}
 
 	context.JSON(http.StatusOK, gin.H{"shows": shows})
+}
+
+func (setc *SettingsController) SendTestNotification(context *gin.Context) {
+	userDto, err := services.GetUserFromContext(context)
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusUnauthorized, modelsdto.ErrorDto{Error: err.Error()})
+		return
+	}
+
+	var user modelsdb.User
+
+	if err := db.DB.Preload("UserConfig").First(&user, userDto.ID).Error; err != nil {
+		services.SendError(context, "user not found")
+		return
+	}
+
+	var body struct {
+		URL string `json:"url"`
+	}
+
+	if context.BindJSON(&body) != nil {
+		services.SendError(context, "bad request")
+
+		return
+	}
+
+	payload := tasks.NotificationPayload{
+		Title: "Test TV Show",
+		Body:  "Episode S01E99 Testing 1 2 3",
+	}
+
+	err = tasks.SendNotificationToURL(body.URL, payload)
+
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusBadRequest, modelsdto.ErrorDto{Error: err.Error()})
+		return
+	}
+
+	context.Status(http.StatusOK)
 }

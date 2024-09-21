@@ -1,3 +1,4 @@
+import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 import { css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -14,7 +15,7 @@ import '@shoelace-style/shoelace/dist/components/option/option.js';
 import '@shoelace-style/shoelace/dist/components/select/select.js';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 
-import { saveConfigGeneral } from './settings-api';
+import { saveConfigGeneral, sendTestNotification } from './settings-api';
 
 interface SettingsFormValues {
   theme?: string;
@@ -42,8 +43,9 @@ export class SettingsGeneral extends BaseElement {
             <sl-option value="light">Light</sl-option>
           </sl-select>
         </div>
-        <div>
+        <div class="notifier-container">
           <sl-input name="notifierUrl" label="Notifier URL" value=${ifDefined(notifierUrl)}></sl-input>
+          <sl-button variant="neutral" @click=${this.handleSendTest}>Send Test</sl-button>
         </div>
         <div>
           <sl-switch name="hideSpoilers" ?checked=${hideSpoilers}>Hide Spoilers</sl-switch>
@@ -79,6 +81,21 @@ export class SettingsGeneral extends BaseElement {
     this.toast({ variant: 'success', message: 'Settings saved' });
   }
 
+  private async handleSendTest() {
+    if (this.formController.form) {
+      const values = serialize(this.formController.form);
+
+      if (values.notifierUrl) {
+        const errorMessage = await sendTestNotification(values.notifierUrl as string);
+        if (errorMessage) {
+          this.toast({ variant: 'danger', message: errorMessage });
+        } else {
+          this.toast({ variant: 'success', message: 'Test message sent' });
+        }
+      }
+    }
+  }
+
   static styles = [
     sharedStyles,
     css`
@@ -93,9 +110,28 @@ export class SettingsGeneral extends BaseElement {
         padding-bottom: var(--sl-spacing-2x-small);
       }
 
+      sl-select[name="theme"] {
+        width: 10rem;
+      }
+
+      sl-input[name="notifierUrl"] {
+        width: 100%;
+      }
+
+      .notifier-container {
+        display: flex;
+        flex-direction: column;
+        gap: var(--sl-spacing-medium);
+      }
+
       @media screen and (min-width: 640px) {
         #settings-form {
-          width: 400px;
+          width: 600px;
+        }
+
+        .notifier-container {
+          flex-direction: row;
+          align-items: flex-end;
         }
       }
     `,

@@ -32,6 +32,11 @@ type NotifierEpisode struct {
 	AirDate       time.Time
 }
 
+type NotificationPayload struct {
+	Title string `json:"title"`
+	Body  string `json:"body"`
+}
+
 func (nt NotifierTask) InitTasks() error {
 	var followedShows []modelsdb.FollowedShow
 
@@ -208,23 +213,22 @@ func (nt NotifierTask) addNotifierTask(user modelsdb.User, episode NotifierEpiso
 func (nt NotifierTask) sendNotification(user modelsdb.User, title string, body string) error {
 	url := user.UserConfig.NotifierUrl
 
-	if strings.TrimSpace(url) == "" {
-		return nil
-	}
-
 	/*
 		for now the payload for notification is hard coded and specific to Apprise - make this customizable
 		using some sort of JSON template
 	*/
 
-	type Payload struct {
-		Title string `json:"title"`
-		Body  string `json:"body"`
-	}
-
-	payload := Payload{
+	payload := NotificationPayload{
 		Title: title,
 		Body:  body,
+	}
+
+	return SendNotificationToURL(url, payload)
+}
+
+func SendNotificationToURL(url string, payload NotificationPayload) error {
+	if strings.TrimSpace(url) == "" {
+		return nil
 	}
 
 	marshalled, err := json.Marshal(payload)
