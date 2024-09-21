@@ -16,5 +16,6 @@ func AddSettingsRoutes(router *gin.Engine) {
 		authRoutes.POST("/saveaccount", settingsController.SaveConfigAccount)
 		authRoutes.POST("/importdata", settingsController.ImportData)
 		authRoutes.GET("/exportdata", settingsController.ExportData)
+		authRoutes.POST("/sendtest", settingsController.SendTestNotification)
 	}
 }
