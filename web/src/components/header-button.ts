@@ -22,6 +22,11 @@ export class HeaderButton extends LitElement {
       background-color: transparent;
     }
 
+    sl-button:hover::part(base) {
+      color: var(--sl-color-neutral-900);
+      border-color: var(--sl-color-neutral-500);
+    }
+
     sl-button.header-selected::part(base) {
       border-color: var(--sl-color-sky-300);
     }
