@@ -97,7 +97,7 @@ export class SideMenu extends BaseElement {
         margin: 0;
         display: flex;
         flex-direction: column;
-        gap: 15px;
+        gap: var(--sl-spacing-large);
         width: 170px;
         transition: width 500ms ease-in-out;
         height: 100vh;
