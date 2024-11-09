@@ -1,10 +1,11 @@
 import { Router } from '@vaadin/router';
 import { css, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { BaseElement } from '@/components/base-element';
 import { sideMenuItems } from '@/layout/side-menu-items';
+import { getStorageValue, setStorageValue } from '@/utils';
 
 import './app-header';
 import './side-menu';
@@ -16,6 +17,8 @@ export class AppLayout extends BaseElement {
   @property() headerTitle?: string;
   @property() selected?: string;
 
+  @state() private narrow = false;
+
   constructor() {
     super();
     this.addEventListener('side-menu-select', this.handleSideMenuSelect);
@@ -24,7 +27,12 @@ export class AppLayout extends BaseElement {
   render() {
     return html`
       <main class="app-container">
-        <side-menu .items=${sideMenuItems} selected=${ifDefined(this.selected)}></side-menu>
+        <side-menu
+          .items=${sideMenuItems}
+          selected=${ifDefined(this.selected)}
+          ?narrow=${this.narrow}
+          @side-menu-toggle=${this.handleSideMenuToggle}
+        ></side-menu>
         <div class="content">
           <app-header
             iconLibrary=${ifDefined(this.iconLibrary)}
@@ -46,6 +54,16 @@ export class AppLayout extends BaseElement {
     }
   }
 
+  private handleSideMenuToggle() {
+    this.narrow = !this.narrow;
+    setStorageValue('sm-width', this.narrow ? 'narrow' : 'wide');
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.narrow = getStorageValue('sm-width') === 'narrow';
+  }
+
   static styles = css`
     .app-container {
       box-sizing: border-box;
@@ -59,6 +77,7 @@ export class AppLayout extends BaseElement {
     .content {
       background-color: var(--content-bg-color);
       flex-grow: 1;
+      z-index: 2;
     }
   `;
 }

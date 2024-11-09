@@ -9,7 +9,6 @@ export class HeaderButton extends LitElement {
   render() {
     return html`
       <sl-button
-        variant="text"
         size="medium"
         class=${classMap({ 'header-selected': this.active })}
       >
@@ -19,16 +18,21 @@ export class HeaderButton extends LitElement {
   }
 
   static styles = css`
-    sl-button::part(label) {
-      color: var(--sl-color-neutral-800);
+    sl-button::part(base) {
+      background-color: transparent;
     }
 
-    sl-button::part(label):hover {
-      color: var(--sl-color-neutral-950);
+    sl-button:hover::part(base) {
+      color: var(--sl-color-neutral-900);
+      border-color: var(--sl-color-neutral-500);
+    }
+
+    sl-button.header-selected::part(base) {
+      border-color: var(--sl-color-sky-300);
     }
 
     sl-button.header-selected::part(label) {
-      color: var(--sl-color-sky-500);
+      color: var(--sl-color-sky-700);
     }
   `;
 }
