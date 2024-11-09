@@ -1,56 +1,76 @@
-import { LitElement, css, html } from 'lit';
+import { css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { createEvent } from '../utils';
+import { BaseElement } from '@/components/base-element';
+import { createEvent } from '@/utils';
 
 import type { SideMenuItem } from './side-menu-item';
 
+import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
-import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
-import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 
 @customElement('side-menu')
-export class SideMenu extends LitElement {
-  @property({ attribute: false })
-  items?: SideMenuItem[];
-
-  @property()
-  selected?: string;
+export class SideMenu extends BaseElement {
+  @property({ attribute: false }) items?: SideMenuItem[];
+  @property() selected?: string;
+  @property({ type: Boolean }) narrow = false;
 
   render() {
     return html`
-      <section>
-        <div class="logo-container">
-          <div class="logo">
-            <sl-icon library="local" name="television"></sl-icon>
-          </div>
-        </div>
-        <sl-divider style="--color: var(--sm-divider-color);"></sl-divider>
-        <ul class="main-menu">
-          ${
-            this.items
-              ? this.items.map(item =>
-                  item.name !== 'divider'
-                    ? html`
-                      <li class=${this.selected === item.name ? 'selected' : ''}>
-                        <sl-tooltip content=${ifDefined(item.tooltip)} placement="right">
-                          <sl-icon-button
-                            library=${ifDefined(item.iconLibrary)}
-                            name=${ifDefined(item.iconName)}
-                            @click=${() => this.handleSideItem(item)}
-                          ></sl-icon-button>
-                        </sl-tooltip>
-                      </li>
-                    `
-                    : html` <sl-divider style="--color: var(--sm-divider-color);"></sl-divider> `
-                )
-              : null
-          }
-        </ul>
-      </section>
+      <ul class=${classMap({ narrow: this.narrow })}>
+        <li class="site-title">
+          <span><sl-icon library="local" name="television" aria-hidden="true"></sl-icon></span>
+          <div>MISHOS</div>
+        </li>
+        ${
+          this.items
+            ? this.items.map(item => {
+                if (item.name !== 'divider') {
+                  const icon = html`
+                    <sl-icon
+                      library=${ifDefined(item.iconLibrary)}
+                      name=${ifDefined(item.iconName)}
+                    ></sl-icon>
+                  `;
+
+                  return html`
+                    <li>
+                      <a
+                        href="#"
+                        title=${ifDefined(this.narrow ? item.tooltip : undefined)}
+                        class=${this.selected === item.name ? 'selected' : ''}
+                        @click=${() => this.handleSideItem(item)}
+                      >
+                        ${icon}
+                        ${item.tooltip}
+                      </a>
+                    </li>
+                  `;
+                }
+
+                return html`<sl-divider style="--color: var(--sm-divider-color);"></sl-divider>`;
+              })
+            : null
+        }
+        <li class="collapse">
+          <a href="#" @click=${this.handleToggleNarrow}>
+            <sl-icon
+              library="hi-outline"
+              name=${this.narrow ? 'chevron-double-right' : 'chevron-double-left'}
+            ></sl-icon>
+            Collapse
+          </a>
+        </li>
+      </ul>
     `;
+  }
+
+  private handleToggleNarrow() {
+    //this.narrow = !this.narrow;
+    this.dispatchCustomEvent('side-menu-toggle');
   }
 
   private handleSideItem(item: SideMenuItem) {
@@ -68,71 +88,83 @@ export class SideMenu extends LitElement {
         background-color: var(--sm-bg-color);
       }
 
-      .logo-container {
-        height: 4rem;
+      ul {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        list-style: none;
+        padding: 0;
+        margin: 0;
         display: flex;
-        align-items: center;
-        justify-content: center;
+        flex-direction: column;
+        gap: 15px;
+        width: 170px;
+        transition: width 500ms ease-in-out;
+        height: 100vh;
       }
 
-      .logo {
-        height: 35px;
-        width: 35px;
-        font-size: 1.8rem;
-        margin: 0 var(--sl-spacing-medium);
-        color: var(--sl-color-green-500);
+      ul.narrow {
+        width: 55px;
+      }
+
+      li {
+        margin-left: 15px;
+      }
+
+      li.collapse {
+        margin-top: auto;
+        padding-bottom: 15px;
+      }
+
+      li.site-title {
+        padding-top: 20px;
+        padding-bottom: 5px;
         display: flex;
         align-items: center;
-        justify-content: center;
+        font-weight: var(--sl-font-weight-semibold);
+        letter-spacing: var(--sl-letter-spacing-loose);
+        color: var(--sl-color-green-900);
+      }
+
+      li.site-title span {
+        line-height: 0;
+      }
+
+      li.site-title sl-icon {
+        height: 25px;
+        width: 25px;
+        color: var(--sl-color-green-500);
+      }
+
+      a {
+        display: flex;
+        align-items: center;
+        width: 200px;
+        font-size: var(--sl-font-size-small);
+        text-decoration: none;
+        color: var(--sl-color-neutral-700);
+      }
+
+      a:hover {
+        color: var(--sl-color-neutral-900);
+      }
+
+      a.selected {
+        color: var(--sm-button-selected-text);
+      }
+
+      sl-icon {
+        width: 25px;
+        height: 25px;
+        margin-right: 20px;
       }
 
       sl-divider {
         margin: 0 var(--sl-spacing-medium);
       }
 
-      .divider {
-        padding: 0 1rem;
-      }
-
-      ul {
-        display: flex;
-        flex-direction: column;
-        gap: var(--sl-spacing-small);
-        margin: var(--sl-spacing-medium) 0;
-        padding: 0;
-        list-style: none;
-      }
-
-      li {
-        display: block;
-        align-self: center;
-      }
-
-      sl-icon-button::part(base) {
-        padding: var(--sl-spacing-x-small);
-        font-size: 1.4rem;
-        color: var(--sm-button-text);
-        transition: background-color 150ms ease;
-      }
-
-      sl-icon-button::part(base):hover {
-        color: var(--sl-color-neutral-700);
-        background-color: var(--sl-color-neutral-200);
-      }
-
-      li.selected sl-icon-button::part(base) {
-        color: var(--sm-button-selected-text);
-        background-color: var(--sm-button-selected-bg);
-      }
-
-      sl-tooltip::part(body),
-      sl-tooltip::part(base__arrow) {
-        background-color: var(--sm-tooltip-bg);
-        color: var(--sm-tooltip-text);
-      }
-
-      sl-tooltip::part(body) {
-        padding: var(--sl-spacing-x-small) var(--sl-spacing-small);
+      sl-tooltip {
+        z-index: 999;
       }
     `,
   ];
