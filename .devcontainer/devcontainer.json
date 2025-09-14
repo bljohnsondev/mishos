@@ -1,0 +1,19 @@
+{
+  "name": "Mishos Dev Environment",
+  "dockerFile": "Dockerfile",
+  "runArgs": ["--add-host=host.docker.internal:host-gateway"],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.go",
+        "eamodio.gitlens",
+        "biomejs.biome",
+        "bierner.lit-html",
+        "runem.lit-plugin"
+      ]
+    }
+  },
+  "postCreateCommand": "chmod +x .devcontainer/post-create.sh && .devcontainer/post-create.sh",
+  "forwardPorts": [5173, 3000],
+  "remoteUser": "node"
+}
