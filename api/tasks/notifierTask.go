@@ -166,7 +166,7 @@ func (nt NotifierTask) findUpcomingEpisode(showId uint, skipEpisodeId *uint) (*N
       inner join seasons sea on sea.id = episodes.season_id
       inner join shows s on s.id = sea.show_id
     `).
-		Where("s.id = ? and episodes.aired is not null && episodes.aired > ?", showId, airdate)
+		Where("s.id = ? and episodes.aired is not null and episodes.aired > ?", showId, airdate)
 
 	if skipEpisodeId != nil {
 		db.Where("episodes.id <> ?", *skipEpisodeId)
