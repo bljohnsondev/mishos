@@ -1,0 +1,12 @@
+export TERM=xterm-256color
+
+# start SSH agent if not already running
+if ! ssh-add -l &>/dev/null; then
+  eval $(ssh-agent -s) > /dev/null
+  ssh-add ~/.ssh/id_ed25519
+fi
+
+alias cls="clear"
+alias vi="nvim"
+
+set -o vi

@@ -1,19 +1,28 @@
 {
-  "name": "Mishos Dev Environment",
-  "dockerFile": "Dockerfile",
+  "name": "mishos",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
   "runArgs": ["--add-host=host.docker.internal:host-gateway"],
+  "remoteEnv": {
+    "PATH": "/workspaces/${localWorkspaceFolderBasename}/node_modules/.bin:${containerEnv:PATH}",
+    "TERM": "xterm-256color"
+  },
+  "mounts": [
+    "type=bind,source=${localEnv:HOME}/.config/nvim,target=/home/node/.config/nvim",
+    "type=bind,source=${localEnv:HOME}/.gitconfig,target=/home/node/.gitconfig",
+    "type=bind,source=${localEnv:HOME}/.ssh,target=/home/node/.ssh,readonly"
+  ],
+  "postCreateCommand": "bash .devcontainer/postcreate.sh",
   "customizations": {
     "vscode": {
       "extensions": [
-        "golang.go",
-        "eamodio.gitlens",
-        "biomejs.biome",
-        "bierner.lit-html",
-        "runem.lit-plugin"
+        "svelte.svelte-vscode",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss"
       ]
     }
   },
-  "postCreateCommand": "chmod +x .devcontainer/post-create.sh && .devcontainer/post-create.sh",
-  "forwardPorts": [5173, 3000],
-  "remoteUser": "node"
+  "appPort": [3000, 5173]
 }
