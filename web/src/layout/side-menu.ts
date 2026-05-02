@@ -101,6 +101,7 @@ export class SideMenu extends BaseElement {
         width: 170px;
         transition: width 500ms ease-in-out;
         height: 100vh;
+        overflow: hidden;
       }
 
       ul.narrow {
