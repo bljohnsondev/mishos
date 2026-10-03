@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"mime"
 	"net/http"
 	"strings"
 	"time"
@@ -16,6 +17,11 @@ import (
 	"mishosapi/config"
 	"mishosapi/db"
 	modelsdb "mishosapi/models/db"
+)
+
+const (
+	NotifierTypeApprise = "apprise"
+	NotifierTypeNtfy    = "ntfy"
 )
 
 type NotifierTask struct {
@@ -211,37 +217,61 @@ func (nt NotifierTask) addNotifierTask(user modelsdb.User, episode NotifierEpiso
 }
 
 func (nt NotifierTask) sendNotification(user modelsdb.User, title string, body string) error {
-	url := user.UserConfig.NotifierUrl
-
-	/*
-		for now the payload for notification is hard coded and specific to Apprise - make this customizable
-		using some sort of JSON template
-	*/
-
 	payload := NotificationPayload{
 		Title: title,
 		Body:  body,
 	}
 
-	return SendNotificationToURL(url, payload)
+	return SendNotificationToURL(user.UserConfig.NotifierUrl, user.UserConfig.NotifierType, payload)
 }
 
-func SendNotificationToURL(url string, payload NotificationPayload) error {
+// NormalizeNotifierType maps an empty type to Apprise
+func NormalizeNotifierType(notifierType string) string {
+	notifierType = strings.ToLower(strings.TrimSpace(notifierType))
+	if notifierType == "" {
+		return NotifierTypeApprise
+	}
+
+	return notifierType
+}
+
+func IsValidNotifierType(notifierType string) bool {
+	return notifierType == NotifierTypeApprise || notifierType == NotifierTypeNtfy
+}
+
+func SendNotificationToURL(url string, notifierType string, payload NotificationPayload) error {
 	if strings.TrimSpace(url) == "" {
 		return nil
 	}
 
-	marshalled, err := json.Marshal(payload)
-	if err != nil {
-		return err
-	}
+	var (
+		request *http.Request
+		err     error
+	)
 
-	request, err := http.NewRequest("POST", url, bytes.NewReader(marshalled))
-	if err != nil {
-		return err
-	}
+	switch NormalizeNotifierType(notifierType) {
+	case NotifierTypeNtfy:
+		request, err = http.NewRequest("POST", url, strings.NewReader(payload.Body))
+		if err != nil {
+			return err
+		}
 
-	request.Header.Set("Content-Type", "application/json")
+		request.Header.Set("Title", mime.QEncoding.Encode("UTF-8", payload.Title))
+	case NotifierTypeApprise:
+		marshalled, marshalErr := json.Marshal(payload)
+		if marshalErr != nil {
+			return marshalErr
+		}
+
+		request, err = http.NewRequest("POST", url, bytes.NewReader(marshalled))
+		if err != nil {
+			return err
+		}
+
+		request.Header.Set("Content-Type", "application/json")
+	default:
+		return fmt.Errorf("unsupported notifier type: %s", notifierType)
+	}
 
 	client := http.Client{Timeout: config.NotificationCallTimeout}
 	response, err := client.Do(request)

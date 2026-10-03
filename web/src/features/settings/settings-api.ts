@@ -20,9 +20,9 @@ export const importData = async (data: FormData): Promise<boolean> => {
   return json.imported === true;
 };
 
-export const sendTestNotification = async (url: string): Promise<string | null> => {
+export const sendTestNotification = async (url: string, type?: string): Promise<string | null> => {
   try {
-    await kyWrapper.post('settings/sendtest', { json: { url } });
+    await kyWrapper.post('settings/sendtest', { json: { url, type } });
   } catch (err) {
     return err instanceof Error ? err.message : 'An unknown error occurred';
   }

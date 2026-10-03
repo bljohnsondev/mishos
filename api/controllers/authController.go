@@ -13,6 +13,7 @@ import (
 	modelsdb "mishosapi/models/db"
 	modelsdto "mishosapi/models/dto"
 	"mishosapi/services"
+	"mishosapi/tasks"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -93,6 +94,7 @@ func (ac AuthController) InitData(context *gin.Context) {
 		},
 		UserConfig: modelsdto.UserConfigDto{
 			NotifierTimezone: config.NotifierTimezone,
+			NotifierType:     tasks.NormalizeNotifierType(config.NotifierType),
 			NotifierUrl:      config.NotifierUrl,
 			Theme:            config.Theme,
 			HideSpoilers:     config.HideSpoilers,
