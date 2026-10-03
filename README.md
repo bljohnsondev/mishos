@@ -51,8 +51,13 @@ Ready to give it a try?  Head on over to the [Docker instructions](https://githu
 
 ![Screenshot of the settings general screen](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/settings-general-screenshot1.png "Settings screenshot")
 
-## Gotify Notification
+## Notifications
 
-The current backend code is designed to use an [Apprise](https://github.com/caronc/apprise) endpoint for notifications.  I currently use [Gotify](https://github.com/gotify/server) for notifications.  Since the backend server uses Apprise you have a **lot** of notification options.
+Notifications are sent from the backend server. Currently, it supports the following notification providers:
+
+- [Apprise](https://github.com/caronc/apprise) - a self hosted notification service that allows you to send messages to lots of different providers
+- [Ntfy](https://ntfy.sh/) - a self-hosted or cloud hosted service for notifications
+
+Here is an example of messages sent via Apprise to a Gotify instance:
 
 ![Screenshot of Gotify notifications](https://raw.githubusercontent.com/bljohnsondev/mishos/main/docs/assets/gotify.png "Gotify notifications screenshot")
