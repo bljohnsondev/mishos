@@ -1,0 +1,4 @@
+allowBuilds:
+  '@biomejs/biome': true
+  '@vaadin/vaadin-usage-statistics': false
+  esbuild: true

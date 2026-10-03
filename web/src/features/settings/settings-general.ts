@@ -1,6 +1,6 @@
 import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 import { css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { BaseElement } from '@/components/base-element';
@@ -19,6 +19,7 @@ import { saveConfigGeneral, sendTestNotification } from './settings-api';
 
 interface SettingsFormValues {
   theme?: string;
+  notifierType?: string;
   notifierUrl?: string;
   hideSpoilers?: string;
 }
@@ -30,8 +31,13 @@ export class SettingsGeneral extends BaseElement {
     onSubmit: values => this.handleSubmit(values),
   });
 
+  @state()
+  private currentNotifierUrl?: string;
+
   render() {
+    const notifierType = this.appStore?.initData?.userConfig?.notifierType || 'apprise';
     const notifierUrl = this.appStore?.initData?.userConfig?.notifierUrl;
+    const hasUrl = (this.currentNotifierUrl ?? notifierUrl ?? '').trim() !== '';
     const hideSpoilers = this.appStore?.initData?.userConfig?.hideSpoilers;
     const theme = this.appStore?.initData?.userConfig?.theme;
 
@@ -43,9 +49,23 @@ export class SettingsGeneral extends BaseElement {
             <sl-option value="light">Light</sl-option>
           </sl-select>
         </div>
-        <div class="notifier-container">
-          <sl-input name="notifierUrl" label="Notifier URL" value=${ifDefined(notifierUrl)}></sl-input>
-          <sl-button variant="neutral" @click=${this.handleSendTest}>Send Test</sl-button>
+        <div>
+          <sl-select name="notifierType" label="Notifier Type" value=${notifierType}>
+            <sl-option value="apprise">Apprise</sl-option>
+            <sl-option value="ntfy">Ntfy</sl-option>
+          </sl-select>
+        </div>
+        <div>
+          <div class="notifier-container">
+            <sl-input
+              name="notifierUrl"
+              label="Notifier URL"
+              value=${ifDefined(notifierUrl)}
+              @sl-input=${this.handleNotifierUrlInput}
+            ></sl-input>
+            <sl-button variant="neutral" ?disabled=${!hasUrl} @click=${this.handleSendTest}>Send Test</sl-button>
+          </div>
+          <div class="notifier-help">Leave blank to disable notifications</div>
         </div>
         <div>
           <sl-switch name="hideSpoilers" ?checked=${hideSpoilers}>Hide Spoilers</sl-switch>
@@ -57,10 +77,15 @@ export class SettingsGeneral extends BaseElement {
     `;
   }
 
+  private handleNotifierUrlInput(e: Event) {
+    this.currentNotifierUrl = (e.target as HTMLInputElement).value;
+  }
+
   private async handleSubmit(values: SettingsFormValues) {
     if (this.appStore?.initData?.userConfig) {
       await this.callApi(() => {
         saveConfigGeneral({
+          notifierType: values.notifierType,
           notifierUrl: values.notifierUrl,
           theme: values.theme,
           hideSpoilers: values.hideSpoilers === 'on',
@@ -68,6 +93,7 @@ export class SettingsGeneral extends BaseElement {
       });
 
       if (this.appStore?.initData?.userConfig) {
+        this.appStore.initData.userConfig.notifierType = values.notifierType;
         this.appStore.initData.userConfig.notifierUrl = values.notifierUrl;
         this.appStore.initData.userConfig.theme = values.theme;
         this.appStore.initData.userConfig.hideSpoilers = values.hideSpoilers === 'on';
@@ -86,7 +112,7 @@ export class SettingsGeneral extends BaseElement {
       const values = serialize(this.formController.form);
 
       if (values.notifierUrl) {
-        const errorMessage = await sendTestNotification(values.notifierUrl as string);
+        const errorMessage = await sendTestNotification(values.notifierUrl as string, values.notifierType as string);
         if (errorMessage) {
           this.toast({ variant: 'danger', message: errorMessage });
         } else {
@@ -110,7 +136,7 @@ export class SettingsGeneral extends BaseElement {
         padding-bottom: var(--sl-spacing-2x-small);
       }
 
-      sl-select[name="theme"] {
+      sl-select[name="theme"], sl-select[name="notifierType"] {
         width: 10rem;
       }
 
@@ -122,6 +148,12 @@ export class SettingsGeneral extends BaseElement {
         display: flex;
         flex-direction: column;
         gap: var(--sl-spacing-medium);
+      }
+
+      .notifier-help {
+        margin-top: var(--sl-spacing-x-small);
+        color: var(--sl-input-help-text-color);
+        font-size: var(--sl-input-help-text-font-size-medium);
       }
 
       @media screen and (min-width: 640px) {

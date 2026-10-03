@@ -18,9 +18,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV PATH="/usr/local/go/bin:/go/bin:${PATH}"
 ENV GOPATH="/go"
 
-RUN mkdir -p ${GOPATH}/bin \
-    && chown -R node:node ${GOPATH}
-
 # installs the neovim binary
 RUN ARCH=$(uname -m) && \
     case "$ARCH" in \
@@ -36,6 +33,7 @@ RUN ARCH=$(uname -m) && \
 RUN go install github.com/go-task/task/v3/cmd/task@latest \
     && go install golang.org/x/tools/gopls@latest \
     && go install honnef.co/go/tools/cmd/staticcheck@latest \
-    && go install github.com/air-verse/air@latest
+    && go install github.com/air-verse/air@latest \
+    && chown -R node:node ${GOPATH}
 
 COPY bashrc-config /tmp/bashrc-config

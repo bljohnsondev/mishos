@@ -33,6 +33,7 @@ func (setc SettingsController) SaveConfigGeneral(context *gin.Context) {
 	}
 
 	var body struct {
+		NotifierType string `json:"notifierType"`
 		NotifierURL  string `json:"notifierUrl"`
 		Theme        string `json:"theme"`
 		HideSpoilers bool   `json:"hideSpoilers"`
@@ -51,6 +52,14 @@ func (setc SettingsController) SaveConfigGeneral(context *gin.Context) {
 		return
 	}
 
+	notifierType := tasks.NormalizeNotifierType(body.NotifierType)
+	if !tasks.IsValidNotifierType(notifierType) {
+		services.SendError(context, "invalid notifier type")
+
+		return
+	}
+
+	user.UserConfig.NotifierType = notifierType
 	user.UserConfig.NotifierUrl = body.NotifierURL
 	user.UserConfig.Theme = body.Theme
 	user.UserConfig.HideSpoilers = body.HideSpoilers
@@ -174,7 +183,8 @@ func (setc *SettingsController) SendTestNotification(context *gin.Context) {
 	}
 
 	var body struct {
-		URL string `json:"url"`
+		Type string `json:"type"`
+		URL  string `json:"url"`
 	}
 
 	if context.BindJSON(&body) != nil {
@@ -188,7 +198,14 @@ func (setc *SettingsController) SendTestNotification(context *gin.Context) {
 		Body:  "Episode S01E99 Testing 1 2 3",
 	}
 
-	err = tasks.SendNotificationToURL(body.URL, payload)
+	notifierType := tasks.NormalizeNotifierType(body.Type)
+	if !tasks.IsValidNotifierType(notifierType) {
+		services.SendError(context, "invalid notifier type")
+
+		return
+	}
+
+	err = tasks.SendNotificationToURL(body.URL, notifierType, payload)
 
 	if err != nil {
 		context.AbortWithStatusJSON(http.StatusBadRequest, modelsdto.ErrorDto{Error: err.Error()})
